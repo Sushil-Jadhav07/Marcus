@@ -50,10 +50,8 @@ function App() {
                 <Route path="/market-pulse" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                     
+                      <main className=" pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <MarketPulse />
                       </main>
                     </>
@@ -62,10 +60,7 @@ function App() {
                 <Route path="/insider-strategy" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                      <main className=" !h-auto pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <InsiderStrategy />
                       </main>
                     </>

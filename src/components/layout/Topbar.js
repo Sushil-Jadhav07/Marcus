@@ -10,6 +10,18 @@ const Topbar = () => {
   const { user, userProfile, isAuthenticated } = useSelector((state) => state.auth);
   const [isDark, setIsDark] = useState(false);
 
+  useEffect(() => {
+    try {
+      const storedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldUseDark = storedTheme ? storedTheme === 'dark' : prefersDark;
+      setIsDark(shouldUseDark);
+      document.documentElement.classList.toggle('dark', shouldUseDark);
+    } catch (_) {
+      // no-op
+    }
+  }, []);
+
   const displayInitial = (() => {
     const name = userProfile?.name || userProfile?.firstName || user?.displayName || user?.email || 'M';
     return name?.trim()?.charAt(0)?.toUpperCase() || 'M';
@@ -21,6 +33,11 @@ const Topbar = () => {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    } catch (_) {
+      // no-op
     }
   }, [isDark]);
 

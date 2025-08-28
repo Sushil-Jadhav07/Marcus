@@ -1,3 +1,11 @@
+## Dark mode
+
+Tailwind is configured with class-based dark mode. A small inline script in `public/index.html` sets the initial theme using `localStorage` and `prefers-color-scheme` to avoid FOUC.
+
+- Toggle is available in `components/layout/Topbar.js` and `components/layout/MobileTopbar.js`.
+- Use Tailwind `dark:` variants in components, e.g. `bg-white dark:bg-black`, `text-black dark:text-white`.
+- The selected theme persists in `localStorage` under the key `theme`.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

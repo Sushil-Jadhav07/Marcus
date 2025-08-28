@@ -10,15 +10,15 @@ const MoreTools = () => {
 
   return (
     <div className="p-4 space-y-6">
-      <h2 className="text-white text-xl font-semibold">More Tools</h2>
+      <h2 className="text-white dark:text-black text-xl font-semibold">More Tools</h2>
       <div className="grid grid-cols-2 gap-4">
         {tools.map((tool, index) => (
           <div
             key={index}
-            className="relative h-24 w-full flex flex-col justify-start items-start p-2 rounded-2xl bg-gradient-to-br from-gray-600 via-gray-700 to-gray-900 border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/40 border-r-white/40 border-b-blue-500/40 border-l-blue-500/40"
+            className="relative h-24 w-full flex flex-col justify-start items-start p-2 rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/40 border-r-white/40 border-b-blue-500/40 border-l-blue-500/40 bg-white dark:bg-black"
           >
             <div className="text-2xl ">{tool.icon}</div>
-            <h3 className="text-white text-sm font-medium">{tool.name}</h3>
+            <h3 className="text-black dark:text-white text-sm font-medium">{tool.name}</h3>
           </div>
         ))}
       </div>
