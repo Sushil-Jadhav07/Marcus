@@ -6,8 +6,8 @@ const Homearea = () => {
   return (
     <div className='w-full flex flex-col justify-center items-center'>
     <div className='md:hidden flex flex-col justify-center items-center w-[90%] p-10 relative '>
-       <div className='absolute dark:block hidden -top-0 left-[25px] h-full w-[85%] bg-contain z-0 bg-center' style={{backgroundImage: `url(${bgimage})`}}></div>
-       <div className='absolute dark:hidden block -top-0 left-[45px] h-[90%] w-[75%] bg-contain z-0 bg-center' style={{backgroundImage: `url(${bgimage2})`}}></div>
+       <div className='absolute dark:block hidden -top-0 left-[0px] h-full w-[100%] bg-no-repeat bg-contain z-0 bg-center' style={{backgroundImage: `url(${bgimage})`}}></div>
+       <div className='absolute dark:hidden block -top-[0.5px] -left-[3px] h-[90%] w-[100%] bg-no-repeat bg-contain z-0 bg-center' style={{backgroundImage: `url(${bgimage2})`}}></div>
        <div className='flex flex-col items-center justify-start h-full pt-0 w-full z-10'>
         <h2 className='text-5xl font-bold text-white'>Welcome</h2>
         <p className='text-white text-md'>to Best Trading Platform <br /> Next level Trade Product</p>

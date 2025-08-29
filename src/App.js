@@ -69,10 +69,8 @@ function App() {
                 <Route path="/sector-scope" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                      
+                      <main className=" pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <SectorScope />
                       </main>
                     </>
@@ -81,10 +79,8 @@ function App() {
                 <Route path="/swing-spectrum" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                      
+                      <main className=" pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <SwingSpectrum />
                       </main>
                     </>
@@ -93,10 +89,8 @@ function App() {
                 <Route path="/option-clock" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                      
+                      <main className=" pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <OptionClock />
                       </main>
                     </>
@@ -105,10 +99,7 @@ function App() {
                 <Route path="/option-apex" element={
                   <ProtectedRoute>
                     <>
-                      <Topbar />
-                      <MobileTopbar />
-                      <Navigation />
-                      <main className="main-content pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
+                      <main className="pt-16 md:ml-20 lg:ml-24 pb-24 md:pb-0">
                         <OptionApex />
                       </main>
                     </>

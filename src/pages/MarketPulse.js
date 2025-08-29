@@ -2,7 +2,6 @@ import React from 'react';
 import Navigation from '../components/layout/Navigation';
 import Topbar from '../components/layout/Topbar';
 import MobileTopbar from '../components/layout/MobileTopbar';
-import SignalCard from '../components/MarketPulse/SignalCard';
 import SignalSection from '../components/MarketPulse/SignalSection';
 
 const MarketPulse = () => {
@@ -36,8 +35,9 @@ const MarketPulse = () => {
         <MobileTopbar />
           <div className=" h-[120vh] bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
-            <h1 className='text-white lg:text-4xl text-lg'>Market Pulse</h1>
+          <h2 className="mb-3 text-white font-semibold tracking-wide">Market Pulse</h2>
           </div>
+         
           <SignalSection
               title="LOM Short Term"
               items={[

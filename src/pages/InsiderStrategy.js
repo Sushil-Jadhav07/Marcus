@@ -2,7 +2,9 @@ import React from 'react';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Topbar from '../components/layout/Topbar';
 import Navigation from '../components/layout/Navigation';
-import StockHeatmap from '../components/MarketPulse/StockHeatmap';
+import StrategyBoard from '../components/Insider/StrategyBoard';
+
+
 
 const InsiderStrategy = () => {
   const data = {
@@ -20,9 +22,58 @@ const InsiderStrategy = () => {
           <MobileTopbar />
            <div className='h-[120vh] bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% '>
             <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
-              <h1 className='text-white lg:text-4xl text-lg'>Insider Strategy</h1>
+            <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Strategy</h2>
             </div>
-            <StockHeatmap data={data} />
+            <StrategyBoard
+              title="5 MIN MOMENTUM SPIKE"
+              height={500}
+              rowHeight={56}
+              items={[
+                { name: 'ASTRAL', shape: 'big', change: -3.1 },
+                { name: 'TORNTPOWER', shape: 'tall', change: -5.0 },
+                { name: 'TATACOMM', shape: 'tall', change: -1.5 },
+                { name: 'COFORGE', shape: 'tall', change: 2.3 },
+                { name: 'HAVELLS', shape: 'tall', change: 1.8 },
+                { name: 'GMRAIRPORT', shape: 'tall', change: 2.2 },
+                { name: 'PFC', shape: 'square', change: -1.1 },
+                { name: 'ICICIBANK', shape: 'square', change: 1.2 },
+                { name: 'UNITDSPR', shape: 'tall', change: 1.7 },
+                { name: 'KALYANKJIL', shape: 'tall', change: 2.4 },
+                { name: 'PGEL', shape: 'square', change: 2.1 },
+                { name: 'AXISBANK', shape: 'square', change: 1.9 },
+                { name: 'LAURUSLABS', shape: 'tall', change: -1.7 },
+                { name: 'CIPLA', shape: 'square', change: -0.9 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+              ]}
+            />
+            <div className='dark:bg-black bg-white'>
+            <StrategyBoard
+              title="10 MIN MOMENTUM SPIKE"
+              height={500}
+              rowHeight={56}
+              items={[
+                { name: 'ASTRAL', shape: 'big', change: -3.1 },
+                { name: 'TORNTPOWER', shape: 'tall', change: -5.0 },
+                { name: 'TATACOMM', shape: 'tall', change: -1.5 },
+                { name: 'COFORGE', shape: 'tall', change: 2.3 },
+                { name: 'HAVELLS', shape: 'tall', change: 1.8 },
+                { name: 'GMRAIRPORT', shape: 'tall', change: 2.2 },
+                { name: 'PFC', shape: 'square', change: -1.1 },
+                { name: 'ICICIBANK', shape: 'square', change: 1.2 },
+                { name: 'UNITDSPR', shape: 'tall', change: 1.7 },
+                { name: 'KALYANKJIL', shape: 'tall', change: 2.4 },
+                { name: 'PGEL', shape: 'square', change: 2.1 },
+                { name: 'AXISBANK', shape: 'square', change: 1.9 },
+                { name: 'LAURUSLABS', shape: 'tall', change: -1.7 },
+                { name: 'CIPLA', shape: 'square', change: -0.9 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+                { name: 'NAUKRI', shape: 'square', change: 2.0 },
+              ]}
+            />
+            </div>
            </div>
       </div>
     </div>
