@@ -1,1 +1,7 @@
 node_modules
+
+.env
+
+# Local environment overrides (do not commit)
+.env.local
+

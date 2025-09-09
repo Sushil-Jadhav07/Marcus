@@ -102,7 +102,7 @@ const MarketProgress = ({
 
   return (
     <div className={`px-1 mt-2 ${className}`}>
-      <div className="relative bg-gray-200/20 lg:w-[1350px] w-[340px] rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 dark:border-t-white/60  border-t-gray-400/60 dark:border-r-white/60 border-r-gray-400/60 border-b-blue-400/60 px-2 border-l-blue-400/60 pt-2 pb-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]" tabIndex={0} onKeyDown={onKeyDown}>
+      <div className="relative bg-gray-200/20 lg:w-[1200px] w-[340px] rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 dark:border-t-white/60  border-t-gray-400/60 dark:border-r-white/60 border-r-gray-400/60 border-b-blue-400/60 px-2 border-l-blue-400/60 pt-2 pb-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]" tabIndex={0} onKeyDown={onKeyDown}>
         <div className="flex items-center gap-3">
           <div
             ref={trackRef}

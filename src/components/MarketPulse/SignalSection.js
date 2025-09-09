@@ -11,7 +11,7 @@ const SignalSection = ({
   items = [],
 }) => {
   return (
-    <div className="mt-6 px-5">
+    <div className="mt-6 px-5 lg:hidden block">
       <div className="flex items-center justify-between">
         <div className='flex justify-center items-center gap-2'>
         <div className='flex justify-center items-center gap-2'>
@@ -28,7 +28,7 @@ const SignalSection = ({
           See all <span>→</span>
         </button>
       </div>
-      <div className="mt-4 !dark:text-white !text-black overflow-x-auto hide-scrollbar">
+      <div className="mt-4 !dark:text-white !text-black overflow-x-auto scrollbar-hide">
         <div className="flex gap-5 snap-x snap-mandatory">
           {items.map((item) => (
             <SignalCard key={item.symbol + item.timeLabel}

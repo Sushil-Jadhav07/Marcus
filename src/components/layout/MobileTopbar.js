@@ -6,17 +6,27 @@ import { BsSunFill, BsMoonFill } from 'react-icons/bs';
 
 const MobileTopbar = () => {
   const { user, userProfile, isAuthenticated } = useSelector((state) => state.auth);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true); // Default to dark mode
 
   useEffect(() => {
     try {
       const storedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const shouldUseDark = storedTheme ? storedTheme === 'dark' : prefersDark;
-      setIsDark(shouldUseDark);
-      document.documentElement.classList.toggle('dark', shouldUseDark);
+      
+      if (storedTheme) {
+        // Use stored preference
+        const shouldUseDark = storedTheme === 'dark';
+        setIsDark(shouldUseDark);
+        document.documentElement.classList.toggle('dark', shouldUseDark);
+      } else {
+        // Default to dark mode only if no stored preference exists
+        setIsDark(true);
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
     } catch (_) {
-      // no-op
+      // Fallback to dark mode if localStorage fails
+      setIsDark(true);
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
@@ -36,6 +46,19 @@ const MobileTopbar = () => {
     }
   }, [isDark]);
 
+  // Enhanced theme toggle function
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    
+    try {
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', newTheme);
+    } catch (_) {
+      // no-op
+    }
+  };
+
   return (
     <header className="md:hidden fixed top-0 inset-x-0 z-[1100]">
       <div className="h-16 w-full bg-gradient-to-r from-[#1d4ed8] via-[#1d4ed8] to-[#1d4ed8] ">
@@ -47,9 +70,11 @@ const MobileTopbar = () => {
           </Link>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsDark((v) => !v)}
-              aria-label="Toggle theme"
-              className="relative h-9 w-14 rounded-2xl px-2 flex items-center justify-between bg-[#0b3aa6]"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+              className={`relative h-9 w-14 rounded-2xl px-2 flex items-center justify-between transition-colors duration-300 ${
+                isDark ? 'bg-[#0b3aa6]' : 'bg-gray-300'
+              }`}
             >
               <BsSunFill className={`text-black dark:text-white z-10 ${isDark ? 'opacity-50 ' : 'opacity-100'}`} size={12} />
               <BsMoonFill className={`text-black dark:text-white z-10 ${isDark ? 'opacity-100' : 'opacity-70'}`} size={14} />

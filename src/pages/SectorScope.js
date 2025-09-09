@@ -3,6 +3,9 @@ import Topbar from '../components/layout/Topbar';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Navigation from '../components/layout/Navigation';
 import StrategyBoard from '../components/Insider/StrategyBoard';
+import Marquee from '../components/MarketPulse/Marquee';
+import MomentumHeatmap from '../components/MarketPulse/MomentumHeatmap';
+
 
 const SectorScope = () => {
   return (
@@ -11,7 +14,7 @@ const SectorScope = () => {
         <Topbar /> 
         <MobileTopbar />
         <Navigation />
-          <div className=" h-[100vh] bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
+          <div className=" h-[100vh] lg:hidden block bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
           <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
           </div>
@@ -66,8 +69,42 @@ const SectorScope = () => {
           />
           </div>
           </div>
+          <div className='lg:block hidden overflow-hidden'>
+            <Marquee/>
+            <div className='flex justify-start item-center px-5 pt-5'>
+            <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
+            </div>
+            
+            {/* Momentum Heatmap */}
+            <div className='px-5 mt-5'>
+              <MomentumHeatmap 
+                data={[]}
+                title="Realty"
+                showHeader={true}
+              />
+            </div>
+            
+            {/* Additional Momentum Heatmap */}
+            <div className='px-5 mt-5'>
+              <MomentumHeatmap 
+                data={[]}
+                title="Pharmaceuticals"
+                showHeader={true}
+              />
+            </div>
+            
+            {/* Third Momentum Heatmap */}
+            <div className='px-5 mt-5'>
+              <MomentumHeatmap 
+                data={[]}
+                title="Financial Services"
+                showHeader={true} 
+              />
+            </div>
+            
+          </div>    
     </div>
-  </div>
+    </div>
   );
 };
 
