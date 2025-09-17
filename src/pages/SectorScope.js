@@ -5,6 +5,7 @@ import Navigation from '../components/layout/Navigation';
 import StrategyBoard from '../components/Insider/StrategyBoard';
 import Marquee from '../components/MarketPulse/Marquee';
 import MomentumHeatmap from '../components/MarketPulse/MomentumHeatmap';
+import TradingViewWidget from '../components/common/TradingViewHeatmap';
 
 
 const SectorScope = () => {
@@ -75,32 +76,18 @@ const SectorScope = () => {
             <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
             </div>
             
-            {/* Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="Realty"
-                showHeader={true}
-              />
-            </div>
+             {/* Sector Heatmap - Real Estate */}
+             <div className='px-5 mt-5'>
+               <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-6'>
+                 
+                   <div className='h-[470px]'>
+                     <TradingViewWidget />
+                   </div>
+               </div>
+             </div>
             
-            {/* Additional Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="Pharmaceuticals"
-                showHeader={true}
-              />
-            </div>
             
-            {/* Third Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="Financial Services"
-                showHeader={true} 
-              />
-            </div>
+            
             
           </div>    
     </div>

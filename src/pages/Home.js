@@ -20,6 +20,9 @@ const Home = () => {
                   <div className='h-full'>
                   <Homearea />
                   </div>
+                  {/* <div className='h-full px-4 my-6'>
+                    <CandlestickChart symbol="IBM" apiKey={process.env.REACT_APP_ALPHA_VANTAGE_KEY || '3R1UBTVGUDNS46OO'} height={420} />
+                  </div> */}
                   <div className='h-full'>
                   <Functions />
                   </div>
