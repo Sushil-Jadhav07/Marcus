@@ -25,7 +25,6 @@ const OptionApex = () => {
             <div className='lg:block hidden'>
             <Marquee/>
             <div className='px-5 mt-8'>
-            
               <OptionApexDesktop />
             </div>
             </div>

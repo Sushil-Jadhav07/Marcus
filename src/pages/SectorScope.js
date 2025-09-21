@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FiRefreshCw } from 'react-icons/fi';
 import Topbar from '../components/layout/Topbar';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Navigation from '../components/layout/Navigation';
@@ -6,9 +7,26 @@ import StrategyBoard from '../components/Insider/StrategyBoard';
 import Marquee from '../components/MarketPulse/Marquee';
 import MomentumHeatmap from '../components/MarketPulse/MomentumHeatmap';
 import TradingViewWidget from '../components/common/TradingViewHeatmap';
+import SectorQuotes from '../components/common/SectorQuotes';
+import SectorSingleListTV from '../components/common/SectorSingleListTV';
+import BreakoutBeaconLive from '../components/common/BreakoutBeaconLive';
+import EnergySectorBeacon from '../components/common/EnergySectorBeacon';
+import ITSectorBeacon from '../components/common/ITSectorBeacon';
+import PharmaSectorBeacon from '../components/common/PharmaSectorBeacon';
+import AutoSectorBeacon from '../components/common/AutoSectorBeacon';
+import FMCGSectorBeacon from '../components/common/FMCGSectorBeacon';
 
 
 const SectorScope = () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshAll = async () => {
+    setIsRefreshing(true);
+    // Trigger refresh for all sector components
+    // Each component will handle its own refresh
+    setTimeout(() => setIsRefreshing(false), 2000);
+  };
+
   return (
     <div className='flex flex-col h-full'>
     <div className='w-full h-full flex flex-col'>
@@ -19,77 +37,65 @@ const SectorScope = () => {
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
           <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
           </div>
-          <StrategyBoard
-              title="Reality"
-              height={500}
-              rowHeight={56}
-              items={[
-                { name: 'ASTRAL', shape: 'big', change: -3.1 },
-                { name: 'TORNTPOWER', shape: 'tall', change: -5.0 },
-                { name: 'TATACOMM', shape: 'tall', change: -1.5 },
-                { name: 'COFORGE', shape: 'tall', change: 2.3 },
-                { name: 'HAVELLS', shape: 'tall', change: 1.8 },
-                { name: 'GMRAIRPORT', shape: 'tall', change: 2.2 },
-                { name: 'PFC', shape: 'square', change: -1.1 },
-                { name: 'ICICIBANK', shape: 'square', change: 1.2 },
-                { name: 'UNITDSPR', shape: 'tall', change: 1.7 },
-                { name: 'KALYANKJIL', shape: 'tall', change: 2.4 },
-                { name: 'PGEL', shape: 'square', change: 2.1 },
-                { name: 'AXISBANK', shape: 'square', change: 1.9 },
-                { name: 'LAURUSLABS', shape: 'tall', change: -1.7 },
-                { name: 'CIPLA', shape: 'square', change: -0.9 },
-                { name: 'NAUKRI', shape: 'square', change: 2.0 },
-                { name: 'NAUKRI', shape: 'square', change: 2.0 },
-                { name: 'NAUKRI', shape: 'square', change: 2.0 },
-              ]}
-          />
-          <div className='dark:bg-black bg-white'>
-          <StrategyBoard
-              title="Pharmaceuticals"
-              height={500}
-              rowHeight={56}
-              items={[
-                { name: 'SUNPHARMA', shape: 'big', change: 2.8 },
-                { name: 'DRREDDY', shape: 'tall', change: 1.9 },
-                { name: 'CIPLA', shape: 'tall', change: -0.9 },
-                { name: 'DIVISLAB', shape: 'tall', change: 3.2 },
-                { name: 'LUPIN', shape: 'tall', change: 1.4 },
-                { name: 'BIOCON', shape: 'tall', change: -2.1 },
-                { name: 'AUROPHARMA', shape: 'square', change: 0.8 },
-                { name: 'TORNTPHARM', shape: 'square', change: 2.5 },
-                { name: 'ALKEM', shape: 'tall', change: 1.6 },
-                { name: 'GLENMARK', shape: 'tall', change: -1.3 },
-                { name: 'CADILAHC', shape: 'square', change: 0.9 },
-                { name: 'ABBOTINDIA', shape: 'square', change: 1.7 },
-                { name: 'LAURUSLABS', shape: 'tall', change: -1.7 },
-                { name: 'PFIZER', shape: 'square', change: 0.5 },
-                { name: 'GRANULES', shape: 'square', change: 2.3 },
-                { name: 'STRIDES', shape: 'square', change: 1.8 },
-                { name: 'NATCOPHAR', shape: 'square', change: -0.6 },
-              ]}
-          />
+          <div className='px-5 mt-4'>
+            <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-4'>
+              <div className='h-[420px]'>
+                <TradingViewWidget />
+              </div>
+            </div>
           </div>
+          <div className='px-5 mt-4'>
+            {/* <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-4'>
+              <div className='h-[260px]'>
+                <SectorQuotes />
+              </div>
+            </div> */}
+          </div>
+         
           </div>
           <div className='lg:block hidden overflow-hidden'>
             <Marquee/>
-            <div className='flex justify-start item-center px-5 pt-5'>
-            <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
-            </div>
+            {/* <div className='flex justify-between items-center px-5 pt-5'>
+              <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
+              <button
+                onClick={handleRefreshAll}
+                disabled={isRefreshing}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <FiRefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span className="text-sm">Refresh All</span>
+              </button>
+            </div> */}
             
              {/* Sector Heatmap - Real Estate */}
              <div className='px-5 mt-5'>
                <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-6'>
-                 
                    <div className='h-[470px]'>
                      <TradingViewWidget />
                    </div>
                </div>
              </div>
+             <div className='px-5 mt-5'>
+               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                 <EnergySectorBeacon />
+                 <ITSectorBeacon />
+               </div>
+               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                 <PharmaSectorBeacon />
+                 <AutoSectorBeacon />
+               </div>
+               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                 <FMCGSectorBeacon />
+                 <BreakoutBeaconLive />
+               </div>
+               
+             </div>
             
-            
+          
             
             
           </div>    
+          
     </div>
     </div>
   );

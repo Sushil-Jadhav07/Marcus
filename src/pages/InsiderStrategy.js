@@ -4,7 +4,9 @@ import Topbar from '../components/layout/Topbar';
 import Navigation from '../components/layout/Navigation';
 import StrategyBoard from '../components/Insider/StrategyBoard';
 import Marquee from '../components/MarketPulse/Marquee';
-import MomentumHeatmap from '../components/MarketPulse/MomentumHeatmap';
+import InsiderStrategyBox from '../components/Insider/InsiderStrategyBox';
+import SectorAnalysisBox from '../components/Insider/SectorAnalysisBox';
+import EnergySectorBeacon from '../components/common/EnergySectorBeacon';
 
 
 
@@ -17,9 +19,9 @@ const InsiderStrategy = () => {
     ]
   };
   return (
-    <div className='flex flex-col h-full bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+    <div className='flex flex-col h-[100vh] bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
     <Navigation />
-      <div className='w-full h-full flex flex-col'>
+      <div className=' w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
            <div className='h-[120vh] lg:hidden block'>
@@ -77,37 +79,17 @@ const InsiderStrategy = () => {
             />
             </div>
            </div>
-           <div className='lg:block hidden overflow-hidden'>
+           <div className='lg:block  hidden overflow-hidden'>
             <Marquee/>
             <div className='flex justify-start item-center px-5 pt-5'>
             <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Strategy</h2>
             </div>
             
-            {/* Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="5 MIN MOMENTUM SPIKE"
-                showHeader={true}
-              />
-            </div>
-            
-            {/* Additional Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="10 MIN MOMENTUM SPIKE"
-                showHeader={true}
-              />
-            </div>
-            
-            {/* Third Momentum Heatmap */}
-            <div className='px-5 mt-5'>
-              <MomentumHeatmap 
-                data={[]}
-                title="15 MIN MOMENTUM SPIKE"
-                showHeader={true}
-              />
+            {/* Grid Layout for Sector Analysis Boxes */}
+            <div className='px-5'>
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6'>
+                <EnergySectorBeacon/>
+              </div>
             </div>
             
           </div>

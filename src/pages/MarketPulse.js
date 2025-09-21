@@ -6,6 +6,7 @@ import MobileTopbar from '../components/layout/MobileTopbar';
 import SignalSection from '../components/MarketPulse/SignalSection';
 import BreakoutBeacon from '../components/common/BreakoutBeacon';
 import Marquee from '../components/MarketPulse/Marquee';
+import Nifty50Chart from '../components/charts/Nifty50Chart';
 
 
 const MarketPulse = () => {
@@ -45,6 +46,9 @@ const MarketPulse = () => {
             <h2 className="mb-3 text-white font-semibold tracking-wide">Market Pulse</h2>
             </div>
             <div className='px-5 grid grid-cols-1 lg:grid-cols-2 gap-5'>
+              {/* <div className='col-span-1 lg:col-span-2'>
+                <Nifty50Chart height={360} />
+              </div> */}
               <BreakoutBeacon 
                 
                 title="Breakout Beacon"

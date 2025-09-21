@@ -17,7 +17,7 @@ function TradingViewWidget() {
           "blockColor": "change",
           "grouping": "sector",
           "locale": "en",
-          "symbolUrl": "",
+          "symbolUrl": "https://www.tradingview.com/chart/?symbol={symbol}",
           "colorTheme": "dark",
           "exchanges": [],
           "hasTopBar": false,
