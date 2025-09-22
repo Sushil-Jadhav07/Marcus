@@ -7,6 +7,11 @@ import SignalSection from '../components/MarketPulse/SignalSection';
 import BreakoutBeacon from '../components/common/BreakoutBeacon';
 import Marquee from '../components/MarketPulse/Marquee';
 import Nifty50Chart from '../components/charts/Nifty50Chart';
+import IntradayBoost from '../components/common/IntradayBoost';
+import TopLevelStocks from '../components/common/TopLevelStocks';
+import LowLevelStocks from '../components/common/LowLevelStocks';
+import TopLoser from '../components/common/TopLoser';
+import TopGainer from '../components/common/TopGainer';
 
 
 const MarketPulse = () => {
@@ -50,31 +55,13 @@ const MarketPulse = () => {
                 <Nifty50Chart height={360} />
               </div> */}
               <BreakoutBeacon 
-                
                 title="Breakout Beacon"
               />
-              <BreakoutBeacon 
-                
-                title="Intraday Boost"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Bullish"
-              />
-              <div className=''>
-              <BreakoutBeacon 
-                
-                title="DAY H/L REVERSAL"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Neutral"
-              />
-            </div>
-            
-            <div className=''>
-              <BreakoutBeacon 
-                title="MOMENTUM SIGNALS"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Bullish"
-              />
-            </div>
+              <IntradayBoost/>
+              <TopLevelStocks title="Top Level Stocks"/>
+              <LowLevelStocks title='Low Level Stocks' />
+              <TopGainer title='TOP GAINERS' />
+              <TopLoser title="TOP LOSERS" />
             </div>
             
             
