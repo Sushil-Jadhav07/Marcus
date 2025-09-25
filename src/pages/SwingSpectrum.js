@@ -6,6 +6,11 @@ import Navigation from '../components/layout/Navigation';
 import SignalSection from '../components/MarketPulse/SignalSection';
 import Marquee from '../components/MarketPulse/Marquee';
 import BreakoutBeacon from '../components/common/BreakoutBeacon';
+import LOMSwingScanOne from '../components/common/LOMSwingScanOne';
+import LOMSwingScanTwo from '../components/common/LOMSwingScanTwo';
+import LOMSwingThree from '../components/common/LOMSwingThree';
+import LOMSwingFour from '../components/common/LOMSwingFour';
+import WeeklyWatch from '../components/common/WeeklyWatch';
 
 const SwingSpectrum = () => {
   return (
@@ -55,37 +60,14 @@ const SwingSpectrum = () => {
             <h2 className="mb-3 text-white font-semibold tracking-wide">Swing Spectrum</h2>
             </div>
             <div className='px-5 grid grid-cols-1 lg:grid-cols-2 gap-5'>
-              <BreakoutBeacon 
-                data={[]}
-                title="Breakout Beacon"
-              />
-              <BreakoutBeacon 
-                data={[[]]}
-                title="Intraday Boost"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Bullish"
-              />
-              <div className=''>
-              <BreakoutBeacon 
-                data={[]}
-                title="DAY H/L REVERSAL"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Neutral"
-              />
+              <LOMSwingScanOne title="10 DAY BO" />
+              <LOMSwingScanTwo title="50 DAY BO" />
+              <LOMSwingThree title='CHANNEL BO'/>
+              <LOMSwingFour title='NR7'/>
             </div>
-            
-            <div className=''>
-              <BreakoutBeacon 
-                data={[]}
-                title="MOMENTUM SIGNALS"
-                moodOptions={['Bullish', 'Bearish', 'Neutral']}
-                defaultMood="Bullish"
-              />
+            <div className='px-5'>
+            <WeeklyWatch title={"WEEKLY WATCH"}/>
             </div>
-            </div>
-            
-            
-            
           </div>
     </div>
   </div>

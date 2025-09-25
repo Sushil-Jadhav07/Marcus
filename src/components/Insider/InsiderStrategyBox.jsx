@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
+import { buildTradingViewNseUrl } from '../../utils/tradingview';
 
 const InsiderStrategyBox = ({ title, children, className = "" }) => {
   const [data, setData] = useState(null);
@@ -44,18 +45,6 @@ const InsiderStrategyBox = ({ title, children, className = "" }) => {
 
   const processed = useMemo(() => {
     if (!Array.isArray(data)) return null;
-    const buildTradingViewUrl = (item) => {
-      let raw = item?.symbol || item?.SYMBOL || item?.tradingsymbol || item?.ticker || null;
-      if (!raw) return null;
-      raw = String(raw).toUpperCase().trim();
-      // Remove common suffixes
-      raw = raw.replace(/\.NS$/i, '');
-      raw = raw.replace(/-(EQ|BE|BL|SM|BZ)$/i, '');
-      // Replace spaces with nothing (TV NSE tickers have no spaces)
-      raw = raw.replace(/\s+/g, '');
-      // Known index aliases remain as-is (NIFTY, BANKNIFTY, FINNIFTY, MIDCPNIFTY etc.)
-      return `https://www.tradingview.com/chart/?symbol=NSE:${encodeURIComponent(raw)}`;
-    };
     const baseItems = data
       .slice(0, 22)
       .sort((a, b) => Math.abs(Number(b?.per_chg ?? b?.change ?? 0)) - Math.abs(Number(a?.per_chg ?? a?.change ?? 0)))
@@ -65,7 +54,7 @@ const InsiderStrategyBox = ({ title, children, className = "" }) => {
         const clamped = Math.max(-5, Math.min(5, Number.isNaN(changeValue) ? 0 : changeValue));
         const intensity = Math.round((Math.abs(clamped) / 5) * 100);
         const color = clamped >= 0 ? `rgba(34,197,94,${0.45 + intensity/250})` : `rgba(239,68,68,${0.45 + intensity/250})`;
-        const url = buildTradingViewUrl(item);
+        const url = buildTradingViewNseUrl(item);
         return { label, color, url };
       });
 
