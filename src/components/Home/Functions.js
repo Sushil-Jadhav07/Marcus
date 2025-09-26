@@ -12,12 +12,12 @@ import bgimage from '../../asset/img/functions/bgbox.png'
 
 const Functions = () => {
   const features = [
-    { title: 'Market Plus', to: '/market-pulse', icon: marketpulseIcon },
-    { title: 'Insider Strategy', to: '/insider-strategy', icon: insiderstrategyIcon },
-    { title: 'Sector Scope', to: '/sector-scope', icon: sectorscopeIcon },
-    { title: 'Swing Spectrum', to: '/swing-spectrum', icon: swingspectrumIcon },
-    { title: 'Option Clock', to: '/option-clock', icon: optionclockIcon },
-    { title: 'Option Apex', to: '/option-apex', icon: optionapexIcon },
+    { title: 'Market Plus', to: '/market-pulse', icon: marketpulseIcon, desc: "The market’s heartbeat: real-time trend, momentum, and breadth at a glance.", },
+    { title: 'Insider Strategy', to: '/insider-strategy', icon: insiderstrategyIcon, desc: "Decode insider buy/sell disclosures to follow where the smart money moves." },
+    { title: 'Sector Scope', to: '/sector-scope', icon: sectorscopeIcon ,desc: "Compare sector strength, rotation, and risk-on/off in a clean heatmap view." },
+    { title: 'Swing Spectrum', to: '/swing-spectrum', icon: swingspectrumIcon, desc: "Spot 2–10 day swing setups across volatility bands and momentum lanes." },
+    { title: 'Option Clock', to: '/option-clock', icon: optionclockIcon, desc: "Time entries with IV, theta decay, and catalyst countdowns synced to the tape." },
+    { title: 'Option Apex', to: '/option-apex', icon: optionapexIcon ,desc: "Surface high-conviction options plays at the peak of risk-reward." },
   ]
   return (
     <>
@@ -39,17 +39,16 @@ const Functions = () => {
     </div>
     <div className='w-full px-4 py-6 lg:block hidden'>
        <div className="grid grid-cols-3 gap-6">
-        {features.map(({ title, to, icon }) => (
+        {features.map(({ title, desc, to, icon }) => (
           <Link key={to} to={to} className="relative h-[286px] backdrop-blur-lg rounded-xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/60 border-r-white/60 border-b-blue-400/60 border-l-blue-400/60 w-full flex flex-col items-start justify-start gap-3 bg-white/20 dark:bg-white/20 p-5 shadow-lg">
             <div className='flex justify-start items-center gap-3'>
-              <img src={icon} alt={title} className="w-[44px] h-[40px]" />
+              <img src={icon} alt={title} className="w-[40px] h-[45px]" />
               <p className="text-[24px] font-semibold text-black dark:text-white text-center leading-tight">{title}</p>
             </div>
             <div className='flex justify-start items-start gap-3 mt-[20px]'>
-              <p className='text-[20px] w-[300px] font-normal text-black dark:text-white leading-tight'>It identifies stocks where the big players  are actively
-              building positions</p>
+              <p className='text-[20px] w-[300px] font-normal text-black dark:text-white leading-tight'>{desc}</p>
             </div>
-            <div className='backdrop-blur-lg rounded-xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/60 border-r-white/60 border-b-blue-400/60 border-l-blue-400/60 flex justify-center items-center dark:text-white text-[16px] text-black gap-3 mt-[20px] p-5 w-full'>
+            <div className='backdrop-blur-lg rounded-xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/60 border-r-white/60 border-b-blue-400/60 border-l-blue-400/60 flex justify-center items-center dark:text-white text-[20px] text-black gap-3 mt-[20px] p-4 w-full'>
               {title}
             </div>
           </Link>

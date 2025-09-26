@@ -3,6 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/authSlice';
 import { FaEllipsisH, FaTools, FaSignOutAlt, FaHome, FaChartLine, FaChartBar, FaTh } from 'react-icons/fa';
+import { 
+  Cog6ToothIcon, 
+  QuestionMarkCircleIcon,
+  ArrowRightOnRectangleIcon 
+} from '@heroicons/react/24/outline';
 
 // Import icons
 import marketActive from '../../asset/img/Icons/Active/marketactive.png';
@@ -226,41 +231,59 @@ const Navigation = () => {
             ))}
           </nav>
         </div>
-        <div className="flex flex-col gap-2 w-full px-5">
+        <div className="flex gap-2 w-full px-5">
+          {/* FAQ Box */}
+          <Link
+            to="/faq"
+            onMouseEnter={() => setHoveredItem('faq')}
+            onMouseLeave={() => setHoveredItem(null)}
+            className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
+            title="FAQ"
+          >
+            <QuestionMarkCircleIcon className={`w-5 h-5 transition-all duration-300 ${
+              hoveredItem === 'faq' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
+            }`} />
+          </Link>
+
+          {/* Settings Box */}
+          <Link
+            to="/settings"
+            onMouseEnter={() => setHoveredItem('settings')}
+            onMouseLeave={() => setHoveredItem(null)}
+            className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
+            title="Settings"
+          >
+            <Cog6ToothIcon className={`w-5 h-5 transition-all duration-300 ${
+              hoveredItem === 'settings' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
+            }`} />
+          </Link>
+
+          {/* Logout Box */}
           {isAuthenticated ? (
             <button
               onClick={handleLogout}
               onMouseEnter={() => setHoveredItem('logout')}
               onMouseLeave={() => setHoveredItem(null)}
-              className="group relative overflow-hidden flex items-center gap-3 px-3 py-3 rounded-xl text-lg transition-all duration-300 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400/40"
+              className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
+              title="Logout"
             >
-              <FaSignOutAlt className={`w-5 h-5 transition-all duration-300 ${
-                hoveredItem === 'logout' ? 'text-red-500' : 'text-slate-600 dark:text-slate-300'
+              <ArrowRightOnRectangleIcon className={`w-5 h-5 transition-all duration-300 ${
+                hoveredItem === 'logout' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
               }`} />
-              <span className="relative z-10">Logout</span>
-              <span
-                className={`absolute inset-0 -z-0 rounded-xl transition-opacity duration-300 ${
-                  hoveredItem === 'logout'
-                    ? 'opacity-100 bg-red-50 dark:bg-red-900/20'
-                    : 'opacity-0'
-                }`}
-              />
             </button>
           ) : (
             <Link
               to="/login"
               onMouseEnter={() => setHoveredItem('login')}
               onMouseLeave={() => setHoveredItem(null)}
-              className="group relative overflow-hidden flex items-center justify-center gap-3 px-3 py-3 rounded-xl text-lg transition-all duration-300 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400/40"
+              className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
+              title="Sign In"
             >
-              <span className="relative z-10">Sign In</span>
-              <span
-                className={`absolute inset-0 -z-0 rounded-xl transition-opacity duration-300 ${
-                  hoveredItem === 'login'
-                    ? 'opacity-100 bg-blue-50 dark:bg-blue-900/20'
-                    : 'opacity-0'
-                }`}
-              />
+              <span className={`text-sm font-medium transition-all duration-300 ${
+                hoveredItem === 'login' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
+              }`}>
+                Sign In
+              </span>
             </Link>
           )}
         </div>

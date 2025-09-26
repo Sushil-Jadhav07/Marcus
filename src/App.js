@@ -12,6 +12,8 @@ import SectorScope from './pages/SectorScope';
 import SwingSpectrum from './pages/SwingSpectrum';
 import OptionClock from './pages/OptionClock';
 import OptionApex from './pages/OptionApex';
+import Settings from './pages/Settings';
+import FAQ from './pages/FAQ';
 import './App.css';
 import { Provider, useDispatch } from 'react-redux';
 import store from './store';
@@ -104,6 +106,26 @@ function App() {
                      
                       <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
                         <OptionApex />
+                      </main>
+                    </div>
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                     
+                      <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <Settings />
+                      </main>
+                    </div>
+                  </ProtectedRoute>
+                } />
+                <Route path="/faq" element={
+                  <ProtectedRoute>
+                    <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                     
+                      <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <FAQ />
                       </main>
                     </div>
                   </ProtectedRoute>

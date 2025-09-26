@@ -24,10 +24,7 @@ const Homearea = () => {
        <div className='flex flex-col items-center justify-start h-full pt-0 w-full z-10'>
         <h2 className='text-5xl font-bold text-white'>Welcome</h2>
         <p className='text-white text-md'>to Best Trading Platform <br className='bl lg:hidden' /> Next level Trade Product</p>
-        <p className='text-white text-xs text-center   mt-5'>Lorem ipsum dolor sit amet, consectetur   adipiscing        elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat.</p>
+        <p className='text-white text-xs text-center mt-5'>Welcome to Marcus Platform. Track live prices, scan curated news, and visualize trends in seconds. Make every market move with clarity and confidence.</p>
        </div>
        
     </div>
@@ -36,10 +33,7 @@ const Homearea = () => {
        <div className='flex flex-col items-center justify-start h-full pt-0 w-full z-10'>
         <h2 className='text-5xl lg:text-7xl font-bold text-white'>Welcome</h2>
         <p className='text-white text-lg lg:text-xl'>To Best Trading Platform <br className='block lg:hidden'/> Next level Trade Product</p>
-        <p className='text-white lg:text-lg text-md text-center mt-5'>Lorem ipsum dolor sit amet, consectetur   adipiscing        elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat.</p>
+        <p className='text-white lg:text-lg text-md text-center mt-5'>Welcome to Marcus Platform. Track live prices, scan curated news, and visualize trends in seconds. Make every market move with clarity and confidence.</p>
        </div>
        
     </div>
@@ -55,9 +49,7 @@ const Homearea = () => {
       >
         {/* Left: Paragraph */}
         <p className='text-[22px] leading-snug max-w-3xl opacity-90'>
-          Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-          euismod tincidunt ut laoreet dolore magna aliquam euismod tincidunt ut laoreet
-          dolore magna aliquam erat volutpat.
+        Welcome to Marcus Platform. Track live prices, scan curated news, and visualize trends in seconds. Make every market move with clarity and confidence.
         </p>
 
         {/* Right: Welcome + Name */}
