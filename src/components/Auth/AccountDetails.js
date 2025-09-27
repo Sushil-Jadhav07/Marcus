@@ -37,11 +37,13 @@ const safeDate = (value) => {
 const AccountDetails = () => {
   const { user, userProfile, loading, initializing } = useSelector((state) => state.auth)
 
+  console.log(userProfile)
+
   const displayName = userProfile?.name || [userProfile?.firstName, userProfile?.lastName].filter(Boolean).join(' ') || user?.displayName || (user?.email ? user.email.split('@')[0] : 'User')
   const email = userProfile?.email || user?.email || '—'
-  const phone = userProfile?.phone || 'No Number'
+  const phone = userProfile?.phoneNumber || 'No Number'
   const provider = userProfile?.provider || (user?.providerData?.[0]?.providerId ?? '—')
-  const memberSince = safeDate(userProfile?.createdAt || user?.metadata?.creationTime)
+  const memberSince = userProfile?.role || '—'
   const photoURL = userProfile?.photoURL || user?.photoURL || ''
   const [showPhoto, setShowPhoto] = useState(Boolean(photoURL))
   const avatarInitial = email && email !== '—' ? getInitialFromEmail(email) : getInitials(displayName)
@@ -88,13 +90,13 @@ const AccountDetails = () => {
                   <PhoneIcon className='w-4 h-4' />
                   <span>{phone || "No Number"}</span>
                 </div>
-                {/* <div className='flex items-center gap-2 text-white/85 text-sm'>
-                  <CalendarDaysIcon className='w-4 h-4' />
-                  <span>Member since {memberSince}</span>
-                </div> */}
+                  <div className='flex items-center gap-2 text-white/85 text-sm'>
+                    <UserCircleIcon className='w-4 h-4' />
+                    <span className='capitalize'>Role: {memberSince}</span>
+                  </div>
                 <div className='flex items-center gap-2 text-white/85 text-sm'>
                   <CheckBadgeIcon className='w-4 h-4' />
-                  <span>Provider: {provider}</span>
+                  <span className='capitalize'>Provider: {provider}</span>
                 </div>
               </div>
             </div>

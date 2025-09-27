@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/authSlice';
-import { FaEllipsisH, FaTools, FaSignOutAlt, FaHome, FaChartLine, FaChartBar, FaTh } from 'react-icons/fa';
+import { FaEllipsisH, FaTools, FaHome, FaChartLine, FaChartBar, FaTh } from 'react-icons/fa';
 import { 
   Cog6ToothIcon, 
   QuestionMarkCircleIcon,
-  ArrowRightOnRectangleIcon 
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
 // Import icons
@@ -22,6 +22,10 @@ import optionActive from '../../asset/img/Icons/Active/optionactive.png';
 import optionInactive from '../../asset/img/Icons/Inactive/option.png';
 import apexActive from '../../asset/img/Icons/Active/apexactive.png';
 import apexInactive from '../../asset/img/Icons/Inactive/apex.png';
+import createUserActive from '../../asset/img/Icons/Active/FIIactive.png';
+import createUserInactive from '../../asset/img/Icons/Inactive/FII.png';
+import userListActive from '../../asset/img/Icons/Active/insideractive.png';
+import userListInactive from '../../asset/img/Icons/Inactive/insider.png';
 // Import home icon (using market icon as fallback)
 import homeActive from '../../asset/img/Icons/Active/marketactive.png';
 import homeInactive from '../../asset/img/Icons/Inactive/marketpulse.png';
@@ -36,10 +40,12 @@ const CustomIcon = ({ iconName, isActive, isHovered, className = "" }) => {
       'sector-scope': state ? sectorActive : sectorInactive,
       'swing-spectrum': state ? swingActive : swingInactive,
       'option-clock': state ? optionActive : optionInactive,
-      'option-apex': state ? apexActive : apexInactive
+      'option-apex': state ? apexActive : apexInactive,
+      'create-user': state ? createUserActive : createUserInactive,
+      'user-list': state ? userListActive : userListInactive
     };
     
-    return iconMap[iconName];
+    return iconMap[name];
   };
 
   const shouldShowActive = isActive || isHovered;
@@ -63,7 +69,8 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
       'sector-scope': sectorActive,
       'swing-spectrum': swingActive,
       'option-clock': optionActive,
-      'option-apex': apexActive
+      'option-apex': apexActive,
+      'create-user': createUserActive
     };
 
     const inactiveIconMap = {
@@ -73,7 +80,8 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
       'sector-scope': sectorInactive,
       'swing-spectrum': swingInactive,
       'option-clock': optionInactive,
-      'option-apex': apexInactive
+      'option-apex': apexInactive,
+      'create-user': createUserInactive
     };
     
     return shouldUseActive ? activeIconMap[name] : inactiveIconMap[name];
@@ -89,20 +97,18 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
 };
 
 const Navigation = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
-  const { user, userProfile , isAuthenticated } = useSelector((state) => state.auth);
+  const location = useLocation();
+    const { user, userProfile , isAuthenticated } = useSelector((state) => state.auth);
+    const role = userProfile?.role || 'client';
   const [isQuickOpen, setIsQuickOpen] = useState(false);
   const [quickKey, setQuickKey] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [hoveredQuickAction, setHoveredQuickAction] = useState(null);
 
+  const navigate = useNavigate();
   const isActive = (path) => {
     return location.pathname === path;
-  };
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
   };
 
   // Get user display name or email
@@ -119,7 +125,17 @@ const Navigation = () => {
     return user?.email ? user.email.split('@')[0] : 'User';
   };
 
-  const navItems = [
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser());
+      // Optional: redirect to login page or home
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const navItemsBase = [
     { path: '/market-pulse', label: 'Market Pulse', iconName: 'market-pulse' },
     { path: '/insider-strategy', label: 'Insider Strategy', iconName: 'insider-strategy' },
     { path: '/sector-scope', label: 'Sector Scope', iconName: 'sector-scope' },
@@ -127,6 +143,14 @@ const Navigation = () => {
     { path: '/option-clock', label: 'Option Clock', iconName: 'option-clock' },
     { path: '/option-apex', label: 'Option Apex', iconName: 'option-apex' }
   ];
+
+  const navItems = role === 'admin'
+    ? [
+        ...navItemsBase,
+        { path: '/create-user', label: 'Create User', iconName: 'create-user' },
+        { path: '/user-list', label: 'User List', iconName: 'user-list' },
+      ]
+    : navItemsBase;
 
   
 
@@ -162,35 +186,55 @@ const Navigation = () => {
     setIsQuickOpen(true);
   };
 
-  const quickActionsByKey = {
-    home: [
-      { to: '/', iconName: 'home', label: 'Home' },
-      { to: '/market-pulse', iconName: 'market-pulse', label: 'Pulse' },
-      { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Swing' },
-      { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-      { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
-      { to: '/option-clock', iconName: 'option-clock', label: 'Clock' },
-      { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
-    ],
-    pulse: [
-      { to: '/market-pulse', iconName: 'market-pulse', label: 'Open Pulse' },
-      { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-      { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
-    ],
-    swing: [
-      { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Open Swing' },
-      { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
-    ],
-    tools: [
-      { to: '/option-clock', iconName: 'option-clock', label: 'Open Clock' },
-      { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
-    ],
-    more: [
-      { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
-      { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-      { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
-    ]
+  // Create quick actions based on role
+  const createQuickActions = () => {
+    const baseActions = {
+      home: [
+        { to: '/', iconName: 'home', label: 'Home' },
+        { to: '/market-pulse', iconName: 'market-pulse', label: 'Pulse' },
+        { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Swing' },
+        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
+        { to: '/option-clock', iconName: 'option-clock', label: 'Clock' },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+      ],
+      pulse: [
+        { to: '/market-pulse', iconName: 'market-pulse', label: 'Open Pulse' },
+        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
+      ],
+      swing: [
+        { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Open Swing' },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+      ],
+      tools: [
+        { to: '/option-clock', iconName: 'option-clock', label: 'Open Clock' },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+      ],
+      more: [
+        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
+        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+      ]
+    };
+
+    // Add Create User and User List for admin role
+    if (role === 'admin') {
+      baseActions.home.push({ to: '/create-user', iconName: 'create-user', label: 'Create User' });
+      baseActions.home.push({ to: '/user-list', iconName: 'user-list', label: 'User List' });
+      baseActions.more.push({ to: '/create-user', iconName: 'create-user', label: 'Create User' });
+      baseActions.more.push({ to: '/user-list', iconName: 'user-list', label: 'User List' });
+    }
+
+    return baseActions;
   };
+
+  const quickActionsByKey = createQuickActions();
+
+  // Don't render navigation if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <>
@@ -258,34 +302,18 @@ const Navigation = () => {
             }`} />
           </Link>
 
-          {/* Logout Box */}
-          {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              onMouseEnter={() => setHoveredItem('logout')}
-              onMouseLeave={() => setHoveredItem(null)}
-              className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
-              title="Logout"
-            >
-              <ArrowRightOnRectangleIcon className={`w-5 h-5 transition-all duration-300 ${
-                hoveredItem === 'logout' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
-              }`} />
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              onMouseEnter={() => setHoveredItem('login')}
-              onMouseLeave={() => setHoveredItem(null)}
-              className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
-              title="Sign In"
-            >
-              <span className={`text-sm font-medium transition-all duration-300 ${
-                hoveredItem === 'login' ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'
-              }`}>
-                Sign In
-              </span>
-            </Link>
-          )}
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            onMouseEnter={() => setHoveredItem('logout')}
+            onMouseLeave={() => setHoveredItem(null)}
+            className="group relative overflow-hidden border-[1px] border-[#ccc] flex items-center justify-center gap-3 px-3 py-3 rounded-xl transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700"
+            title="Logout"
+          >
+            <ArrowRightOnRectangleIcon className={`w-5 h-5 transition-all duration-300 ${
+              hoveredItem === 'logout' ? 'text-red-500' : 'text-slate-600 dark:text-slate-300'
+            }`} />
+          </button>
         </div>
       </aside>
 
@@ -435,23 +463,16 @@ const Navigation = () => {
                   </Link>
                 ))}
               </div>
-              <div className="mt-4">
-                {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-2 rounded-xl text-sm py-3 text-slate-800 dark:text-slate-200 transition-all duration-200 border border-red-200 dark:border-red-800/30 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 hover:text-red-700 dark:hover:text-red-300"
-                  >
-                    <FaSignOutAlt className="w-4 h-4" />
-                    Logout
-                  </button>
-                ) : (
-                  <Link
-                    to="/login"
-                    className="w-full inline-flex items-center justify-center rounded-xl text-sm py-3 text-slate-800 dark:text-slate-200 transition-all duration-200 border border-blue-200 dark:border-blue-800/30 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-300"
-                  >
-                    Sign In
-                  </Link>
-                )}
+              
+              {/* Logout Button for Mobile */}
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-white/10">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-300"
+                >
+                  <ArrowRightOnRectangleIcon className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
               </div>
             </div>
           </div>

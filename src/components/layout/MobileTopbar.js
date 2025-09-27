@@ -6,6 +6,7 @@ import { BsSunFill, BsMoonFill } from 'react-icons/bs';
 
 const MobileTopbar = () => {
   const { user, userProfile, isAuthenticated } = useSelector((state) => state.auth);
+  const role = useSelector((state) => state.role?.role || 'client');
   const [isDark, setIsDark] = useState(true); // Default to dark mode
 
   useEffect(() => {
@@ -59,6 +60,11 @@ const MobileTopbar = () => {
     }
   };
 
+  // Don't render mobile topbar if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <header className="md:hidden fixed top-0 inset-x-0 z-[1100]">
       <div className="h-16 w-full bg-gradient-to-r from-[#1d4ed8] via-[#1d4ed8] to-[#1d4ed8] ">
@@ -80,13 +86,12 @@ const MobileTopbar = () => {
               <BsMoonFill className={`text-black dark:text-white z-10 ${isDark ? 'opacity-100' : 'opacity-70'}`} size={14} />
               <span className={`absolute top-1/2 -translate-y-1/2 h-6 w-6 rounded-full dark:bg-[#1d4ed8] bg-[#fff] transition-transform text-white shadow ${isDark ? 'translate-x-5' : '-translate-x-1'}`} />
             </button>
-            {isAuthenticated ? (
+            <div className="flex items-center gap-2">
               <div className="h-9 w-9 rounded-full bg-white/20 ring-2 ring-white/40 grid place-items-center">
                 <span className="text-white font-bold text-sm">{displayInitial}</span>
               </div>
-            ) : (
-              <Link to="/login" className="rounded-lg border border-white/30 text-white/90 hover:text-white hover:bg-white/10 px-2.5 py-1 text-sm">Login</Link>
-            )}
+              
+            </div>
           </div>
         </div>
       </div>
@@ -95,5 +100,4 @@ const MobileTopbar = () => {
 };
 
 export default MobileTopbar;
-
 

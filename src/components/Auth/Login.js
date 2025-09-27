@@ -12,7 +12,15 @@ const Login = () => {
   const [error, setError] = useState('');
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.auth.loading);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
+
+  // Redirect to dashboard if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +43,18 @@ const Login = () => {
       setError(err);
     }
   };
+
+  // Don't render login form if already authenticated
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% to-[#0D0D0D] flex items-center justify-center px-4 py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-white">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% to-[#0D0D0D] flex items-center justify-center px-4 py-12">
@@ -110,7 +130,7 @@ const Login = () => {
 
             <hr className='my-6 border-white/10' />
 
-        <button
+        {/* <button
           onClick={handleGoogleLogin}
           className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={loading}
@@ -131,16 +151,16 @@ const Login = () => {
               <span>Sign in with Google</span>
             </>
           )}
-        </button>
+        </button> */}
 
-        <div className="mt-6 text-center text-sm text-white">
+        {/* <div className="mt-6 text-center text-sm text-white">
           <p>
             Don't have an account?{' '}
             <Link to="/signup" className="font-medium text-white hover:text-indigo-700">
               Sign up here
             </Link>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -5,7 +5,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  updateProfile
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 
@@ -17,6 +18,59 @@ const initialState = {
   initializing: true,
   error: null
 };
+
+export const createUser = createAsyncThunk(
+  'auth/createUser',
+  async ({ fullName, phoneNumber, email, password, role }, { rejectWithValue }) => {
+    try {
+      // Create user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Update user profile with display name
+      await updateProfile(user, {
+        displayName: fullName
+      });
+      
+      // Create user document in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userProfile = {
+        uid: user.uid,
+        fullName: fullName.trim(),
+        phoneNumber: phoneNumber.trim(),
+        email: email.trim(),
+        role: role,
+        password: password,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        isActive: true,
+        provider: 'password'
+      };
+      await setDoc(userDocRef, userProfile, { merge: true });
+
+      return { user, userProfile: { ...userProfile, createdAt: Date.now() } };
+    } catch (error) {
+      let errorMessage = 'Failed to create user';
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'An account with this email already exists';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Password should be at least 6 characters';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address';
+          break;
+        case 'auth/operation-not-allowed':
+          errorMessage = 'Email/password accounts are not enabled';
+          break;
+        default:
+          errorMessage = error.message || 'An unexpected error occurred';
+      }
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
 
 export const signupWithEmail = createAsyncThunk(
   'auth/signupWithEmail',
@@ -195,6 +249,21 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.userProfile = action.payload.userProfile;
+        state.isAuthenticated = true;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'User creation failed';
+      })
+
       .addCase(signupWithEmail.pending, (state) => {
         state.loading = true;
         state.error = null;

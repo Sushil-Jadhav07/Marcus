@@ -19,14 +19,14 @@ const FAQSection = () => {
     {
       id: 'account-1',
       category: 'Account',
-      question: 'How do I create a Marcus Finance account?',
-      answer: 'To create your Marcus Finance account, simply click on the "Sign Up" button on our homepage. Fill in your email address, create a secure password, and provide your basic information. You\'ll receive a verification email to confirm your account and get started with our comprehensive financial tools.'
+      question: 'How do I access Marcus Finance platform?',
+      answer: 'Marcus Finance uses a role-based access system. Your access is determined by your assigned role (Admin or Client). Admins have access to all features including user management, while Clients have access to the core financial tools and analysis features.'
     },
     {
       id: 'account-2',
       category: 'Account',
-      question: 'How do I reset my password?',
-      answer: 'If you\'ve forgotten your password, click on "Forgot Password" on the login page. Enter your registered email address, and we\'ll send you a secure link to reset your password. Follow the instructions in the email to create a new password and regain access to your account.'
+      question: 'What roles are available in Marcus Finance?',
+      answer: 'Marcus Finance offers two main roles: Admin and Client. Admins have full access to all features including the ability to create and manage users. Clients have access to the core financial analysis tools including Market Pulse, Insider Strategy, Sector Scope, Swing Spectrum, Option Clock, and Option Apex.'
     },
     {
       id: 'billing-1',

@@ -439,7 +439,7 @@ const BreakoutBeacon = ({
       </div>
 
       {/* Header row */}
-      <div className="grid grid-cols-7 text-[12px] dark:text-white/70 text-black/70 px-2">
+      <div className="grid grid-cols-7 text-[15px] text-white/70 dark:text-black/70 px-2">
         <div className="col-span-3  bg-white/50 px-5 py-2 rounded-full ">Symbols</div>
         <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%n+</div>
         <div className="col-span-2 bg-white/50 px-5 py-2 rounded-full">LTP</div>
@@ -473,22 +473,22 @@ const BreakoutBeacon = ({
             {/* Symbol + tag */}
             <div className="col-span-3 flex items-center justify-between gap-2 overflow-hidden">
               <div className='flex items-center gap-2'>
-              <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 transition-colors ${
+              <span className={`text-[15px] font-semibold rounded-full px-2 py-0.5 transition-colors ${
                 r.tag === 'BULL' 
                   ? 'bg-green-500 text-white group-hover:bg-green-400' 
                   : 'bg-red-500 text-white group-hover:bg-red-400'
               }`}>{r.tag}</span>
-              <span className="truncate text-sm dark:text-white text-black transition-colors group-hover:text-white">{toTitleCase(stripExpirySuffix(getDisplayName(r)) || prettifyFromSymbol(r.symbol))}</span>
+              <span className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white">{toTitleCase(stripExpirySuffix(getDisplayName(r)) || prettifyFromSymbol(r.symbol))}</span>
               </div>
               <div className='flex items-center gap-2'>
-                <img src={iconsmall} alt={r.symbol} className='w-4 h-4 transition-transform duration-150 group-hover:rotate-6' />
+                <img src={iconsmall} alt={r.symbol} className='w-4 h-4  transition-transform duration-150 group-hover:rotate-6' />
                 </div>
             </div>
 
             {/* %n+ showing net change percent; value calculated earlier or from API */}
-            <div className="col-span-1 text-center">
+            <div className="col-span-1 text-center text-[15px]">
               <span
-                className={`inline-flex min-w-[48px] justify-center rounded-full px-2 py-0.5 text-xs font-semibold ${
+                className={`inline-flex min-w-[48px] justify-center rounded-full px-2 py-0.5  text-[15px] font-semibold ${
                   r.dir === 'up' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
                 }`}
               >
@@ -497,14 +497,14 @@ const BreakoutBeacon = ({
             </div>
 
             {/* LTP display */}
-            <div className="col-span-2 text-start">
+            <div className="col-span-2 text-center">
               <div className="inline-flex items-center gap-2">
-                <span className="text-xs font-medium dark:text-white text-black">{r.ltp ? r.ltp.toFixed(2) : '--'}</span>
+                <span className="text-[15px] font-medium dark:text-white text-black">{r.ltp ? r.ltp.toFixed(2) : '--'}</span>
               </div>
             </div>
 
             {/* Time */}
-            <div className="col-span-1 text-center text-xs dark:text-white/80 text-black/80">{r.time}</div>
+            <div className="col-span-1 text-center text-[15px] dark:text-white/80 text-black/80">{r.time}</div>
           </div>
         ))
         )}
