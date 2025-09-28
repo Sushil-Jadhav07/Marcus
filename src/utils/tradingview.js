@@ -35,12 +35,12 @@ export function normalizeNseSymbolForTradingView(rawSymbol) {
 
 /**
  * Build a TradingView chart URL for an NSE instrument.
- * Accepts a raw item or a string; attempts to pick the symbol field.
+ * Accepts a raw item or a string; prioritizes nsecode field first, then attempts other symbol fields.
  */
 export function buildTradingViewNseUrl(itemOrSymbol) {
   const raw = typeof itemOrSymbol === 'string'
     ? itemOrSymbol
-    : (itemOrSymbol?.symbol || itemOrSymbol?.SYMBOL || itemOrSymbol?.tradingsymbol || itemOrSymbol?.tradingSymbol || itemOrSymbol?.ticker || '');
+    : (itemOrSymbol?.nsecode || itemOrSymbol?.NSECODE || itemOrSymbol?.symbol || itemOrSymbol?.SYMBOL || itemOrSymbol?.tradingsymbol || itemOrSymbol?.tradingSymbol || itemOrSymbol?.ticker || '');
 
   const normalized = normalizeNseSymbolForTradingView(raw);
   if (!normalized) return null;

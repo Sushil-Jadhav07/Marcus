@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FiHelpCircle, FiRefreshCw } from 'react-icons/fi';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
+import { buildTradingViewNseUrl } from '../../utils/tradingview';
 
 /**
  * TopLevelStocks
@@ -115,12 +116,12 @@ const TopLevelStocks = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-7 text-[12px] dark:text-white/70 text-black/70 px-2">
-        <div className="col-span-3 bg-white/50 px-5 py-2 rounded-full">Symbol</div>
-        <div className="col-span-2 bg-white/50 px-5 py-2 rounded-full">OI Change</div>
-        <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">OI</div>
-        <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%</div>
-      </div>
+      <div className="grid grid-cols-7 text-[15px]  text-black/70 px-2">
+      <div className="col-span-3 bg-white/50 px-5 py-2 rounded-full">Symbol</div>
+      <div className="col-span-2 bg-white/50 px-5 py-2 rounded-full">OI Change</div>
+      <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">OI</div>
+      <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%</div>
+    </div>
 
       <div className="mt-2 divide-y divide-white/10">
         {isLoading ? (
@@ -133,25 +134,32 @@ const TopLevelStocks = ({
             const up = Number.isFinite(pct) ? pct >= 0 : (Number(it.netChangeOpnInterest) || 0) >= 0;
             return (
               <div key={(it.tradingSymbol || it.symbol || 'row') + idx} className="group grid grid-cols-7 items-center px-2 py-2 rounded-lg hover:bg-white/10 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:ring-1 ring-white/10">
-                <div className="col-span-3 flex items-center justify-between gap-2 overflow-hidden">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
-                    <span className="truncate text-sm dark:text-white text-black transition-colors group-hover:text-white">{displaySymbol(it)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <img src={iconsmall} alt={displaySymbol(it)} className="w-4 h-4 transition-transform duration-150 group-hover:rotate-6" />
-                  </div>
+              <div className="col-span-3 flex items-center justify-between gap-2 overflow-hidden">
+                <div className="flex items-center gap-2">
+                  <span className={`text-[15px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
+                  <a 
+                    href={buildTradingViewNseUrl(it) || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white hover:text-blue-300  cursor-pointer"
+                  >
+                    {displaySymbol(it)}
+                  </a>
                 </div>
-                <div className="col-span-2 text-sm flex justify-center items-center">
-                  <span className={`inline-flex min-w-[80px] justify-center rounded-full px-2 py-0.5 text-xs font-semibold ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
-                    {fmtInt(it.netChangeOpnInterest)}
-                  </span>
-                </div>
-                <div className="col-span-1 text-xs dark:text-white text-black">{fmtInt(it.opnInterest)}</div>
-                <div className={`col-span-1 text-xs font-semibold ${up ? 'text-green-300' : 'text-red-300'}`}>
-                  {fmtPct(it.percentChange)}
+                <div className="flex items-center gap-2">
+                  <img src={iconsmall} alt={displaySymbol(it)} className="w-4 h-4 transition-transform duration-150 group-hover:rotate-6" />
                 </div>
               </div>
+              <div className="col-span-2 text-sm flex justify-center items-center">
+                <span className={`inline-flex min-w-[80px] justify-center rounded-full px-2 py-0.5 text-[15px] font-semibold ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                  {fmtInt(it.netChangeOpnInterest)}
+                </span>
+              </div>
+              <div className="col-span-1 text-[15px] dark:text-white text-black">{fmtInt(it.opnInterest)}</div>
+              <div className={`col-span-1 text-[15px] px-2 font-semibold ${up ? 'text-green-300' : 'text-red-300'}`}>
+                {fmtPct(it.percentChange)}
+              </div>
+            </div>
             );
           })
         )}

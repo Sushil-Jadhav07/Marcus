@@ -439,7 +439,7 @@ const BreakoutBeacon = ({
       </div>
 
       {/* Header row */}
-      <div className="grid grid-cols-7 text-[15px] text-white/70 dark:text-black/70 px-2">
+      <div className="grid grid-cols-7 text-[15px] text-black/70 dark:text-black/70 px-2">
         <div className="col-span-3  bg-white/50 px-5 py-2 rounded-full ">Symbols</div>
         <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%n+</div>
         <div className="col-span-2 bg-white/50 px-5 py-2 rounded-full">LTP</div>
@@ -478,7 +478,7 @@ const BreakoutBeacon = ({
                   ? 'bg-green-500 text-white group-hover:bg-green-400' 
                   : 'bg-red-500 text-white group-hover:bg-red-400'
               }`}>{r.tag}</span>
-              <span className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white">{toTitleCase(stripExpirySuffix(getDisplayName(r)) || prettifyFromSymbol(r.symbol))}</span>
+              <span className="truncate text-[15px] uppercase dark:text-white text-black transition-colors group-hover:text-white">{toTitleCase(stripExpirySuffix(getDisplayName(r)) || prettifyFromSymbol(r.symbol))}</span>
               </div>
               <div className='flex items-center gap-2'>
                 <img src={iconsmall} alt={r.symbol} className='w-4 h-4  transition-transform duration-150 group-hover:rotate-6' />
