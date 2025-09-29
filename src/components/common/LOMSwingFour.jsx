@@ -130,7 +130,7 @@ const LOMSwingFour = (
       </div>
     </div>
 
-    <div className="grid grid-cols-6 text-[12px] dark:text-white/70 text-black/70 px-2">
+    <div className="grid grid-cols-6 text-[15px]  text-black/70 px-2">
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-4">Name</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">per_chg</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">Close</div>
@@ -154,15 +154,15 @@ const LOMSwingFour = (
               
               <div className="flex items-center justify-between gap-2 overflow-hidden col-span-4">
                 <div className="flex items-center gap-2 ">
-                  <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
-                  <a href={tvLink} target="_blank" rel="noreferrer" className="truncate text-sm dark:text-white text-black transition-colors group-hover:text-white">{name}</a>
+                  <span className={`text-[15px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
+                  <a href={tvLink} target="_blank" rel="noreferrer" className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white">{nse}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img src={iconsmall} alt={name} className="w-4 h-4 transition-transform duration-150 group-hover:rotate-6" />
+                  <img src={iconsmall} alt={name} className="w-5 h-5 transition-transform duration-150 group-hover:rotate-6" />
                 </div>
               </div>
-              <div className={`text-xs font-semibold flex justify-center items-center col-span-1 ${up ? 'text-green-300' : 'text-red-300'}`}>{fmtPct(pct)}</div>
-              <div className="text-xs dark:text-white text-black col-span-1 flex justify-center items-center">{fmtInt(close)}</div>
+                <div className={`text-[15px] font-semibold flex justify-center items-center col-span-1 ${up ? 'text-green-300' : 'text-red-300'}`}>{fmtPct(pct)}</div>
+              <div className="text-[15px] dark:text-white text-black col-span-1 flex justify-center items-center">{fmtInt(close)}</div>
             </div>
           );
         })

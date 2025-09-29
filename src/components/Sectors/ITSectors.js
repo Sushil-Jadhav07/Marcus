@@ -1,22 +1,25 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FiHelpCircle, FiRefreshCw } from 'react-icons/fi';
+import { FiHelpCircle, FiRefreshCw, FiSearch } from 'react-icons/fi';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
 
-const LOMSwingScanTwo = (
+const ITSectors = (
     {
-        title = 'SWING SCAN 2',
+        title = 'IT SECTOR',
         apiUrl = 'https://angelbackend-production.up.railway.app/scan',
         method = 'POST',
         requestBody = {
-          scan_clause: "( {cash} ( 1 day ago low <= daily min( 50 , daily low ) and daily high < 1 day ago high and daily close < 1 day ago close and daily close < daily open and daily volume < 1 day ago volume * 1.2 ) )"
+          scan_clause: "( {cash} ( sector = 'i.t' ) )  "
         },
         headers = { 'Content-Type': 'application/json' },
+        limit = 58,
       }
 ) => {
     const [rawData, setRawData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterType, setFilterType] = useState('Neutral');
+  
     const extractItems = (json) => {
       if (Array.isArray(json)) return json;
       if (Array.isArray(json?.data)) return json.data;
@@ -24,7 +27,7 @@ const LOMSwingScanTwo = (
       if (Array.isArray(json?.data?.items)) return json.data.items;
       return [];
     };
-
+  
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -38,71 +41,100 @@ const LOMSwingScanTwo = (
         const items = extractItems(json);
         setRawData(Array.isArray(items) ? items : []);
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('LOMSwingScanTwo fetch failed', e);
         setRawData([]);
       } finally {
         setIsLoading(false);
       }
     };
 
+    const getPerChg = (it) => {
+        const candidates = [it?.per_chg, it?.percentChange, it?.pct, it?.changePercent];
+        const val = candidates.find((v) => Number.isFinite(Number(v)));
+        return Number(val);
+      };
+  
+      const getClose = (it) => {
+        const candidates = [it?.close, it?.ltp, it?.price, it?.lastPrice];
+        const val = candidates.find((v) => Number.isFinite(Number(v)));
+        return Number(val);
+      };
+  
+      const getNseCode = (it) => {
+        const code = it?.nsecode || it?.nseCode || it?.symbol || it?.tradingSymbol || getName(it);
+        return stripExpirySuffix(String(code || '').replace(/-EQ$/i, '').replace(/^NSE_?/i, ''));
+      };
+      const stripExpirySuffix = (str) => {
+        let v = String(str || '');
+        v = v.replace(/\d{2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}(?:FUT|OPT)?$/i, '');
+        v = v.replace(/\d{2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV)(?:FUT|OPT)?$/i, '');
+        v = v.replace(/(FUT|OPT)$/i, '');
+        return v.trim();
+      };
+      const getName = (it) => {
+        const sym = it?.name || it?.symbol || it?.tradingSymbol || '';
+        if (!sym) return '';
+        return stripExpirySuffix(String(sym).replace(/-EQ$/i, '').replace(/^NSE_?/i, ''));
+      };
+  
     useEffect(() => {
       fetchData();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl, method, JSON.stringify(requestBody)]);
-
+  
     const data = useMemo(
-      () => (Array.isArray(rawData) ? rawData : []),
-      [rawData]
+      () => {
+        const arr = Array.isArray(rawData) ? rawData : [];
+        
+        // Apply search filter
+        let filteredData = arr;
+        if (searchTerm) {
+          filteredData = arr.filter(item => {
+            const symbol = getNseCode(item).toLowerCase();
+            const name = getName(item).toLowerCase();
+            return symbol.includes(searchTerm.toLowerCase()) || name.includes(searchTerm.toLowerCase());
+          });
+        }
+        
+        // Apply sentiment filter
+        if (filterType !== 'Neutral') {
+          filteredData = filteredData.filter(item => {
+            const pct = getPerChg(item);
+            if (filterType === 'Bullish') return pct > 0;
+            if (filterType === 'Bearish') return pct < 0;
+            return true;
+          });
+        }
+        
+        return filteredData.slice(0, limit);
+      },
+      [rawData, limit, searchTerm, filterType]
     );
-
+  
     const fmtInt = (v) => {
       const n = Number(v);
       if (!Number.isFinite(n)) return '--';
       return n.toLocaleString('en-IN');
     };
-
+  
     const fmtPct = (v) => {
       const n = Number(v);
       if (!Number.isFinite(n)) return '--';
       const sign = n > 0 ? '+' : '';
       return `${sign}${n.toFixed(2)}%`;
     };
-
-    const stripExpirySuffix = (str) => {
-      let v = String(str || '');
-      v = v.replace(/\d{2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}(?:FUT|OPT)?$/i, '');
-      v = v.replace(/\d{2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV)(?:FUT|OPT)?$/i, '');
-      v = v.replace(/(FUT|OPT)$/i, '');
-      return v.trim();
-    };
-
-    const getName = (it) => {
-      const sym = it?.name || it?.symbol || it?.tradingSymbol || '';
+  
+    
+  
+    const displaySymbol = (it) => {
+      const sym = it.tradingSymbol || it.symbol || '';
       if (!sym) return '';
-      return stripExpirySuffix(String(sym).replace(/-EQ$/i, '').replace(/^NSE_?/i, ''));
-    };
-
-    const getPerChg = (it) => {
-      const candidates = [it?.per_chg, it?.percentChange, it?.pct, it?.changePercent];
-      const val = candidates.find((v) => Number.isFinite(Number(v)));
-      return Number(val);
-    };
-
-    const getClose = (it) => {
-      const candidates = [it?.close, it?.ltp, it?.price, it?.lastPrice];
-      const val = candidates.find((v) => Number.isFinite(Number(v)));
-      return Number(val);
-    };
-
-    const getNseCode = (it) => {
-      const code = it?.nsecode || it?.nseCode || it?.symbol || it?.tradingSymbol || getName(it);
-      return stripExpirySuffix(String(code || '').replace(/-EQ$/i, '').replace(/^NSE_?/i, ''));
+      const s = sym.replace(/-EQ$/i, '').replace(/^NSE_?/i, '');
+      return stripExpirySuffix(s);
     };
 
   return (
     <div className="relative overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 hover:scale-[1.02]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-    {/* Header */}
+    {/* Header (matches BreakoutBeacon style) */}
     <div className="flex items-center gap-4 mb-2">
       <div className="relative">
         <img src={icon} alt={title} className="w-12 h-12 drop-shadow-lg" />
@@ -110,7 +142,7 @@ const LOMSwingScanTwo = (
       </div>
       <div className="flex-1">
         <h3 className="font-bold tracking-wide text-[20px] dark:text-white text-black drop-shadow-sm">{title}</h3>
-        <div className="text-xs text-white/70 font-medium">Swing setup scan</div>
+        <div className="text-xs text-white/70 font-medium">Open Interest Gainers (NEAR)</div>
       </div>
       <div className="flex items-center gap-3 text-xs dark:text-white/80 text-black/80">
         <button
@@ -129,11 +161,51 @@ const LOMSwingScanTwo = (
       </div>
     </div>
 
-      <div className="grid grid-cols-6 text-[15px]  text-black/70 px-2">
-      <div className="bg-white/50 px-5 py-2 rounded-full col-span-4">Name</div>
+    {/* Search and Filter Section */}
+    <div className="flex flex-col sm:flex-row gap-4 mb-4">
+      {/* Search Bar */}
+      <div className="flex-1 relative">
+        <div className="relative">
+          <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search symbols"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white/0 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+          />
+        </div>
+      </div>
+      
+      {/* Filter Box */}
+      <div className="relative">
+        <button
+          onClick={() => {
+            const options = ['Neutral', 'Bullish', 'Bearish'];
+            const currentIndex = options.indexOf(filterType);
+            const nextIndex = (currentIndex + 1) % options.length;
+            setFilterType(options[nextIndex]);
+          }}
+          className="flex items-center gap-2 px-4 py-2  backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <span className="text-sm font-medium">{filterType}</span>
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div className="text-sm text-white/70 mb-2">
+      Shows latest signals with change
+    </div>
+
+    <div className="grid grid-cols-5 text-[15px]  text-black/70 px-2">
+      <div className="bg-white/50 px-5 py-2 rounded-full col-span-3">Symbol</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">per_chg</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">Close</div>
     </div>
+    
 
     <div className="mt-2 divide-y divide-white/10 h-[500px] overflow-y-scroll scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {isLoading ? (
@@ -149,15 +221,15 @@ const LOMSwingScanTwo = (
           const nse = getNseCode(it);
           const tvLink = `https://in.tradingview.com/chart/?symbol=NSE:${encodeURIComponent(nse)}`;
           return (
-            <div key={(nse || name || 'row') + idx} className="group grid grid-cols-6 items-center px-2 py-2 rounded-lg hover:bg-white/10 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:ring-1 ring-white/10">
+            <div key={(nse || name || 'row') + idx} className="group grid grid-cols-5 items-center px-2 py-2 rounded-lg hover:bg-white/10 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:ring-1 ring-white/10">
               
-              <div className="flex items-center justify-between gap-2 overflow-hidden col-span-4">
+              <div className="flex items-center justify-between gap-2 overflow-hidden col-span-3">
                 <div className="flex items-center gap-2 ">
                   <span className={`text-[15px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
-                  <a href={tvLink} target="_blank" rel="noreferrer" className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white">{nse}</a>
+                  <a href={tvLink} target="_blank" rel="noreferrer" className="truncate text-sm dark:text-white text-black transition-colors group-hover:text-white">{nse}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img src={iconsmall} alt={name} className="w-5 h-5 transition-transform duration-150 group-hover:rotate-6" />
+                  <img src={iconsmall} alt={name} className="w-4 h-4 transition-transform duration-150 group-hover:rotate-6" />
                 </div>
               </div>
               <div className={`text-[15px] font-semibold flex justify-center items-center col-span-1 ${up ? 'text-green-300' : 'text-red-300'}`}>{fmtPct(pct)}</div>
@@ -171,6 +243,4 @@ const LOMSwingScanTwo = (
   )
 }
 
-export default LOMSwingScanTwo
-
-
+export default ITSectors

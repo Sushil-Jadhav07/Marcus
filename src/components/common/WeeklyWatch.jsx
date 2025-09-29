@@ -55,7 +55,16 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
           const intensity = Math.round((Math.abs(clamped) / 5) * 100);
           const color = clamped >= 0 ? `rgba(34,197,94,${0.45 + intensity/250})` : `rgba(239,68,68,${0.45 + intensity/250})`;
           const url = buildTradingViewNseUrl(item);
-          return { label, color, url };
+          const closePrice = Number(item?.close ?? item?.ltp ?? item?.last_price ?? 0);
+          const perChange = Number(item?.per_chg ?? item?.change ?? item?.pctChange ?? item?.pChange ?? 0);
+          return { 
+            label, 
+            color, 
+            url, 
+            closePrice: closePrice.toFixed(2), 
+            perChange: perChange.toFixed(2),
+            originalData: item 
+          };
         });
   
       const rowsTarget = 3 ; // fixed number of rows; grid will pack by columns
@@ -67,14 +76,34 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
       if (baseItems.length > 0) {
         // First column: single large tile spanning all rows, two columns wide
         const first = baseItems[0];
-        tiles.push({ key: `item-0`, label: first.label, color: first.color, colSpan: 2, rowSpan: rowsTarget, url: first.url });
+        tiles.push({ 
+          key: `item-0`, 
+          label: first.label, 
+          color: first.color, 
+          colSpan: 2, 
+          rowSpan: rowsTarget, 
+          url: first.url,
+          closePrice: first.closePrice,
+          perChange: first.perChange,
+          originalData: first.originalData
+        });
       }
   
       baseItems.slice(1).forEach((it, idx) => {
         const rowSpan = patternRows[patternIndex % patternRows.length];
         patternIndex += 1;
         const colSpan = 1; // pack vertically first
-        tiles.push({ key: `item-${idx + 1}`, label: it.label, color: it.color, colSpan, rowSpan, url: it.url });
+        tiles.push({ 
+          key: `item-${idx + 1}`, 
+          label: it.label, 
+          color: it.color, 
+          colSpan, 
+          rowSpan, 
+          url: it.url,
+          closePrice: it.closePrice,
+          perChange: it.perChange,
+          originalData: it.originalData
+        });
       });
   
       return { tiles, rowsCount: rowsTarget };
@@ -115,15 +144,32 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
                 {processed.tiles.map((it) => (
                   <div
                     key={it.key}
-                    className={`flex items-center justify-center p-2 ${it.filler ? 'opacity-0' : 'cursor-pointer hover:brightness-110'}`}
+                    className={`relative group flex items-center justify-center p-2 ${it.filler ? 'opacity-0' : 'cursor-pointer hover:brightness-110'}`}
                     style={{ backgroundColor: it.filler ? 'transparent' : it.color, gridColumnEnd: `span ${it.colSpan}`, gridRowEnd: `span ${it.rowSpan}` }}
                     title={it.filler ? '' : it.label}
                     onClick={() => { if (!it.filler && it.url) { window.open(it.url, '_blank', 'noopener'); } }}
                   >
                     {!it.filler && (
-                      <span className="text-white font-semibold tracking-wide uppercase text-[12px] md:text-[13px] lg:text-[14px] select-none text-center truncate w-full px-2">
-                        {it.label}
-                      </span>
+                      <>
+                        <span className="text-white font-semibold tracking-wide uppercase text-[12px] md:text-[13px] lg:text-[14px] select-none text-center truncate w-full px-2">
+                          {it.label}
+                        </span>
+                        
+                        {/* Hover Popup */}
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                          <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg border border-gray-700 whitespace-nowrap">
+                            <div className="text-center">
+                              <div className="font-semibold text-white mb-1">{it.label}</div>
+                              <div className="text-gray-300">Close: ₹{it.closePrice}</div>
+                              <div className={`font-medium ${Number(it.perChange) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                {Number(it.perChange) >= 0 ? '+' : ''}{it.perChange}%
+                              </div>
+                            </div>
+                            {/* Arrow pointing down */}
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 ))}

@@ -37,7 +37,7 @@ const CustomIcon = ({ iconName, isActive, isHovered, className = "" }) => {
       'home': state ? homeActive : homeInactive,
       'market-pulse': state ? marketActive : marketInactive,
       'insider-strategy': state ? insiderActive : insiderInactive,
-      'sector-scope': state ? sectorActive : sectorInactive,
+      'sector-scope': state ? sectorActive : sectorInactive,  
       'swing-spectrum': state ? swingActive : swingInactive,
       'option-clock': state ? optionActive : optionInactive,
       'option-apex': state ? apexActive : apexInactive,
@@ -140,8 +140,8 @@ const Navigation = () => {
     { path: '/insider-strategy', label: 'Insider Strategy', iconName: 'insider-strategy' },
     { path: '/sector-scope', label: 'Sector Scope', iconName: 'sector-scope' },
     { path: '/swing-spectrum', label: 'Swing Spectrum', iconName: 'swing-spectrum' },
-    { path: '/option-clock', label: 'Option Clock', iconName: 'option-clock' },
-    { path: '/option-apex', label: 'Option Apex', iconName: 'option-apex' }
+    { path: '/option-clock', label: 'Option Clock', iconName: 'option-clock', comingSoon: true },
+    { path: '/option-apex', label: 'Option Apex', iconName: 'option-apex', comingSoon: true }
   ];
 
   const navItems = role === 'admin'
@@ -205,16 +205,16 @@ const Navigation = () => {
       ],
       swing: [
         { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Open Swing' },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ],
       tools: [
-        { to: '/option-clock', iconName: 'option-clock', label: 'Open Clock' },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+        { to: '/option-clock', iconName: 'option-clock', label: 'Open Clock', comingSoon: true },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ],
       more: [
         { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
         { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ]
     };
 
@@ -246,32 +246,52 @@ const Navigation = () => {
           </Link>
           <nav className="flex-1 flex flex-col gap-1 w-full">
             {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onMouseEnter={() => setHoveredItem(item.path)}
-                onMouseLeave={() => setHoveredItem(null)}
-                className={`group relative overflow-hidden flex items-center gap-3 px-3 py-3 rounded-xl text-lg transition-all duration-300 ${
-                  isActive(item.path)
-                    ? 'text-slate-900 dark:text-white'
-                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                <CustomIcon 
-                  iconName={item.iconName}
-                  isActive={isActive(item.path)}
-                  isHovered={hoveredItem === item.path}
-                  className="w-6 h-6"
-                />
-                <span className="relative z-10">{item.label}</span>
-                <span
-                  className={`absolute inset-0 -z-0 rounded-xl transition-opacity duration-300 ${
+              item.comingSoon ? (
+                <div
+                  key={item.path}
+                  className="group relative overflow-hidden flex flex-col gap-1 px-3 py-3 rounded-xl text-lg transition-all duration-300 opacity-60 cursor-not-allowed"
+                >
+                  <div className="flex items-center gap-3">
+                    <CustomIcon 
+                      iconName={item.iconName}
+                      isActive={false}
+                      isHovered={false}
+                      className="w-6 h-6"
+                    />
+                    <span className="relative z-10">{item.label}</span>
+                  </div>
+                  <span className="text-xs text-red-400 animate-pulse font-medium ml-9">
+                    Coming Soon
+                  </span>
+                </div>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onMouseEnter={() => setHoveredItem(item.path)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  className={`group relative overflow-hidden flex items-center gap-3 px-3 py-3 rounded-xl text-lg transition-all duration-300 ${
                     isActive(item.path)
-                      ? 'opacity-100 bg-slate-200 dark:bg-gradient-to-r dark:from-white/10 dark:via-white/5 dark:to-white/0'
-                      : 'opacity-0 group-hover:opacity-100 bg-slate-100 dark:bg-white/5'
+                      ? 'text-slate-900 dark:text-white'
+                      : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
                   }`}
-                />
-              </Link>
+                >
+                  <CustomIcon 
+                    iconName={item.iconName}
+                    isActive={isActive(item.path)}
+                    isHovered={hoveredItem === item.path}
+                    className="w-6 h-6"
+                  />
+                  <span className="relative z-10">{item.label}</span>
+                  <span
+                    className={`absolute inset-0 -z-0 rounded-xl transition-opacity duration-300 ${
+                      isActive(item.path)
+                        ? 'opacity-100 bg-slate-200 dark:bg-gradient-to-r dark:from-white/10 dark:via-white/5 dark:to-white/0'
+                        : 'opacity-0 group-hover:opacity-100 bg-slate-100 dark:bg-white/5'
+                    }`}
+                  />
+                </Link>
+              )
             ))}
           </nav>
         </div>
@@ -445,22 +465,41 @@ const Navigation = () => {
               <h3 className="text-sm text-slate-700 dark:text-slate-300 mb-3">Quick Actions</h3>
               <div className="grid grid-cols-4 gap-3">
                 {(quickActionsByKey[quickKey] || []).map((item, index) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onMouseEnter={() => setHoveredQuickAction(`${quickKey}-${index}`)}
-                    onMouseLeave={() => setHoveredQuickAction(null)}
-                    className="group flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 py-4 transition-all duration-300 min-h-[80px]"
-                  >
-                    <div className="flex items-center justify-center h-8">
-                      <QuickActionIcon 
-                        iconName={item.iconName}
-                        isHovered={hoveredQuickAction === `${quickKey}-${index}` || isActive(item.to)}
-                        className="w-7 h-7 object-contain"
-                      />
+                  item.comingSoon ? (
+                    <div
+                      key={item.to}
+                      className="group flex flex-col items-center justify-center gap-1 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 py-4 transition-all duration-300 min-h-[80px] opacity-60 cursor-not-allowed"
+                    >
+                      <span className="text-[8px] text-red-400 animate-pulse font-medium">
+                        Coming Soon
+                      </span>
+                      <div className="flex items-center justify-center h-8">
+                        <QuickActionIcon 
+                          iconName={item.iconName}
+                          isHovered={false}
+                          className="w-7 h-7 object-contain"
+                        />
+                      </div>
+                      <span className="text-[10px] text-slate-700 dark:text-slate-300 text-center leading-tight">{item.label}</span>
                     </div>
-                    <span className="text-[10px] text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight">{item.label}</span>
-                  </Link>
+                  ) : (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onMouseEnter={() => setHoveredQuickAction(`${quickKey}-${index}`)}
+                      onMouseLeave={() => setHoveredQuickAction(null)}
+                      className="group flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 py-4 transition-all duration-300 min-h-[80px]"
+                    >
+                      <div className="flex items-center justify-center h-8">
+                        <QuickActionIcon 
+                          iconName={item.iconName}
+                          isHovered={hoveredQuickAction === `${quickKey}-${index}` || isActive(item.to)}
+                          className="w-7 h-7 object-contain"
+                        />
+                      </div>
+                      <span className="text-[10px] text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white text-center leading-tight">{item.label}</span>
+                    </Link>
+                  )
                 ))}
               </div>
               

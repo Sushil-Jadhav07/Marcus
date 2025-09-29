@@ -48,117 +48,44 @@ const OptionClock = () => {
       <div className='w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
-          <div className=" lg:hidden block ">
-            <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 gap-5 items-center'>
-            <h2 className=" !mb-0 text-white font-semibold tracking-wide">Option Clock</h2>
-            <div className="flex justify-center items-center text-[10px] bg-white text-red-800 rounded-sm px-2">Live</div>
-            <FaPlay className='dark:text-white text-black lg:text-lg text-sm' />
+          
+          {/* Coming Soon Section - Mobile */}
+          <div className="h-screen lg:hidden flex flex-col items-center justify-center px-5">
+            <div className="text-center">
+              <h2 className="mb-6 text-white font-bold tracking-wide text-3xl">Option Clock</h2>
+              <div className="relative">
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-white/30 rounded-2xl px-8 py-4 shadow-2xl">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-white font-semibold text-lg tracking-wide animate-pulse">
+                    Coming Soon
+                  </span>
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-2xl blur-sm -z-10 animate-pulse"></div>
+              </div>
+              <p className="mt-6 text-white/70 text-sm max-w-md">
+                We're working hard to bring you real-time option clock tools. Stay tuned for updates!
+              </p>
             </div>
-            <IndexAndExpFilters className='mt-4' />
           </div>
-          <div className='lg:block hidden '>
-          <Marquee/>
-            <div className='px-5 mt-8'>
-              {/* Operation Clock Header */}
-              <div className='flex items-center justify-between mb-6'>
-                <div className='flex items-center gap-4'>
-                  <h2 className='text-white text-2xl font-bold tracking-wide mb-0'>Option Clock</h2>
-                  <div className="flex justify-center items-center text-[10px] bg-white text-red-800 rounded-sm px-2">
-                    LIVE
-                  </div>
-                  <FaPlay className='text-white text-sm ml-2' />
+
+          {/* Coming Soon Section - Desktop */}
+          <div className='lg:flex hidden h-screen items-center justify-center'>
+            <div className="text-center">
+              <h2 className="mb-8 text-white font-bold tracking-wide text-4xl">Option Clock</h2>
+              <div className="relative">
+                <div className="inline-flex items-center gap-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-white/30 rounded-3xl px-12 py-6 shadow-2xl">
+                  <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold text-2xl tracking-wide animate-pulse">
+                    Coming Soon
+                  </span>
+                  <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
                 </div>
+                <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-3xl blur-lg -z-10 animate-pulse"></div>
               </div>
-              <div ref={dropdownRef} className='flex justify-end gap-3 mb-4'>
-                {/* Index Filter Dropdown */}
-                <div className='relative'>
-                  <button 
-                    onClick={() => {
-                      setIndexDropdownOpen(!indexDropdownOpen);
-                      setExpDropdownOpen(false);
-                    }}
-                    className='flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm rounded-full px-4 py-2 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300'
-                  >
-                    <span className='text-white/90'>Index:</span>
-                    <span className='font-medium'>{selectedIndex}</span>
-                    {indexDropdownOpen ? (
-                      <FaChevronUp className='w-3 h-3 text-white/70 transition-transform duration-300' />
-                    ) : (
-                      <FaChevronDown className='w-3 h-3 text-white/70 transition-transform duration-300' />
-                    )}
-                  </button>
-                  
-                  {/* Index Dropdown Menu */}
-                  <div className={`absolute top-full mt-2 right-0 w-48 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg transition-all duration-300 ease-in-out origin-top ${
-                    indexDropdownOpen 
-                      ? 'opacity-100 scale-100 translate-y-0' 
-                      : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
-                  }`}>
-                    {indexOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setSelectedIndex(option.label);
-                          setIndexDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg ${
-                          selectedIndex === option.label
-                            ? 'bg-blue-500/30 text-white font-medium'
-                            : 'text-white/90 hover:bg-white/10'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Exp Filter Dropdown */}
-                <div className='relative'>
-                  <button 
-                    onClick={() => {
-                      setExpDropdownOpen(!expDropdownOpen);
-                      setIndexDropdownOpen(false);
-                    }}
-                    className='flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm rounded-full px-4 py-2 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300'
-                  >
-                    <span className='text-white/90'>Exp:</span>
-                    <span className='font-medium'>{selectedExp}</span>
-                    {expDropdownOpen ? (
-                      <FaChevronUp className='w-3 h-3 text-white/70 transition-transform duration-300' />
-                    ) : (
-                      <FaChevronDown className='w-3 h-3 text-white/70 transition-transform duration-300' />
-                    )}
-                  </button>
-                  
-                  {/* Exp Dropdown Menu */}
-                  <div className={`absolute top-full mt-2 right-0 w-56 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-lg transition-all duration-300 ease-in-out origin-top ${
-                    expDropdownOpen 
-                      ? 'opacity-100 scale-100 translate-y-0' 
-                      : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
-                  }`}>
-                    {expOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setSelectedExp(option.label);
-                          setExpDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-4 py-3 text-sm transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg ${
-                          selectedExp === option.label
-                            ? 'bg-blue-500/30 text-white font-medium'
-                            : 'text-white/90 hover:bg-white/10'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <MarketProgress />
-              <OptionCandles/>
+              <p className="mt-8 text-white/70 text-lg max-w-2xl">
+                We're working hard to bring you real-time option clock tools. Stay tuned for updates!
+              </p>
             </div>
           </div>
       </div>

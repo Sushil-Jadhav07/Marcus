@@ -360,7 +360,7 @@ const BreakoutBeacon = ({
       </div>
 
       {/* Search */}
-      <div className="relative mb-3">
+      {/* <div className="relative mb-3">
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 dark:text-white/70 text-black/70" />
         <input
           value={query}
@@ -368,7 +368,7 @@ const BreakoutBeacon = ({
           placeholder="Search symbols"
           className="w-full pl-9 pr-3 py-2 rounded-lg bg-white/10 border border-white/10  text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400/50 placeholder:text-black/80"
         />
-      </div>
+      </div> */}
 
       {/* Progress Bar */}
       {/* <div className="mb-4">
@@ -425,17 +425,38 @@ const BreakoutBeacon = ({
         </div>
       </div> */}
 
-      {/* Toolbar */}
-      <div className="flex items-center gap-2 mb-3">
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 rounded-md bg-white/10 border border-white/10 px-2.5 py-1.5 dark:text-white text-black text-xs"
-          onClick={() => setMood((m) => (moodOptions[(moodOptions.indexOf(m) + 1) % moodOptions.length]))}
-        >
-          <span>{mood}</span>
-          <FiChevronDown />
-        </button>
-        <div className="text-[11px] dark:text-white/70 text-black/70 ml-auto">Shows latest signals with change</div>
+      {/* Search and Filter Section */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
+        {/* Search Bar */}
+        <div className="flex-1 relative">
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search symbols"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-white/0 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        {/* Filter Box */}
+        <div className="relative">
+          <button
+            onClick={() => setMood((m) => (moodOptions[(moodOptions.indexOf(m) + 1) % moodOptions.length]))}
+            className="flex items-center gap-2 px-4 py-2 backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <span className="text-sm font-medium">{mood}</span>
+            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="text-sm text-white/70 mb-2">
+        Shows latest signals with change
       </div>
 
       {/* Header row */}
@@ -465,9 +486,21 @@ const BreakoutBeacon = ({
             className="group grid grid-cols-7 items-center px-2 py-2 rounded-lg cursor-pointer transition-all duration-150 ease-out hover:bg-white/10 hover:-translate-y-0.5 hover:ring-1 ring-white/10"
             role="button"
             tabIndex={0}
-            onClick={() => openInTradingView(r.symbol)}
+            onClick={() => {
+              if (r.tradingViewUrl) {
+                window.open(r.tradingViewUrl, '_blank', 'noopener,noreferrer');
+              } else {
+                openInTradingView(r.symbol);
+              }
+            }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') openInTradingView(r.symbol);
+              if (e.key === 'Enter' || e.key === ' ') {
+                if (r.tradingViewUrl) {
+                  window.open(r.tradingViewUrl, '_blank', 'noopener,noreferrer');
+                } else {
+                  openInTradingView(r.symbol);
+                }
+              }
             }}
           >
             {/* Symbol + tag */}

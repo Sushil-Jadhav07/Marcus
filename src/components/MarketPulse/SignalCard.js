@@ -11,6 +11,7 @@ const SignalCard = ({
   symbol,
   timeLabel,
   signalPercent,
+  ltp,
   movePercent,
   direction = 'up', // 'up' | 'down'
 }) => {
@@ -25,8 +26,8 @@ const SignalCard = ({
       <div className="rounded-2xl h-56 bg-gradient-to-b from-white/60 to-white/10">
         <div className=" relative backdrop-blur-lg rounded-xl border-t-2 border-r-2 border-b-2 border-l-2 dark:border-t-white/60  border-t-gray-400/60 dark:border-r-white/60 border-r-gray-400/60 border-b-blue-400/60 border-l-blue-400/60  p-3 h-56  ">
           {/* Header row */}
-          <div className="flex items-start justify-between">
-            <div className="h-10 w-10 rounded-full bg-gray-200/90" />
+          <div className="flex items-start justify-end">
+            {/* <div className="h-10 w-10 rounded-full bg-gray-200/90" /> */}
             <div className="flex items-center gap-2">
               {/* Simple candles glyph using inline SVG */}
               {/* <svg width="22" height="22" viewBox="0 0 24 24" className="text-white/80">
@@ -53,7 +54,7 @@ const SignalCard = ({
           </div>
 
           {/* Metrics */}
-          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
             <div>
               <div className="dark:text-white text-black">Time</div>
               <div className="mt-1 dark:text-white text-black text-base">{timeLabel}</div>
@@ -61,6 +62,10 @@ const SignalCard = ({
             <div>
               <div className="dark:text-white text-black">Sgn %</div>
               <div className={`mt-1 text-base font-semibold ${isUp ? 'text-[#1EE004]' : 'text-[#E70101]'}`}>{signalPercent}</div>
+            </div>
+            <div>
+              <div className="dark:text-white text-black">LTP</div>
+              <div className="mt-1 dark:text-white text-black text-base">{ltp}</div>
             </div>
           </div>
 

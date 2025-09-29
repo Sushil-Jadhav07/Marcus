@@ -15,6 +15,8 @@ import ITSectorBeacon from '../components/common/ITSectorBeacon';
 import PharmaSectorBeacon from '../components/common/PharmaSectorBeacon';
 import AutoSectorBeacon from '../components/common/AutoSectorBeacon';
 import FMCGSectorBeacon from '../components/common/FMCGSectorBeacon';
+import EnergySector from '../components/Sectors/EnergySector';
+import ITSectors from '../components/Sectors/ITSectors';
 
 
 const SectorScope = () => {
@@ -77,8 +79,9 @@ const SectorScope = () => {
              </div>
              <div className='px-5 mt-5'>
                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                 <EnergySectorBeacon />
-                 <ITSectorBeacon />
+                 {/* <EnergySectorBeacon /> */}
+                 <EnergySector />
+                 <ITSectors />
                </div>
                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                  <PharmaSectorBeacon />
