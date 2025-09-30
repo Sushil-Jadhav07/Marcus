@@ -143,7 +143,7 @@ const PharmaSectorBeacon = () => {
 
   return (
     <BreakoutBeacon 
-      title="PHARMA" 
+      title="PHARMA SECTOR" 
       rows={data} 
       isLoading={isLoading}
       onRefresh={fetchData}

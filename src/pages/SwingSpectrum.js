@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Topbar from '../components/layout/Topbar';
 import Navigation from '../components/layout/Navigation';
@@ -11,47 +11,133 @@ import LOMSwingScanTwo from '../components/common/LOMSwingScanTwo';
 import LOMSwingThree from '../components/common/LOMSwingThree';
 import LOMSwingFour from '../components/common/LOMSwingFour';
 import WeeklyWatch from '../components/common/WeeklyWatch';
+import WeeklyWatchMobile from '../components/common/WeeklyWatchMobile';
 
 const SwingSpectrum = () => {
+  // Mobile SignalSection state
+  const [bo10Data, setBo10Data] = useState([]);
+  const [bo10Loading, setBo10Loading] = useState(false);
+  const [bo10Error, setBo10Error] = useState(null);
+  const [bo50Data, setBo50Data] = useState([]);
+  const [bo50Loading, setBo50Loading] = useState(false);
+  const [bo50Error, setBo50Error] = useState(null);
+  const [channelData, setChannelData] = useState([]);
+  const [channelLoading, setChannelLoading] = useState(false);
+  const [channelError, setChannelError] = useState(null);
+  const [nr7Data, setNr7Data] = useState([]);
+  const [nr7Loading, setNr7Loading] = useState(false);
+  const [nr7Error, setNr7Error] = useState(null);
+
+  const transformScanToSignals = (arr) => {
+    if (!Array.isArray(arr)) return [];
+    return arr.map((item, index) => {
+      const perChgNum = Number(item?.per_chg ?? item?.change ?? item?.pctChange ?? item?.pChange ?? 0);
+      const symbol = item?.nsecode || item?.symbol || item?.tradingSymbol || item?.ticker || `STOCK${index + 1}`;
+      const ltpNum = Number(item?.close ?? item?.ltp ?? item?.last_price ?? 0);
+      const pctText = `${perChgNum >= 0 ? '+' : ''}${perChgNum.toFixed(2)}%`;
+      return {
+        symbol: String(symbol).substring(0, 20),
+        timeLabel: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false }),
+        signalPercent: pctText,
+        ltp: ltpNum,
+        movePercent: pctText,
+        direction: perChgNum >= 0 ? 'up' : 'down',
+      };
+    });
+  };
+
+  const postScan = async (scan_clause, setters) => {
+    const { setData, setLoading, setError } = setters;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scan_clause }),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const json = await res.json();
+      const list = Array.isArray(json?.data) ? json.data : [];
+      setData(transformScanToSignals(list));
+    } catch (err) {
+      setError(err?.message || 'Unknown error');
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchBo10 = () => postScan(
+    "( {cash} ( 1 day ago max( 10 , daily high ) < daily close and 1 day ago max( 10 , daily high ) > 1 day ago high and 1 day ago close < daily open ) )",
+    { setData: setBo10Data, setLoading: setBo10Loading, setError: setBo10Error }
+  );
+
+  const fetchBo50 = () => postScan(
+    "( {cash} ( 1 day ago low <= daily min( 50 , daily low ) and daily high < 1 day ago high and daily close < 1 day ago close and daily close < daily open and daily volume < 1 day ago volume * 1.2 ) )",
+    { setData: setBo50Data, setLoading: setBo50Loading, setError: setBo50Error }
+  );
+
+  const fetchChannel = () => postScan(
+    "( {57960} ( daily max( 20 , daily high ) > 1 day ago max( 20 , 1 day ago high ) and daily max( 50 , daily high ) > 1 day ago max( 50 , 1 day ago high ) and daily max( 90 , daily high ) > 1 day ago max( 90 , 1 day ago high ) and daily max( 144 , daily high ) > 1 day ago max( 144 , 1 day ago high ) ) )",
+    { setData: setChannelData, setLoading: setChannelLoading, setError: setChannelError }
+  );
+
+  const fetchNr7 = () => postScan(
+    "( {33489} ( daily high - daily low < 1 day ago high - 1 day ago low and daily high - daily low < 2 days ago high - 2 days ago low and daily high - daily low < 3 days ago high - 3 days ago low and daily high - daily low < 4 days ago high - 4 days ago low and daily high - daily low < 5 days ago high - 5 days ago low and daily high - daily low < 6 days ago high - 6 days ago low ) )",
+    { setData: setNr7Data, setLoading: setNr7Loading, setError: setNr7Error }
+  );
+
+  useEffect(() => {
+    fetchBo10();
+    fetchBo50();
+    fetchChannel();
+    fetchNr7();
+  }, []);
+
   return (
     <div className='flex flex-col h-full'>
   <Navigation />
     <div className='w-full h-full flex flex-col'>
         <Topbar /> 
         <MobileTopbar />
-          <div className=" h-[120vh] lg:hidden block bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
+          <div className=" h-auto lg:hidden block bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
           <h2 className="mb-3 text-white font-semibold tracking-wide">Swing Spectrum</h2>
           </div>
-         
           <SignalSection
-              title="LOM Short Term"
-              items={[
-                { symbol: 'BOSCHILTD', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'RVNL', timeLabel: '15:05', signalPercent: '-5.01%', movePercent: '-5.01%', direction: 'down' },
-                { symbol: 'BOSCH', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'TCS', timeLabel: '10:15', signalPercent: '-2.12%', movePercent: '-1.80%', direction: 'down' },
-              ]}
-            />
-              <SignalSection
-              title="Contraction BO"
-              items={[
-                { symbol: 'BOSCHILTD', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'RVNL', timeLabel: '15:05', signalPercent: '-5.01%', movePercent: '-5.01%', direction: 'down' },
-                { symbol: 'BOSCH', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'TCS', timeLabel: '10:15', signalPercent: '-2.12%', movePercent: '-1.80%', direction: 'down' },
-              ]}
-            />
-            <div className='dark:bg-black bg-white'>
-            <SignalSection
-              title="Day H/L Reversal"
-              items={[
-                { symbol: 'BOSCHILTD', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'RVNL', timeLabel: '15:05', signalPercent: '-5.01%', movePercent: '-5.01%', direction: 'down' },
-                { symbol: 'BOSCH', timeLabel: '09:30', signalPercent: '6.44%', movePercent: '6.51%', direction: 'up' },
-                { symbol: 'TCS', timeLabel: '10:15', signalPercent: '-2.12%', movePercent: '-1.80%', direction: 'down' },
-              ]}
-            />
+            title="10 DAY BO"
+            items={bo10Data}
+            isLoading={bo10Loading}
+            error={bo10Error}
+            onRefresh={fetchBo10}
+          />
+          <SignalSection
+            title="50 DAY BO"
+            items={bo50Data}
+            isLoading={bo50Loading}
+            error={bo50Error}
+            onRefresh={fetchBo50}
+          />
+          <SignalSection
+            title="CHANNEL BO"
+            items={channelData}
+            isLoading={channelLoading}
+            error={channelError}
+            onRefresh={fetchChannel}
+          />
+          <SignalSection
+            title="NR7"
+            items={nr7Data}
+            isLoading={nr7Loading}
+            error={nr7Error}
+            onRefresh={fetchNr7}
+          />
+
+          <div className='px-5'>
+          <WeeklyWatchMobile title={"WEEKLY WATCH"}/>
+          </div>
+        
             </div>
           </div>
           <div className='lg:block hidden overflow-hidden'>
@@ -69,7 +155,6 @@ const SwingSpectrum = () => {
             <WeeklyWatch title={"WEEKLY WATCH"}/>
             </div>
           </div>
-    </div>
   </div>
   );
 };

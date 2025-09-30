@@ -9,7 +9,7 @@ const ITSectors = (
         apiUrl = 'https://angelbackend-production.up.railway.app/scan',
         method = 'POST',
         requestBody = {
-          scan_clause: "( {cash} ( sector = 'i.t' ) )  "
+          scan_clause: "( {cash} ( sector = 'i.t' ) )"
         },
         headers = { 'Content-Type': 'application/json' },
         limit = 58,

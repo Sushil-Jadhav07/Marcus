@@ -89,16 +89,36 @@ const BreakoutBeacon = ({
       const direction = changePct >= 0 ? 'up' : 'down';
 
       const ltpVal = Number(it.ltp ?? it.lastPrice ?? it.close) || 0;
-      const openField = Number(it.open ?? it.o) || 0;
-      const closeField = Number(it.close ?? it.c ?? it.lastPrice ?? it.ltp) || 0;
+      const openFieldRaw = Number(it.open ?? it.o);
+      const closeFieldRaw = Number(it.close ?? it.c ?? it.lastPrice ?? it.ltp);
+      const haveOHLC = Number.isFinite(openFieldRaw) && openFieldRaw > 0 && Number.isFinite(closeFieldRaw);
+
+      // Unified net change value used for direction and fallback percent
       const netChangeApi = Number(it.netChange);
-      const netChange = Number.isFinite(netChangeApi) ? netChangeApi : (ltpVal || closeField) - openField;
-      const netChangePct = Number.isFinite(Number(it.percentChange))
-        ? Number(it.percentChange)
-        : (openField ? (netChange / openField) * 100 : (Number.isFinite(changePct) ? changePct : 0));
+      const openField = Number.isFinite(openFieldRaw) ? openFieldRaw : 0;
+      const closeField = Number.isFinite(closeFieldRaw) ? closeFieldRaw : ltpVal;
+      const netChangeVal = Number.isFinite(netChangeApi) ? netChangeApi : (closeField - openField);
+
+      let netChangePctNum = haveOHLC ? ((closeFieldRaw - openFieldRaw) / openFieldRaw) * 100 : NaN;
+
+      if (!Number.isFinite(netChangePctNum)) {
+        const percentCandidates = [it.percentChange, it.per_chg, it.changePct, it.pct, it.percent, it.pChange, it.percChange];
+        for (const cand of percentCandidates) {
+          if (cand === undefined || cand === null) continue;
+          const num = Number(String(cand).replace('%', '').trim());
+          if (Number.isFinite(num)) { netChangePctNum = num; break; }
+        }
+      }
+
+      if (!Number.isFinite(netChangePctNum)) {
+        netChangePctNum = openField > 0 ? (netChangeVal / openField) * 100 : (Number.isFinite(changePct) ? changePct : 0);
+      }
+
+      if (Math.abs(netChangePctNum) < 0.005) netChangePctNum = 0;
+      const netChangePct = `${netChangePctNum > 0 ? '+' : netChangePctNum < 0 ? '-' : ''}${Math.abs(netChangePctNum).toFixed(2)}%`;
 
       // Re-evaluate direction primarily from netChange when present
-      const finalDir = Number.isFinite(netChange) ? (netChange >= 0 ? 'up' : 'down') : direction;
+      const finalDir = Number.isFinite(netChangeVal) ? (netChangeVal >= 0 ? 'up' : 'down') : direction;
 
       return {
         tag: finalDir === 'up' ? 'BULL' : 'BEAR',
@@ -107,9 +127,9 @@ const BreakoutBeacon = ({
         percent: Math.abs(changePct) || 0,
         signal: Math.abs(changePct) || 0,
         ltp: ltpVal,
-        open: openField,
-        close: closeField,
-        netChange,
+        open: Number.isFinite(openFieldRaw) ? openFieldRaw : 0,
+        close: Number.isFinite(closeFieldRaw) ? closeFieldRaw : 0,
+        netChange: netChangeVal,
         netChangePct,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         dir: finalDir,

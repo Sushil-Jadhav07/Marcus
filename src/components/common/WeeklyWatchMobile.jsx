@@ -3,7 +3,7 @@ import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
 import { buildTradingViewNseUrl } from '../../utils/tradingview';
 
-const WeeklyWatch = ({ title, children, className = "" }) => {
+const WeeklyWatchMobile = ({ title, children, className = "" }) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -46,7 +46,7 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
     const processed = useMemo(() => {
       if (!Array.isArray(data)) return null;
       const baseItems = data
-        .slice(0, 22)
+        .slice(0, 15)
         .sort((a, b) => Math.abs(Number(b?.per_chg ?? b?.change ?? 0)) - Math.abs(Number(a?.per_chg ?? a?.change ?? 0)))
         .map((item, idx) => {
           const label = item?.symbol || item?.name || item?.ticker || `Item ${idx + 1}`;
@@ -67,8 +67,8 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
           };
         });
   
-      const rowsTarget = 7; // fixed number of rows; grid will pack by columns
-      const patternRows = [1, 1, 1, 3, 3];
+      const rowsTarget = 5; // fixed number of rows; grid will pack by columns
+      const patternRows = [1, 1, 2, 1, 2];
       let patternIndex = 0;
   
       const tiles = [];
@@ -108,9 +108,10 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
   
       return { tiles, rowsCount: rowsTarget };
     }, [data]);
-  
-    return (
-      <div className={` overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 h-[500px]`}>
+
+
+  return (
+    <div className={` overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 h-[500px]`}>
         <div className='flex justify-start items-start gap-5'>
           <div className="relative">
               <img src={icon} alt={title} className="w-12 h-12 drop-shadow-lg" />
@@ -180,7 +181,7 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
           </div>
         )}
       </div>
-    );
+  )
 }
 
-export default WeeklyWatch
+export default WeeklyWatchMobile

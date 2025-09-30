@@ -16,8 +16,8 @@ const Home = () => {
           <div className='w-full h-full flex flex-col'>
               <Topbar /> 
               <MobileTopbar />
-                <div className=" h-full ">
-                  <div className='h-full'>
+                <div className=" h-auto ">
+                  <div className='h-auto'>
                   <Homearea />
                   </div>
                   {/* <div className='h-full px-4 my-6'>
@@ -26,8 +26,8 @@ const Home = () => {
                   <div className='h-full'>
                   <Functions />
                   </div>
-                  <LearnMore/>
-                  <MoreTools/>
+                  {/* <LearnMore/>
+                  <MoreTools/> */}
                 </div>
             </div>
     </div>

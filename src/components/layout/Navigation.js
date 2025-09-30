@@ -70,7 +70,8 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
       'swing-spectrum': swingActive,
       'option-clock': optionActive,
       'option-apex': apexActive,
-      'create-user': createUserActive
+      'create-user': createUserActive,
+      'user-list': userListActive
     };
 
     const inactiveIconMap = {
@@ -81,7 +82,8 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
       'swing-spectrum': swingInactive,
       'option-clock': optionInactive,
       'option-apex': apexInactive,
-      'create-user': createUserInactive
+      'create-user': createUserInactive,
+      'user-list': userListInactive
     };
     
     return shouldUseActive ? activeIconMap[name] : inactiveIconMap[name];
@@ -188,23 +190,62 @@ const Navigation = () => {
 
   // Create quick actions based on role
   const createQuickActions = () => {
-    const baseActions = {
-      home: [
-        { to: '/', iconName: 'home', label: 'Home' },
-        { to: '/market-pulse', iconName: 'market-pulse', label: 'Pulse' },
-        { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Swing' },
-        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
-        { to: '/option-clock', iconName: 'option-clock', label: 'Clock' },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
-      ],
+    // Common links available to everyone
+    const commonHome = [
+      { to: '/', iconName: 'home', label: 'Home' },
+      { to: '/market-pulse', iconName: 'market-pulse', label: 'Pulse' },
+      { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Swing' },
+      { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+      { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
+    ];
+
+    const base = {
       pulse: [
-        { to: '/market-pulse', iconName: 'market-pulse', label: 'Open Pulse' },
+        { to: '/market-pulse', iconName: 'market-pulse', label: 'Market Pulse' },
         { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
         { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
       ],
       swing: [
         { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Open Swing' },
+      ],
+      more: [
+        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
+        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+      ]
+    };
+
+    if (role === 'admin') {
+      // Admin: replace Option Clock/Apex with Create User/User List
+      return {
+        home: [
+          ...commonHome,
+          { to: '/create-user', iconName: 'create-user', label: 'Create User' },
+          { to: '/user-list', iconName: 'user-list', label: 'User List' }
+        ],
+        pulse: base.pulse,
+        swing: base.swing,
+        tools: [
+          { to: '/create-user', iconName: 'create-user', label: 'Create User' },
+          { to: '/user-list', iconName: 'user-list', label: 'User List' }
+        ],
+        more: [
+          ...base.more,
+          { to: '/create-user', iconName: 'create-user', label: 'Create User' },
+          { to: '/user-list', iconName: 'user-list', label: 'User List' }
+        ]
+      };
+    }
+
+    // Non-admin: keep Option Apex and Option Clock
+    return {
+      home: [
+        ...commonHome,
+        { to: '/option-clock', iconName: 'option-clock', label: 'Clock' },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
+      ],
+      pulse: base.pulse,
+      swing: [
+        ...base.swing,
         { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ],
       tools: [
@@ -212,21 +253,10 @@ const Navigation = () => {
         { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ],
       more: [
-        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
-        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+        ...base.more,
         { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
       ]
     };
-
-    // Add Create User and User List for admin role
-    if (role === 'admin') {
-      baseActions.home.push({ to: '/create-user', iconName: 'create-user', label: 'Create User' });
-      baseActions.home.push({ to: '/user-list', iconName: 'user-list', label: 'User List' });
-      baseActions.more.push({ to: '/create-user', iconName: 'create-user', label: 'Create User' });
-      baseActions.more.push({ to: '/user-list', iconName: 'user-list', label: 'User List' });
-    }
-
-    return baseActions;
   };
 
   const quickActionsByKey = createQuickActions();
