@@ -1,4 +1,5 @@
 import React from 'react';
+import { buildTradingViewNseUrl } from '../../utils/tradingview';
 import up from '../../asset/img/candle.png'
 import down from '../../asset/img/plus.png'
 import bull from '../../asset/img/bull.png'
@@ -20,10 +21,15 @@ const SignalCard = ({
   const movePercentTextColor = isUp ? 'text-green-400' : 'text-red-400';
   const arrow = isUp ? '▲' : '▼';
   const animal = isUp ? bull : bear;
+  const tvUrl = buildTradingViewNseUrl(symbol);
 
   return (
     <div className="snap-start dark:text-white text-black shrink-0 w-72">
-      <div className="rounded-2xl h-56 bg-gradient-to-b from-white/60 to-white/10">
+      <div
+        className="rounded-2xl h-56 bg-gradient-to-b from-white/60 to-white/10 cursor-pointer"
+        onClick={() => { if (tvUrl) { window.open(tvUrl, '_blank', 'noopener'); } }}
+        title={tvUrl ? `Open ${symbol} on TradingView` : undefined}
+      >
         <div className=" relative backdrop-blur-lg rounded-xl border-t-2 border-r-2 border-b-2 border-l-2 dark:border-t-white/60  border-t-gray-400/60 dark:border-r-white/60 border-r-gray-400/60 border-b-blue-400/60 border-l-blue-400/60  p-3 h-56  ">
           {/* Header row */}
           <div className="flex items-start justify-end">
