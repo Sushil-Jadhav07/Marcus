@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fi';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
+import { buildTradingViewNseUrl } from '../../utils/tradingview';
 
 // Reusable board component to display a beacon-style list
 // Accepts optional props; falls back to static demo data
@@ -41,14 +42,36 @@ const BreakoutBeacon = ({
   // Transform data from parent to match the expected format
   const transformedData = useMemo(() => {
     if (data && data.length > 0) {
-      return data.map(item => ({
-        tag: item.direction === 'up' ? 'BULL' : 'BEAR',
-        symbol: item.symbol || 'N/A',
-        percent: parseFloat(item.signalPercent?.replace('%', '') || '0'),
-        signal: parseFloat(item.signalPercent?.replace('%', '') || '0'),
-        time: item.timeLabel || '--:--',
-        dir: item.direction || 'up'
-      }));
+      return data.map((item) => {
+        // Prefer direct fields from API if present
+        const rawSymbol = item.nsecode || item.symbol || item.tradingSymbol || 'N/A';
+        // per_chg can arrive as number or string with %; fall back to signalPercent
+        let perChg = item.per_chg;
+        if (perChg === undefined || perChg === null || perChg === '') {
+          const sp = item.signalPercent;
+          if (typeof sp === 'string') {
+            const n = parseFloat(sp.replace('%', ''));
+            if (Number.isFinite(n)) perChg = n;
+          }
+        }
+        const perChgNum = Number(perChg);
+        const percentNum = Number.isFinite(perChgNum)
+          ? perChgNum
+          : parseFloat(String(item.signalPercent || '0').replace('%', '')) || 0;
+        const direction = item.direction || (percentNum >= 0 ? 'up' : 'down');
+
+        return {
+          tag: direction === 'up' ? 'BULL' : 'BEAR',
+          symbol: String(rawSymbol).replace(/-EQ$/i, ''),
+          percent: Math.abs(percentNum),
+          signal: Math.abs(percentNum),
+          netChangePct: percentNum, // numeric for table rendering
+          ltp: item.ltp ?? item.close ?? undefined,
+          time: item.timeLabel || '--:--',
+          dir: direction,
+          tradingViewUrl: buildTradingViewNseUrl(rawSymbol),
+        };
+      });
     }
     return null;
   }, [data]);
@@ -64,18 +87,20 @@ const BreakoutBeacon = ({
   const mapMarketMoversToRows = (items) => {
     if (!Array.isArray(items)) return [];
     return items.map((it, idx) => {
-      const symbolRaw = it.tradingSymbol || it.symbol || it.name || `SYM${idx}`;
-      const symbol = String(symbolRaw).replace(/^NSE_/i, '');
+      const symbolRaw = it.nsecode || it.tradingSymbol || it.symbol || it.name || `SYM${idx}`;
+      const symbol = String(symbolRaw).replace(/^NSE_/i, '').replace(/-EQ$/i, '');
       const company = it.companyName || it.name || undefined;
 
       // Prefer API-provided percentChange, then other aliases
-      let changePct = Number.isFinite(Number(it.percentChange))
-        ? Number(it.percentChange)
-        : (typeof it.changePct === 'number')
-          ? it.changePct
-          : parseFloat(
-              it.changePct || it.pct || it.percent || it.pChange || it.percChange || 0
-            );
+      let changePct = Number.isFinite(Number(it.per_chg))
+        ? Number(it.per_chg)
+        : (Number.isFinite(Number(it.percentChange))
+            ? Number(it.percentChange)
+            : (typeof it.changePct === 'number')
+              ? it.changePct
+              : parseFloat(
+                  it.changePct || it.pct || it.percent || it.pChange || it.percChange || 0
+                ));
 
       const openVal = Number(it.o ?? it.open);
       const closeVal = Number(it.c ?? it.close ?? it.ltp ?? it.lastPrice);
@@ -133,14 +158,17 @@ const BreakoutBeacon = ({
         netChangePct,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         dir: finalDir,
+        tradingViewUrl: buildTradingViewNseUrl(symbolRaw),
       };
     });
   };
 
-  const fetchMarketMovers = async (params = { datatype: 'PercPriceGainers', expirytype: 'FAR' }) => {
+  const fetchMarketMovers = async (params = {
+    "scan_clause": "( {33489} ( [0] 5 minute close > [0] 5 minute vwap and [0] 5 minute close > 1 day ago high and [0] 5 minute volume > ( 2 ) ) ) "
+  }) => {
     try {
       setInternalLoading(true);
-      const res = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
@@ -269,6 +297,16 @@ const BreakoutBeacon = ({
     return filteredRows.filter((r) => r.symbol.toLowerCase().includes(q));
   }, [rows, query, mood]);
 
+  // Normalize percent display regardless of input shape (string with % or number)
+  const getNumericPercent = (value, fallback = 0) => {
+    if (typeof value === 'string') {
+      const n = parseFloat(value.replace('%', '').trim());
+      return Number.isFinite(n) ? n : fallback;
+    }
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+  };
+
   // Calculate progress bar data
   const progressData = useMemo(() => {
     const total = filtered.length;
@@ -336,8 +374,8 @@ const BreakoutBeacon = ({
 
   const openInTradingView = async (symbol) => {
     if (!symbol) return;
-    const tvSymbol = await resolveTvSymbol(symbol);
-    const url = `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(tvSymbol)}`;
+    const url = buildTradingViewNseUrl(symbol);
+    if (!url) return;
     try {
       window.open(url, '_blank', 'noopener,noreferrer');
     } catch (e) {
@@ -481,13 +519,13 @@ const BreakoutBeacon = ({
 
       {/* Header row */}
       <div className="grid grid-cols-7 text-[15px] text-black/70 dark:text-black/70 px-2">
-        <div className="col-span-3  bg-white/50 px-5 py-2 rounded-full ">Symbols</div>
+        <div className="col-span-3  bg-white/50 px-5 py-2 rounded-full ">Symbol</div>
         <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%n+</div>
         <div className="col-span-2 bg-white/50 px-5 py-2 rounded-full">LTP</div>
         <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">Time</div>
       </div>
 
-      <div className="mt-2 divide-y divide-white/10">
+      <div className="mt-2 divide-y divide-white/10 max-h-[500px] overflow-y-auto scrollbar-hide">
         {effectiveLoading ? (
           <div className="flex items-center justify-center py-8">
             <div className="flex items-center gap-2 text-white/70">
@@ -531,7 +569,7 @@ const BreakoutBeacon = ({
                   ? 'bg-green-500 text-white group-hover:bg-green-400' 
                   : 'bg-red-500 text-white group-hover:bg-red-400'
               }`}>{r.tag}</span>
-              <span className="truncate text-[15px] uppercase dark:text-white text-black transition-colors group-hover:text-white">{toTitleCase(stripExpirySuffix(getDisplayName(r)) || prettifyFromSymbol(r.symbol))}</span>
+              <span className="truncate text-[15px] uppercase dark:text-white text-black transition-colors group-hover:text-white">{String(r.symbol || '').toUpperCase()}</span>
               </div>
               <div className='flex items-center gap-2'>
                 <img src={iconsmall} alt={r.symbol} className='w-4 h-4  transition-transform duration-150 group-hover:rotate-6' />
@@ -545,7 +583,7 @@ const BreakoutBeacon = ({
                   r.dir === 'up' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
                 }`}
               >
-                {Number(r.netChangePct ?? 0).toFixed(2)}
+                {getNumericPercent(r.netChangePct ?? r.percent ?? 0).toFixed(2)}
               </span>
             </div>
 

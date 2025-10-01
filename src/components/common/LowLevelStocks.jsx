@@ -9,9 +9,9 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
 const LowLevelStocks = (
     {
         title = 'LOW LEVEL STOCKS',
-        apiUrl = 'https://angelbackend-production.up.railway.app/get-market-movers',
+        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
         method = 'POST',
-        requestBody = { datatype: 'PercPriceLosers', expirytype: 'FAR' },
+        requestBody = { scan_clause: '( {cash} ( daily close > daily open and daily close > daily ema( daily close , 20 ) and daily volume > daily sma( daily volume , 20 ) * 2 and daily close > daily max( 10 , 1 day ago high ) and daily rsi( 14 ) > 50 and daily adx( 14 ) > 20 ) )  ' },
         headers = { 'Content-Type': 'application/json' },
         limit = 20,
       }
@@ -81,10 +81,11 @@ const LowLevelStocks = (
     };
   
     const displaySymbol = (it) => {
+      if (it && it.nsecode) return String(it.nsecode).toUpperCase();
       const sym = it.tradingSymbol || it.symbol || '';
       if (!sym) return '';
       const s = sym.replace(/-EQ$/i, '').replace(/^NSE_?/i, '');
-      return stripExpirySuffix(s);
+      return stripExpirySuffix(s).toUpperCase();
     };
   
 
@@ -124,22 +125,22 @@ const LowLevelStocks = (
       <div className="col-span-1 bg-white/50 px-5 py-2 rounded-full">%</div>
     </div>
 
-    <div className="mt-2 divide-y divide-white/10">
+    <div className="mt-2 divide-y divide-white/10 max-h-[500px] overflow-y-auto scrollbar-hide">
       {isLoading ? (
         <div className="flex items-center justify-center py-8 text-white/70">Loading...</div>
       ) : !data.length ? (
         <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
       ) : (
         data.map((it, idx) => {
-          const pct = Number(it.percentChange);
-          const up = Number.isFinite(pct) ? pct >= 0 : (Number(it.netChangeOpnInterest) || 0) >= 0;
+          const pct = Number(it.per_chg);
+          const up = Number.isFinite(pct) ? pct >= 0 : (Number(it.percentChange) || 0) >= 0;
           return (
-            <div key={(it.tradingSymbol || it.symbol || 'row') + idx} className="group grid grid-cols-7 items-center px-2 py-2 rounded-lg hover:bg-white/10 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:ring-1 ring-white/10">
+            <div key={(it.nsecode || it.tradingSymbol || it.symbol || 'row') + idx} className="group grid grid-cols-7 items-center px-2 py-2 rounded-lg hover:bg-white/10 transition-all duration-150 ease-out hover:-translate-y-0.5 hover:ring-1 ring-white/10">
               <div className="col-span-3 flex items-center justify-between gap-2 overflow-hidden">
                 <div className="flex items-center gap-2">
                   <span className={`text-[15px] font-semibold rounded-full px-2 py-0.5 ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>{up ? 'BULL' : 'BEAR'}</span>
                   <a 
-                    href={buildTradingViewNseUrl(it) || '#'} 
+                    href={buildTradingViewNseUrl(it?.nsecode || it) || '#'} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="truncate text-[15px] dark:text-white text-black transition-colors group-hover:text-white hover:text-blue-300  cursor-pointer"
@@ -153,12 +154,12 @@ const LowLevelStocks = (
               </div>
               <div className="col-span-2 text-sm flex justify-center items-center">
                 <span className={`inline-flex min-w-[80px] justify-center rounded-full px-2 py-0.5 text-[15px] font-semibold ${up ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
-                  {fmtInt(it.ltp)}
+                  {fmtInt(it.volume)}
                 </span>
               </div>
-              <div className="col-span-1 text-[15px] dark:text-white text-black">{fmtInt(it.netChange)}</div>
+              <div className="col-span-1 text-[15px] dark:text-white text-black">{fmtInt(it.close)}</div>
               <div className={`col-span-1 text-[15px] px-2 font-semibold ${up ? 'text-green-300' : 'text-red-300'}`}>
-                {fmtPct(it.percentChange)}
+                {fmtPct(it.per_chg)}
               </div>
             </div>
           );

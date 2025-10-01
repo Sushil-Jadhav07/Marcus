@@ -53,20 +53,43 @@ const MarketPulse = () => {
   const [topGainerError, setTopGainerError] = useState(null);
   const [topLoserError, setTopLoserError] = useState(null);
 
-  // Fetch breakout beacon data
+  // Helper: transform scan API to SignalSection items (nsecode/per_chg/close)
+  const transformScanToSignals = (data) => {
+    const items = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.data)
+        ? data.data
+        : Array.isArray(data?.items)
+          ? data.items
+          : [];
+    const now = () => new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return items.map((it, idx) => {
+      const symbol = String(it.nsecode || it.symbol || it.tradingSymbol || `STOCK${idx + 1}`).substring(0, 20);
+      const perChgNum = Number(it.per_chg);
+      const percent = Number.isFinite(perChgNum) ? perChgNum : 0;
+      const ltp = it.close ?? it.ltp ?? null;
+      return {
+        symbol,
+        timeLabel: now(),
+        signalPercent: `${percent > 0 ? '+' : ''}${percent.toFixed(2)}%`,
+        ltp,
+        movePercent: `${percent > 0 ? '+' : ''}${percent.toFixed(2)}%`,
+        direction: percent >= 0 ? 'up' : 'down',
+      };
+    });
+  };
+
+  // Fetch breakout beacon data (match BreakoutBeacon scan clause)
   const fetchBreakoutData = async () => {
     setBreakoutLoading(true);
     setBreakoutError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercPriceGainers',
-          expirytype: 'FAR'
-        })
+          scan_clause: '( {33489} ( [0] 5 minute close > [0] 5 minute vwap and [0] 5 minute close > 1 day ago high and [0] 5 minute volume > ( 2 ) ) ) ',
+        }),
       });
 
       if (!response.ok) {
@@ -74,9 +97,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Breakout data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setBreakoutData(transformedData);
       saveDataWithTimestamp('breakoutData', transformedData);
     } catch (err) {
@@ -88,20 +109,17 @@ const MarketPulse = () => {
     }
   };
 
-  // Fetch intraday boost data
+  // Fetch intraday boost data (match IntradayBoost scan clause)
   const fetchIntradayData = async () => {
     setIntradayLoading(true);
     setIntradayError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercPriceGainers',
-          expirytype: 'NEAR'
-        })
+          scan_clause: '( {cash} ( daily close > daily open and daily close > daily ema( daily close , 20 ) and daily volume > daily sma( daily volume , 20 ) * 2 and daily close > daily max( 10 , 1 day ago high ) and daily rsi( 14 ) > 50 and daily adx( 14 ) > 20 ) ) ',
+        }),
       });
 
       if (!response.ok) {
@@ -109,9 +127,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Intraday data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setIntradayData(transformedData);
       saveDataWithTimestamp('intradayData', transformedData);
     } catch (err) {
@@ -123,20 +139,17 @@ const MarketPulse = () => {
     }
   };
 
-  // Fetch top level stocks data
+  // Fetch top level stocks data (match TopLevelStocks scan clause)
   const fetchTopLevelData = async () => {
     setTopLevelLoading(true);
     setTopLevelError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercOIGainers',
-          expirytype: 'NEAR'
-        })
+          scan_clause: '( {cash} ( ( {33489} ( ( [0] 5 minute sma( [0] 5 minute volume , 4 ) - daily sma( 2 days ago volume / 75 , 5 ) ) / 2 days ago sma( daily volume , 75 ) * 100 > 0 and daily high / daily close <= 1.003 and 1 day ago "close - 1 candle ago close / 1 candle ago close * 100" < 5 and daily close >= 1 day ago high and daily close > 80 and daily close < 10000 and( {33489} ( [0] 5 minute close - [0] 5 minute open / [0] 5 minute open * 100 < 0.05 or [-1] 5 minute close - [-1] 5 minute open / [-1] 5 minute open * 100 < 0.05 or [-2] 5 minute close - [-2] 5 minute open / [-2] 5 minute open * 100 < 0.05 ) ) ) ) ) )',
+        }),
       });
 
       if (!response.ok) {
@@ -144,9 +157,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Top level data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setTopLevelData(transformedData);
       saveDataWithTimestamp('topLevelData', transformedData);
     } catch (err) {
@@ -158,20 +169,17 @@ const MarketPulse = () => {
     }
   };
 
-  // Fetch low level stocks data
+  // Fetch low level stocks data (match LowLevelStocks scan clause)
   const fetchLowLevelData = async () => {
     setLowLevelLoading(true);
     setLowLevelError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercPriceLosers',
-          expirytype: 'FAR'
-        })
+          scan_clause: '( {cash} ( daily close > daily open and daily close > daily ema( daily close , 20 ) and daily volume > daily sma( daily volume , 20 ) * 2 and daily close > daily max( 10 , 1 day ago high ) and daily rsi( 14 ) > 50 and daily adx( 14 ) > 20 ) )  ',
+        }),
       });
 
       if (!response.ok) {
@@ -179,9 +187,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Low level data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setLowLevelData(transformedData);
       saveDataWithTimestamp('lowLevelData', transformedData);
     } catch (err) {
@@ -193,20 +199,17 @@ const MarketPulse = () => {
     }
   };
 
-  // Fetch top gainers data
+  // Fetch top gainers data (match TopGainer scan clause)
   const fetchTopGainerData = async () => {
     setTopGainerLoading(true);
     setTopGainerError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercOIGainers',
-          expirytype: 'FAR'
-        })
+          scan_clause: '( {cash} ( daily close > daily open * 1.1 ) )',
+        }),
       });
 
       if (!response.ok) {
@@ -214,9 +217,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Top gainer data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setTopGainerData(transformedData);
       saveDataWithTimestamp('topGainerData', transformedData);
     } catch (err) {
@@ -228,20 +229,17 @@ const MarketPulse = () => {
     }
   };
 
-  // Fetch top losers data
+  // Fetch top losers data (match TopLoser scan clause)
   const fetchTopLoserData = async () => {
     setTopLoserLoading(true);
     setTopLoserError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/get-market-movers', {
+      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          datatype: 'PercOILosers',
-          expirytype: 'FAR'
-        })
+          scan_clause: '( {33489} ( ( [=-1] 5 minute close - [0] 5 minute low ) / [=-1] 5 minute close > .01 ) )',
+        }),
       });
 
       if (!response.ok) {
@@ -249,9 +247,7 @@ const MarketPulse = () => {
       }
 
       const data = await response.json();
-      console.log('Top loser data:', data);
-      
-      const transformedData = transformData(data);
+      const transformedData = transformScanToSignals(data);
       setTopLoserData(transformedData);
       saveDataWithTimestamp('topLoserData', transformedData);
     } catch (err) {
