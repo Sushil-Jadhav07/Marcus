@@ -19,15 +19,19 @@ import LOMDayHLReversal from '../components/common/LOMDayHLReversal';
 const InsiderStrategy = () => {
   // Mobile-only SignalSection: LOM LONG TERM (scan API)
   const [lomLongData, setLomLongData] = useState([]);
+  const LOM_LONG_CACHE = 'cache_INSIDER_LOM_LONG';
   const [lomLongLoading, setLomLongLoading] = useState(false);
   const [lomLongError, setLomLongError] = useState(null);
   const [lomShortData, setLomShortData] = useState([]);
+  const LOM_SHORT_CACHE = 'cache_INSIDER_LOM_SHORT';
   const [lomShortLoading, setLomShortLoading] = useState(false);
   const [lomShortError, setLomShortError] = useState(null);
   const [contractionData, setContractionData] = useState([]);
+  const CONTRACTION_CACHE = 'cache_INSIDER_CONTRACTION';
   const [contractionLoading, setContractionLoading] = useState(false);
   const [contractionError, setContractionError] = useState(null);
   const [dayHLData, setDayHLData] = useState([]);
+  const DAYHL_CACHE = 'cache_INSIDER_DAYHL';
   const [dayHLLoading, setDayHLLoading] = useState(false);
   const [dayHLError, setDayHLError] = useState(null);
 
@@ -66,8 +70,16 @@ const InsiderStrategy = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setLomLongData(transformScanToSignals(list));
+      try {
+        localStorage.setItem(LOM_LONG_CACHE, JSON.stringify(transformScanToSignals(list)));
+        localStorage.setItem(`${LOM_LONG_CACHE}_ts`, Date.now().toString());
+      } catch {}
     } catch (err) {
       setLomLongError(err?.message || 'Unknown error');
+      try {
+        const cached = localStorage.getItem(LOM_LONG_CACHE);
+        if (cached) { setLomLongData(JSON.parse(cached)); return; }
+      } catch {}
       setLomLongData([]);
     } finally {
       setLomLongLoading(false);
@@ -91,8 +103,16 @@ const InsiderStrategy = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setLomShortData(transformScanToSignals(list));
+      try {
+        localStorage.setItem(LOM_SHORT_CACHE, JSON.stringify(transformScanToSignals(list)));
+        localStorage.setItem(`${LOM_SHORT_CACHE}_ts`, Date.now().toString());
+      } catch {}
     } catch (err) {
       setLomShortError(err?.message || 'Unknown error');
+      try {
+        const cached = localStorage.getItem(LOM_SHORT_CACHE);
+        if (cached) { setLomShortData(JSON.parse(cached)); return; }
+      } catch {}
       setLomShortData([]);
     } finally {
       setLomShortLoading(false);
@@ -116,8 +136,16 @@ const InsiderStrategy = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setContractionData(transformScanToSignals(list));
+      try {
+        localStorage.setItem(CONTRACTION_CACHE, JSON.stringify(transformScanToSignals(list)));
+        localStorage.setItem(`${CONTRACTION_CACHE}_ts`, Date.now().toString());
+      } catch {}
     } catch (err) {
       setContractionError(err?.message || 'Unknown error');
+      try {
+        const cached = localStorage.getItem(CONTRACTION_CACHE);
+        if (cached) { setContractionData(JSON.parse(cached)); return; }
+      } catch {}
       setContractionData([]);
     } finally {
       setContractionLoading(false);
@@ -141,8 +169,16 @@ const InsiderStrategy = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setDayHLData(transformScanToSignals(list));
+      try {
+        localStorage.setItem(DAYHL_CACHE, JSON.stringify(transformScanToSignals(list)));
+        localStorage.setItem(`${DAYHL_CACHE}_ts`, Date.now().toString());
+      } catch {}
     } catch (err) {
       setDayHLError(err?.message || 'Unknown error');
+      try {
+        const cached = localStorage.getItem(DAYHL_CACHE);
+        if (cached) { setDayHLData(JSON.parse(cached)); return; }
+      } catch {}
       setDayHLData([]);
     } finally {
       setDayHLLoading(false);
@@ -151,6 +187,10 @@ const InsiderStrategy = () => {
 
   useEffect(() => {
     // Load once on mount (mobile section renders this component with lg:hidden)
+    try { const cached = localStorage.getItem(LOM_LONG_CACHE); if (cached) setLomLongData(JSON.parse(cached)); } catch {}
+    try { const cached = localStorage.getItem(LOM_SHORT_CACHE); if (cached) setLomShortData(JSON.parse(cached)); } catch {}
+    try { const cached = localStorage.getItem(CONTRACTION_CACHE); if (cached) setContractionData(JSON.parse(cached)); } catch {}
+    try { const cached = localStorage.getItem(DAYHL_CACHE); if (cached) setDayHLData(JSON.parse(cached)); } catch {}
     fetchLomLongData();
     fetchLomShortData();
     fetchContractionData();

@@ -23,6 +23,8 @@ const BreakoutBeacon = ({
   isLoading = false,
   onRefresh,
 }) => {
+  // Local cache key per beacon title
+  const CACHE_KEY = `cache_BreakoutBeacon_${(title || 'BEACON')}`;
   const staticRows = useMemo(
     () => [
       { tag: 'BULL', symbol: 'BOSCHLTD', percent: 4.34, signal: 3.44, time: '09:35', dir: 'up' },
@@ -178,7 +180,18 @@ const BreakoutBeacon = ({
       const items = Array.isArray(json?.data) ? json.data : [];
       const mapped = mapMarketMoversToRows(items);
       setInternalRows(mapped);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(mapped));
+        localStorage.setItem(`${CACHE_KEY}_ts`, Date.now().toString());
+      } catch (_) {}
     } catch (_) {
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          setInternalRows(JSON.parse(cached));
+          return;
+        }
+      } catch (_) {}
       setInternalRows([]);
     } finally {
       setInternalLoading(false);
@@ -188,6 +201,13 @@ const BreakoutBeacon = ({
   // Auto-fetch market movers if no rows/data provided
   useEffect(() => {
     if (!rowsProp && !(data && data.length)) {
+      // Load cached first if available
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          setInternalRows(JSON.parse(cached));
+        }
+      } catch (_) {}
       fetchMarketMovers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

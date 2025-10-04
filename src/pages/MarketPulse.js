@@ -359,12 +359,12 @@ const MarketPulse = () => {
         <Topbar /> 
         <MobileTopbar />
         
-        <div className=' overflow-hidden'>
+        <div className=' overflow-hidden '>
           <Marquee/>
           <div className='flex justify-start item-center px-5 pt-5'>
             <h2 className="mb-3 text-white font-semibold tracking-wide text-[30px]">Market Pulse</h2>
           </div>
-          <div className='px-5 md:grid hidden grid-cols-1 lg:grid-cols-2 gap-5'>
+          <div className='px-5 md:grid hidden grid-cols-1 lg:grid-cols-2 gap-5 lg:mb-[50px]'>
             <BreakoutBeacon 
               title="Breakout Beacon"
             />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import SignalCard from './SignalCard';
 import { FaLightbulb, FaPlay, FaSync } from 'react-icons/fa';
 import icon from '../../asset/img/candlepc.png';
@@ -13,7 +13,35 @@ const SignalSection = ({
   isLoading = false,
   error = null,
   onRefresh,
+  cacheKey,
 }) => {
+  const [cachedItems, setCachedItems] = useState([]);
+
+  // Load cached on mount
+  useEffect(() => {
+    if (!cacheKey) return;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) setCachedItems(JSON.parse(cached));
+    } catch {}
+  }, [cacheKey]);
+
+  // Save fresh items to cache on successful load
+  useEffect(() => {
+    if (!cacheKey) return;
+    if (!isLoading && !error && Array.isArray(items) && items.length) {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(items));
+        localStorage.setItem(`${cacheKey}_ts`, Date.now().toString());
+        setCachedItems(items);
+      } catch {}
+    }
+  }, [items, isLoading, error, cacheKey]);
+
+  const renderItems = useMemo(() => {
+    return (Array.isArray(items) && items.length) ? items : cachedItems;
+  }, [items, cachedItems]);
+
   return (
     <div className="mt-6 px-5 lg:hidden block">
       <div className="flex items-center justify-between w-full">
@@ -50,7 +78,7 @@ const SignalSection = ({
         </button> */}
       </div>
         <div className="mt-4 !dark:text-white !text-black overflow-x-auto scrollbar-hide">
-          {error ? (
+          {error && !(renderItems && renderItems.length) ? (
             <div className="flex items-center justify-center py-8">
               <div className="text-center">
                 <p className="text-red-400 text-sm mb-2">Please refresh button to try again</p>
@@ -65,20 +93,20 @@ const SignalSection = ({
                 )}
               </div>
             </div>
-          ) : isLoading ? (
+          ) : isLoading && !(renderItems && renderItems.length) ? (
             <div className="flex items-center justify-center py-8">
               <div className="flex items-center gap-3">
                 <FaSync className="w-5 h-5 animate-spin text-white/70" />
                 <p className="text-white/70 text-sm">Loading market data...</p>
               </div>
             </div>
-          ) : items.length === 0 ? (
+          ) : !(renderItems && renderItems.length) ? (
             <div className="flex items-center justify-center py-8">
               <p className="text-white/70 text-sm">No market data available</p>
             </div>
           ) : (
             <div className="flex gap-5 snap-x snap-mandatory">
-              {items.map((item) => (
+              {(renderItems || []).map((item) => (
                 <SignalCard key={item.symbol + item.timeLabel}
                   ltp={item.ltp}
                   symbol={item.symbol}

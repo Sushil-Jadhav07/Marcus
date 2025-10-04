@@ -54,7 +54,7 @@ function App() {
                 <Route path="/" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#fff] from-[#fff] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                          
                           <main className="pt-16 md:ml-64 lg:ml-72 pb-0 md:pb-0 ">
                             <Home />

@@ -61,7 +61,7 @@ const Homearea = () => {
         </div>
       </div>
 
-      <div className='flex justify-start flex-col items-start mt-5 gap-4'>
+      {/* <div className='flex justify-start flex-col items-start mt-5 gap-4'>
           <div className='flex justify-start items-center gap-2'>
             <h2 className='text-white text-[22px] mb-0 font-bold'>Crypto Trading</h2>
             <p className='text-white text-[20px] hover:underline cursor-pointer'>click here</p>
@@ -70,7 +70,7 @@ const Homearea = () => {
             <h2 className='text-white text-[22px] mb-0 font-bold'>FAQ Video</h2>
             <p className='text-white text-[20px] hover:underline cursor-pointer'>click here</p>
           </div>
-        </div>
+        </div> */}
 
     </div>
     </>

@@ -25,21 +25,27 @@ const SectorScope = () => {
 
   // Mobile SignalSections data for ENERGY SECTOR and IT Sector
   const [energyData, setEnergyData] = useState([]);
+  const ENERGY_CACHE = 'cache_SECTOR_energy';
   const [energyLoading, setEnergyLoading] = useState(false);
   const [energyError, setEnergyError] = useState(null);
   const [itData, setItData] = useState([]);
+  const IT_CACHE = 'cache_SECTOR_it';
   const [itLoading, setItLoading] = useState(false);
   const [itError, setItError] = useState(null);
   const [pharmaData, setPharmaData] = useState([]);
+  const PHARMA_CACHE = 'cache_SECTOR_pharma';
   const [pharmaLoading, setPharmaLoading] = useState(false);
   const [pharmaError, setPharmaError] = useState(null);
   const [autoData, setAutoData] = useState([]);
+  const AUTO_CACHE = 'cache_SECTOR_auto';
   const [autoLoading, setAutoLoading] = useState(false);
   const [autoError, setAutoError] = useState(null);
   const [fmcgData, setFmcgData] = useState([]);
+  const FMCG_CACHE = 'cache_SECTOR_fmcg';
   const [fmcgLoading, setFmcgLoading] = useState(false);
   const [fmcgError, setFmcgError] = useState(null);
   const [financeData, setFinanceData] = useState([]);
+  const FINANCE_CACHE = 'cache_SECTOR_finance';
   const [financeLoading, setFinanceLoading] = useState(false);
   const [financeError, setFinanceError] = useState(null);
 
@@ -76,8 +82,10 @@ const SectorScope = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setEnergyData(transformScanToSignals(list));
+      try { localStorage.setItem(ENERGY_CACHE, JSON.stringify(transformScanToSignals(list))); localStorage.setItem(`${ENERGY_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setEnergyError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(ENERGY_CACHE); if (cached) { setEnergyData(JSON.parse(cached)); return; } } catch {}
       setEnergyData([]);
     } finally {
       setEnergyLoading(false);
@@ -99,8 +107,10 @@ const SectorScope = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setItData(transformScanToSignals(list));
+      try { localStorage.setItem(IT_CACHE, JSON.stringify(transformScanToSignals(list))); localStorage.setItem(`${IT_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setItError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(IT_CACHE); if (cached) { setItData(JSON.parse(cached)); return; } } catch {}
       setItData([]);
     } finally {
       setItLoading(false);
@@ -149,8 +159,10 @@ const SectorScope = () => {
         };
       });
       setPharmaData(mapped);
+      try { localStorage.setItem(PHARMA_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${PHARMA_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setPharmaError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(PHARMA_CACHE); if (cached) { setPharmaData(JSON.parse(cached)); return; } } catch {}
       setPharmaData([]);
     } finally {
       setPharmaLoading(false);
@@ -200,8 +212,10 @@ const SectorScope = () => {
         };
       });
       setAutoData(mapped);
+      try { localStorage.setItem(AUTO_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${AUTO_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setAutoError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(AUTO_CACHE); if (cached) { setAutoData(JSON.parse(cached)); return; } } catch {}
       setAutoData([]);
     } finally {
       setAutoLoading(false);
@@ -251,8 +265,10 @@ const SectorScope = () => {
         };
       });
       setFmcgData(mapped);
+      try { localStorage.setItem(FMCG_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${FMCG_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setFmcgError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(FMCG_CACHE); if (cached) { setFmcgData(JSON.parse(cached)); return; } } catch {}
       setFmcgData([]);
     } finally {
       setFmcgLoading(false);
@@ -307,8 +323,10 @@ const SectorScope = () => {
         };
       });
       setFinanceData(mapped);
+      try { localStorage.setItem(FINANCE_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${FINANCE_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
       setFinanceError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(FINANCE_CACHE); if (cached) { setFinanceData(JSON.parse(cached)); return; } } catch {}
       setFinanceData([]);
     } finally {
       setFinanceLoading(false);
@@ -324,6 +342,12 @@ const SectorScope = () => {
 
   useEffect(() => {
     // Load mobile SignalSections on mount
+    try { const c = localStorage.getItem(ENERGY_CACHE); if (c) setEnergyData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(IT_CACHE); if (c) setItData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(PHARMA_CACHE); if (c) setPharmaData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(AUTO_CACHE); if (c) setAutoData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(FMCG_CACHE); if (c) setFmcgData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(FINANCE_CACHE); if (c) setFinanceData(JSON.parse(c)); } catch {}
     fetchEnergyData();
     fetchItData();
     fetchPharmaData();

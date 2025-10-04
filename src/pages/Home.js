@@ -6,7 +6,10 @@ import MobileTopbar from '../components/layout/MobileTopbar';
 import Homearea from '../components/Home/Homearea';
 import Functions from '../components/Home/Functions';
 import LearnMore from '../components/Home/LearnMore';
-import MoreTools from '../components/Home/MoreTools';
+import HomeLearnVideos from '../components/Home/HomeLearnVideos';
+import FAQSection from '../components/F&Q/FAQSection';
+import Marquee from '../components/MarketPulse/Marquee';
+import HomeFAQTeaser from '../components/Home/HomeFAQTeaser';
 
 const Home = () => {
 
@@ -17,17 +20,23 @@ const Home = () => {
               <Topbar /> 
               <MobileTopbar />
                 <div className=" h-auto ">
-                  <div className='h-auto'>
-                  <Homearea />
+                  <div className='h-auto overflow-hidden '>
+                  <Marquee />
+                  
+                 
                   </div>
                   {/* <div className='h-full px-4 my-6'>
                     <CandlestickChart symbol="IBM" apiKey={process.env.REACT_APP_ALPHA_VANTAGE_KEY || '3R1UBTVGUDNS46OO'} height={420} />
                   </div> */}
-                  <div className='h-full'>
+                  <div className='h-full mt-10 px-5 py-5 mb-[50px] lg:mb-[100px] '>
+                  <Homearea />
                   <Functions />
+                  <LearnMore/>
+                  <HomeLearnVideos/>
+                  <HomeFAQTeaser/>
                   </div>
-                  {/* <LearnMore/>
-                  <MoreTools/> */}
+                
+                  {/* <MoreTools/> */}
                 </div>
             </div>
     </div>

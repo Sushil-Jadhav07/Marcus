@@ -15,6 +15,7 @@ const IntradayBoost = ({
 }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const CACHE_KEY = `cache_IntradayBoost_${title}`;
 
   // Map various payload shapes into rows that BreakoutBeacon understands
   const mapToRows = (items) => {
@@ -88,9 +89,20 @@ const IntradayBoost = ({
       const items = Array.isArray(json?.data) ? json.data : (json?.items || []);
       const mapped = mapToRows(items);
       setRows(mapped);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(mapped));
+        localStorage.setItem(`${CACHE_KEY}_ts`, Date.now().toString());
+      } catch (_) {}
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('IntradayBoost fetch failed', e);
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          setRows(JSON.parse(cached));
+          return;
+        }
+      } catch (_) {}
       setRows([]);
     } finally {
       setIsLoading(false);
@@ -98,6 +110,10 @@ const IntradayBoost = ({
   };
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) setRows(JSON.parse(cached));
+    } catch (_) {}
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiUrl]);

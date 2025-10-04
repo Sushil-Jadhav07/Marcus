@@ -16,15 +16,19 @@ import WeeklyWatchMobile from '../components/common/WeeklyWatchMobile';
 const SwingSpectrum = () => {
   // Mobile SignalSection state
   const [bo10Data, setBo10Data] = useState([]);
+  const BO10_CACHE = 'cache_SWING_bo10';
   const [bo10Loading, setBo10Loading] = useState(false);
   const [bo10Error, setBo10Error] = useState(null);
   const [bo50Data, setBo50Data] = useState([]);
+  const BO50_CACHE = 'cache_SWING_bo50';
   const [bo50Loading, setBo50Loading] = useState(false);
   const [bo50Error, setBo50Error] = useState(null);
   const [channelData, setChannelData] = useState([]);
+  const CHANNEL_CACHE = 'cache_SWING_channel';
   const [channelLoading, setChannelLoading] = useState(false);
   const [channelError, setChannelError] = useState(null);
   const [nr7Data, setNr7Data] = useState([]);
+  const NR7_CACHE = 'cache_SWING_nr7';
   const [nr7Loading, setNr7Loading] = useState(false);
   const [nr7Error, setNr7Error] = useState(null);
 
@@ -60,8 +64,26 @@ const SwingSpectrum = () => {
       const json = await res.json();
       const list = Array.isArray(json?.data) ? json.data : [];
       setData(transformScanToSignals(list));
+      // Persist by heuristic using the provided setter
+      try {
+        if (setData === setBo10Data) localStorage.setItem(BO10_CACHE, JSON.stringify(transformScanToSignals(list)));
+        else if (setData === setBo50Data) localStorage.setItem(BO50_CACHE, JSON.stringify(transformScanToSignals(list)));
+        else if (setData === setChannelData) localStorage.setItem(CHANNEL_CACHE, JSON.stringify(transformScanToSignals(list)));
+        else if (setData === setNr7Data) localStorage.setItem(NR7_CACHE, JSON.stringify(transformScanToSignals(list)));
+      } catch {}
     } catch (err) {
       setError(err?.message || 'Unknown error');
+      try {
+        if (setData === setBo10Data) {
+          const c = localStorage.getItem(BO10_CACHE); if (c) { setData(JSON.parse(c)); return; }
+        } else if (setData === setBo50Data) {
+          const c = localStorage.getItem(BO50_CACHE); if (c) { setData(JSON.parse(c)); return; }
+        } else if (setData === setChannelData) {
+          const c = localStorage.getItem(CHANNEL_CACHE); if (c) { setData(JSON.parse(c)); return; }
+        } else if (setData === setNr7Data) {
+          const c = localStorage.getItem(NR7_CACHE); if (c) { setData(JSON.parse(c)); return; }
+        }
+      } catch {}
       setData([]);
     } finally {
       setLoading(false);
@@ -89,6 +111,10 @@ const SwingSpectrum = () => {
   );
 
   useEffect(() => {
+    try { const c = localStorage.getItem(BO10_CACHE); if (c) setBo10Data(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(BO50_CACHE); if (c) setBo50Data(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(CHANNEL_CACHE); if (c) setChannelData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(NR7_CACHE); if (c) setNr7Data(JSON.parse(c)); } catch {}
     fetchBo10();
     fetchBo50();
     fetchChannel();
@@ -147,7 +173,7 @@ const SwingSpectrum = () => {
             </div>
             <div className='px-5 grid grid-cols-1 lg:grid-cols-2 gap-5'>
               <LOMSwingScanOne title="10 DAY BO" />
-              <LOMSwingScanTwo title="50 DAY BO" />
+              <LOMSwingScanOne title="50 DAY BO" />
               <LOMSwingThree title='CHANNEL BO'/>
               <LOMSwingFour title='NR7'/>
             </div>

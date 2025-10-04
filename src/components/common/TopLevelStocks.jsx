@@ -19,6 +19,7 @@ const TopLevelStocks = ({
 }) => {
   const [rawData, setRawData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const CACHE_KEY = `cache_TopLevelStocks_${title}`;
 
   const extractItems = (json) => {
     if (Array.isArray(json)) return json;
@@ -40,9 +41,20 @@ const TopLevelStocks = ({
       const json = await res.json();
       const items = extractItems(json);
       setRawData(Array.isArray(items) ? items : []);
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(Array.isArray(items) ? items : []));
+        localStorage.setItem(`${CACHE_KEY}_ts`, Date.now().toString());
+      } catch (_) {}
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('TopLevelStocks fetch failed', e);
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          setRawData(JSON.parse(cached));
+          return;
+        }
+      } catch (_) {}
       setRawData([]);
     } finally {
       setIsLoading(false);
@@ -50,6 +62,10 @@ const TopLevelStocks = ({
   };
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) setRawData(JSON.parse(cached));
+    } catch (_) {}
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiUrl, method, JSON.stringify(requestBody)]);
