@@ -235,43 +235,43 @@ const UserList = () => {
       <div className='max-w-7xl mx-auto'>
         {/* Header */}
         <div className='text-center mb-8'>
-          <div className='inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm border border-white/15 p-5 rounded-full mb-4'>
+          <div className='inline-flex items-center justify-center w-16 h-16 dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 p-5 rounded-full mb-4'>
             <FiUsers className='w-8 h-8 text-white' />
           </div>
           <h1 className='text-4xl font-bold text-gray-900 dark:text-white mb-2'>
             User Management
           </h1>
-          <p className='text-lg text-gray-600 dark:text-gray-300'>
+          <p className='text-lg text-black dark:text-gray-300'>
             Manage all users in your Marcus Finance platform
           </p>
         </div>
 
         {/* Stats Cards */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-          <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
+          <div className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>Total Users</p>
+                <p className='text-sm font-medium text-black dark:text-gray-400'>Total Users</p>
                 <p className='text-3xl font-bold text-gray-900 dark:text-white'>{stats.all}</p>
               </div>
               <FiUsers className='h-8 w-8 text-blue-600' />
             </div>
           </div>
           
-          <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
+          <div className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>Admins</p>
+                <p className='text-sm font-medium text-black dark:text-gray-400'>Admins</p>
                 <p className='text-3xl font-bold text-gray-900 dark:text-white'>{stats.admin}</p>
               </div>
               <FiUserCheck className='h-8 w-8 text-blue-600' />
             </div>
           </div>
           
-          <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
+          <div className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
             <div className='flex items-center justify-between'>
               <div>
-                <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>Clients</p>
+                <p className='text-sm font-medium text-black dark:text-gray-400'>Clients</p>
                 <p className='text-3xl font-bold text-gray-900 dark:text-white'>{stats.client}</p>
               </div>
               <FiUserX className='h-8 w-8 text-green-600' />
@@ -280,7 +280,7 @@ const UserList = () => {
         </div>
 
         {/* Search and Filter */}
-        <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 mb-6'>
+        <div className='bg-black/10 dark:bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 mb-6'>
           <div className='flex flex-col md:flex-row gap-4 items-center justify-between'>
             <div className='relative flex-1 max-w-md'>
               <AiOutlineSearch className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
@@ -304,15 +304,15 @@ const UserList = () => {
         </div>
 
         {/* Role Tabs */}
-        <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 mb-6'>
-          <div className='border-b border-gray-200 dark:border-gray-700'>
+        <div className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 mb-6'>
+          <div className='border-b border-gray-800 dark:border-gray-700'>
             <nav className='flex space-x-8 px-6' aria-label='Tabs'>
               <button
                 onClick={() => setActiveTab('all')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'all'
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent dark:text-gray-500 text-black hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 All Users ({stats.all})
@@ -322,7 +322,7 @@ const UserList = () => {
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'admin'
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent dark:text-gray-500 text-black hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 Admins ({stats.admin})
@@ -332,7 +332,7 @@ const UserList = () => {
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === 'client'
                     ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent dark:text-gray-500 text-black hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 Clients ({stats.client})
@@ -349,7 +349,7 @@ const UserList = () => {
         )}
 
         {/* Users Table */}
-        <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
+        <div className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5'>
           {loading ? (
             <div className='flex items-center justify-center py-12'>
               <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600'></div>

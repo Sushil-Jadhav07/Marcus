@@ -74,7 +74,7 @@ const HomeFAQTeaser = () => {
       {/* Header */}
       <div className='text-center'>
         <div className='flex items-start justify-start gap-4 mb-3'>
-          <h2 className='text-[20px] text-white font-bold'>
+          <h2 className='text-[20px] dark:text-white text-black font-bold'>
             Frequently Asked Questions
           </h2>
         </div>
@@ -108,7 +108,7 @@ const HomeFAQTeaser = () => {
             return (
               <div
                 key={item.id}
-                className='bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30'
+                className='dark:bg-white/10 bg-black/10 backdrop-blur-sm border dark:border-white/20 border-black/20 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/15 hover:border-white/30'
               >
                 <button
                   onClick={() => toggleExpanded(item.id)}
@@ -116,10 +116,10 @@ const HomeFAQTeaser = () => {
                 >
                   <div className='flex items-start gap-4 flex-1'>
                     <div className='flex-shrink-0 mt-1'>
-                      <QuestionMarkCircleIcon className='h-6 w-6 text-white/80' />
+                      <QuestionMarkCircleIcon className='h-6 w-6 dark:text-white text-black/80' />
                     </div>
                     <div className='flex-1'>
-                      <h3 className='text-lg font-semibold text-white mb-2'>
+                      <h3 className='text-lg font-semibold dark:text-white text-black mb-2'>
                         {item.question}
                       </h3>
                       {/* <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getCategoryColor(item.category)}`}>
@@ -129,16 +129,16 @@ const HomeFAQTeaser = () => {
                   </div>
                   <div className='flex-shrink-0 ml-4'>
                     {isExpanded ? (
-                      <ChevronUpIcon className='h-6 w-6 text-white/80 transition-transform duration-200' />
+                      <ChevronUpIcon className='h-6 w-6 dark:text-white text-black/80 transition-transform duration-200' />
                     ) : (
-                      <ChevronDownIcon className='h-6 w-6 text-white/80 transition-transform duration-200' />
+                      <ChevronDownIcon className='h-6 w-6 dark:text-white text-black/80 transition-transform duration-200' />
                     )}
                   </div>
                 </button>
                 {isExpanded && (
                   <div className='px-6 pb-6 border-t border-white/10'>
                     <div className='pt-4 pl-10'>
-                      <p className='text-white/90 leading-relaxed text-base'>
+                      <p className='dark:text-white text-black/90 leading-relaxed text-base'>
                         {item.answer}
                       </p>
                     </div>

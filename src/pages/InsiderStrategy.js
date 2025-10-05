@@ -198,7 +198,7 @@ const InsiderStrategy = () => {
   }, []);
   
   return (
-    <div className='flex flex-col h-auto bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+    <div className='flex flex-col h-auto'>
     <Navigation />
       <div className=' w-full h-full flex flex-col'>
           <Topbar /> 

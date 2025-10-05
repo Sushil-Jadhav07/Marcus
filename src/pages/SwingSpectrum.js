@@ -127,7 +127,7 @@ const SwingSpectrum = () => {
     <div className='w-full h-full flex flex-col'>
         <Topbar /> 
         <MobileTopbar />
-          <div className=" h-auto lg:hidden block bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
+          <div className=" h-auto lg:hidden block">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
           <h2 className="mb-3 text-white font-semibold tracking-wide">Swing Spectrum</h2>
           </div>

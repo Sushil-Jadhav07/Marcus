@@ -17,6 +17,8 @@ const ITSectors = (
 ) => {
     const [rawData, setRawData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const storageKey = useMemo(() => `ITSectors:${title}`, [title]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('Neutral');
   
@@ -30,6 +32,7 @@ const ITSectors = (
   
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const init = { method, headers };
         if (method.toUpperCase() === 'POST') {
@@ -39,9 +42,24 @@ const ITSectors = (
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         const items = extractItems(json);
-        setRawData(Array.isArray(items) ? items : []);
+        const next = Array.isArray(items) ? items : [];
+        setRawData(next);
+        try {
+          if (Array.isArray(next)) {
+            localStorage.setItem(storageKey, JSON.stringify(next));
+          }
+        } catch (_) {}
       } catch (e) {
-        setRawData([]);
+        setError(e?.message || 'Unknown error');
+        try {
+          const cachedRaw = localStorage.getItem(storageKey);
+          if (cachedRaw) {
+            const cached = JSON.parse(cachedRaw);
+            if (Array.isArray(cached)) {
+              setRawData(prev => prev?.length ? prev : cached);
+            }
+          }
+        } catch (_) {}
       } finally {
         setIsLoading(false);
       }
@@ -77,6 +95,15 @@ const ITSectors = (
       };
   
     useEffect(() => {
+      try {
+        const cachedRaw = localStorage.getItem(storageKey);
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw);
+          if (Array.isArray(cached)) {
+            setRawData(cached);
+          }
+        }
+      } catch (_) {}
       fetchData();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl, method, JSON.stringify(requestBody)]);
@@ -200,6 +227,17 @@ const ITSectors = (
       Shows latest signals with change
     </div>
 
+    {/* {error && data.length > 0 && (
+      <div className="text-amber-300 bg-amber-900/30 border border-amber-500/40 rounded-lg p-3">
+        Showing last saved data (cached). Error: {error}
+      </div>
+    )} */}
+    {error && data.length === 0 && (
+      <div className="text-red-300 bg-red-900/40 border border-red-500/40 rounded-lg p-3">
+        {error}
+      </div>
+    )}
+
     <div className="grid grid-cols-5 text-[15px]  text-black/70 px-2">
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-3">Symbol</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">per_chg</div>
@@ -209,7 +247,10 @@ const ITSectors = (
 
     <div className="mt-2 divide-y divide-white/10 h-[500px] overflow-y-scroll scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {isLoading ? (
-        <div className="flex items-center justify-center py-8 text-white/70">Loading...</div>
+        <div className="flex items-center justify-center py-8 text-white/70"> <div className="flex items-center gap-2 text-white/70">
+              <FiRefreshCw className="animate-spin" />
+              <span>Loading...</span>
+            </div></div>
       ) : !data.length ? (
         <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
       ) : (

@@ -3,13 +3,13 @@ import { FiHelpCircle, FiRefreshCw, FiSearch } from 'react-icons/fi';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
 
-const EnergySector = (
+const RealitySector = (
     {
-        title = 'ENERGY SECTOR',
+        title = 'REALITY SECTOR',
         apiUrl = 'https://angelbackend-production.up.railway.app/scan',
         method = 'POST',
         requestBody = {
-          scan_clause: "( {cash} ( abs( [0] 5 minute sma( [0] 5 minute close , 10 ) - [0] 5 minute sma( [0] 5 minute close , 6 ) ) <= [0] 5 minute sma( [0] 5 minute close , 10 ) * 0.005 and [0] 5 minute close > [0] 5 minute open and [0] 5 minute sma( [0] 5 minute close , 6 ) >= [0] 5 minute sma( [0] 5 minute close , 10 ) and [0] 5 minute close >= [0] 5 minute sma( [0] 5 minute close , 6 ) and [0] 5 minute rsi( 14 ) >= 70 and abs( [0] 5 minute close - [0] 5 minute open ) > 2 * [-1] 5 minute sma( abs( [0] 5 minute close - [0] 5 minute open ) , 75 ) ) ) "
+          scan_clause: "( {33489} ( sector = 'realty' ) ) "
         },
         headers = { 'Content-Type': 'application/json' },
         limit = 58,
@@ -18,7 +18,7 @@ const EnergySector = (
     const [rawData, setRawData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const storageKey = useMemo(() => `EnergySector:${title}`, [title]);
+    const storageKey = useMemo(() => `RealitySector:${title}`, [title]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('Neutral');
   
@@ -159,39 +159,8 @@ const EnergySector = (
       return stripExpirySuffix(s);
     };
 
-   
-
-    
-
-    // const getOpen = (it) => {
-    //   const candidates = [it?.open, it?.o, it?.openPrice];
-    //   const val = candidates.find((v) => Number.isFinite(Number(v)));
-    //   return Number(val);
-    // };
-
-    // const getHigh = (it) => {
-    //   const candidates = [it?.high, it?.h, it?.highPrice];
-    //   const val = candidates.find((v) => Number.isFinite(Number(v)));
-    //   return Number(val);
-    // };
-
-    // const getLow = (it) => {
-    //   const candidates = [it?.low, it?.l, it?.lowPrice];
-    //   const val = candidates.find((v) => Number.isFinite(Number(v)));
-    //   return Number(val);
-    // };
-
-    // const getVolume = (it) => {
-    //   const candidates = [it?.volume, it?.vol, it?.totalVolume, it?.tradedVolume];
-    //   const val = candidates.find((v) => Number.isFinite(Number(v)));
-    //   return Number(val);
-    // };
-
-    // const getAllFields = (it) => {
-    //   return it;
-    // };
   return (
-    <div className="relative overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 hover:scale-[1.02]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+     <div className="relative overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 hover:scale-[1.02]" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
     {/* Header (matches BreakoutBeacon style) */}
     <div className="flex items-center gap-4 mb-2">
       <div className="relative">
@@ -315,4 +284,4 @@ const EnergySector = (
   )
 }
 
-export default EnergySector
+export default RealitySector

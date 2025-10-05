@@ -16,6 +16,7 @@ const LOMSwingScanTwo = (
 ) => {
     const [rawData, setRawData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const extractItems = (json) => {
       if (Array.isArray(json)) return json;
@@ -27,21 +28,25 @@ const LOMSwingScanTwo = (
 
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
+      try { if (typeof navigator !== 'undefined' && !navigator.onLine) { setError('Offline. Showing cached data if available.'); setIsLoading(false); return; } } catch (_) {}
+      let abortId; const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       try {
         const init = { method, headers };
         if (method.toUpperCase() === 'POST') {
           init.body = JSON.stringify(requestBody ?? {});
         }
+        if (controller) { init.signal = controller.signal; abortId = setTimeout(() => controller.abort(), 10000); }
         const res = await fetch(apiUrl, init);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         const items = extractItems(json);
         setRawData(Array.isArray(items) ? items : []);
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('LOMSwingScanTwo fetch failed', e);
+        setError(e?.message || 'Unknown error');
         setRawData([]);
       } finally {
+        if (abortId) { clearTimeout(abortId); }
         setIsLoading(false);
       }
     };
@@ -134,6 +139,17 @@ const LOMSwingScanTwo = (
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">per_chg</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">Close</div>
     </div>
+
+    {error && rawData.length > 0 && (
+      <div className="text-amber-300 bg-amber-900/30 border border-amber-500/40 rounded-lg p-3">
+        Showing last saved data (cached). Error: {error}
+      </div>
+    )}
+    {error && rawData.length === 0 && (
+      <div className="text-red-300 bg-red-900/40 border border-red-500/40 rounded-lg p-3">
+        {error}
+      </div>
+    )}
 
     <div className="mt-2 divide-y divide-white/10 h-[500px] overflow-y-scroll scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {isLoading ? (

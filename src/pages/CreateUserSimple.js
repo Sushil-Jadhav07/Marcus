@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUser } from '../store/authSlice';
 import { addUser, removeUser } from '../store/usersSlice';
@@ -25,6 +25,8 @@ const CreateUserSimple = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [roleOpen, setRoleOpen] = useState(false);
+  const roleDropdownRef = useRef(null);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -76,6 +78,18 @@ const CreateUserSimple = () => {
     
     return true;
   };
+
+  // Close custom dropdown on outside click
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!roleDropdownRef.current) return;
+      if (!roleDropdownRef.current.contains(e.target)) {
+        setRoleOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -141,21 +155,20 @@ const CreateUserSimple = () => {
           <Topbar /> 
           <MobileTopbar />
           <div className=' '>
-      <div className='max-w-4xl mx-auto'>
+      <div className='max-w-6xl mx-auto'>
         {/* Header */}
-        <div className='text-center mb-8'>
-          <h1 className='text-4xl font-bold text-gray-900 dark:text-white mb-2'>
+        <div className=' mb-8 px-4 lg:px-0'>
+        
+          <h1 className='text-3xl text-start lg:text-4xl font-bold text-gray-900 dark:text-white mb-2'>
             Create New User
-          </h1>
-          <p className='text-gray-600 dark:text-gray-300'>
-            Add new users to your Marcus Finance platform with Firebase authentication
-          </p>
+          </h1> 
+         
         </div>
 
-        <div className='grid lg:grid-cols-2 gap-8 lg:px-16 px-4'>
+        <div className='grid grid-cols-1 gap-6 px-4 lg:px-0'>
           {/* Create User Form */}
           <div className='lg:col-span-2'>
-            <div className='bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-8'>
+            <div className='bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 lg:p-8 shadow-lg'>
               <form onSubmit={submit} className='space-y-6'>
                 {/* Alerts */}
                 {error && (
@@ -170,51 +183,53 @@ const CreateUserSimple = () => {
                   </div>
                 )}
 
-                {/* Full Name */}
-                <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-                    Full Name
-                  </label>
-                  <input
-                    type='text'
-                    value={formData.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    placeholder='Enter full name'
-                    className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white'
-                  />
+                {/* Grid: Full name + Phone */}
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                  {/* Full Name */}
+                  <div>
+                    <label className='block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2'>
+                      Full Name <span className='text-red-400'>*</span>
+                    </label>
+                    <input
+                      type='text'
+                      value={formData.fullName}
+                      onChange={(e) => handleInputChange('fullName', e.target.value)}
+                      placeholder='John Doe'
+                      className='w-full px-4 py-3 border border-gray-300 dark:border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/60'
+                    />
+                  </div>
+                  {/* Phone Number */}
+                  <div>
+                    <label className='block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2'>
+                      Phone Number <span className='text-red-400'>*</span>
+                    </label>
+                    <input
+                      type='tel'
+                      value={formData.number}
+                      onChange={(e) => handleInputChange('number', e.target.value)}
+                      placeholder='e.g., 9876543210'
+                      className='w-full px-4 py-3 border border-gray-300 dark:border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/60'
+                    />
+                  </div>
                 </div>
 
-                {/* Phone Number */}
+                {/* Grid: Email */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-                    Phone Number
-                  </label>
-                  <input
-                    type='tel'
-                    value={formData.number}
-                    onChange={(e) => handleInputChange('number', e.target.value)}
-                    placeholder='Enter phone number'
-                    className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white'
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-                    Email Address
+                  <label className='block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2'>
+                    Email Address <span className='text-red-400'>*</span>
                   </label>
                   <input
                     type='email'
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder='Enter email address'
-                    className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white'
+                    placeholder='name@example.com'
+                    className='w-full px-4 py-3 border border-gray-300 dark:border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/60'
                   />
                 </div>
 
                 {/* Password */}
                 <div className='relative'>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                  <label className='block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2'>
                     Password
                   </label>
                   <input
@@ -223,11 +238,11 @@ const CreateUserSimple = () => {
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     
                     placeholder='Enter password (min 6 characters)'
-                    className='w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white'
+                    className='w-full px-4 py-3 pr-12 border border-gray-300 dark:border-white/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-white/60'
                   />
                   <button
                     type='button'
-                    className='absolute right-3 top-11 text-black hover:text-black dark:text-black dark:hover:text-black'
+                    className='absolute right-3 top-11 text-gray-600 hover:text-gray-800 dark:text-white/70 dark:hover:text-white'
                     onClick={() => setShowPassword(!showPassword)}
                   >
                      {showPassword ? (
@@ -254,30 +269,76 @@ const CreateUserSimple = () => {
 
                 {/* Role Selection */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                  <label className='block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2'>
                     User Role
                   </label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) => handleInputChange('role', e.target.value)}
-                    className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white'
-                  >
-                    <option value='client'>Client</option>
-                    <option value='admin'>Admin</option>
-                  </select>
+                  <div ref={roleDropdownRef} className='relative'>
+                    <button
+                      type='button'
+                      onClick={() => setRoleOpen((o) => !o)}
+                      className='flex w-full items-center justify-between px-4 py-3 border border-gray-300 dark:border-white/20 rounded-lg bg-white dark:bg-white/10 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    >
+                      <span className='truncate capitalize'>{formData.role || 'Select role'}</span>
+                      <span className={`ml-3 transition-transform ${roleOpen ? 'rotate-180' : ''}`}>
+                        <svg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                          <path d='M7 10l5 5 5-5' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'/>
+                        </svg>
+                      </span>
+                    </button>
+                    {roleOpen && (
+                      <div className='absolute z-20 mt-2 w-full rounded-xl bg-white dark:bg-[#1f2937] shadow-2xl border border-gray-200 dark:border-white/20 overflow-hidden'>
+                        {[
+                          { label: 'Client', value: 'client' },
+                          { label: 'Admin', value: 'admin' },
+                        ].map((opt) => {
+                          const active = formData.role === opt.value;
+                          return (
+                            <button
+                              type='button'
+                              key={opt.value}
+                              onClick={() => {
+                                handleInputChange('role', opt.value);
+                                setRoleOpen(false);
+                              }}
+                              className={`w-full text-left px-4 py-3 flex items-center justify-between hover:bg-blue-50 dark:hover:bg-white/10 ${active ? 'bg-blue-50 dark:bg-white/10' : ''}`}
+                            >
+                              <span className='capitalize text-gray-900 dark:text-white'>{opt.label}</span>
+                              {active && (
+                                <svg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' className='text-blue-600 dark:text-white'>
+                                  <path d='M20 6L9 17l-5-5' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'/>
+                                </svg>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Submit Button */}
-                <button
-                  type='submit'
-                  disabled={loading}
-                  className='w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200'
-                >
-                  {loading ? 'Creating User...' : 'Create User'}
-                </button>
+                <div className='flex items-center justify-end gap-3 pt-2'>
+                  <button
+                    type='button'
+                    disabled={loading}
+                    onClick={() => setFormData({ fullName: '', number: '', email: '', password: '', confirmPassword: '', role: '' })}
+                    className='px-5 py-3 rounded-lg border border-gray-300 dark:border-white/20 text-gray-700 dark:text-white/80 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors duration-200 disabled:opacity-50'
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type='submit'
+                    disabled={loading}
+                    className='px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700'
+                  >
+                    {loading ? 'Creating User...' : 'Create User'}
+                  </button>
+                </div>
               </form>
             </div>
           </div>
+
+          {/* Right column removed as requested */}
         </div>
       </div>
     </div>

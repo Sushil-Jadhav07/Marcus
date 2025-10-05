@@ -2,11 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
 import { buildTradingViewNseUrl } from '../../utils/tradingview';
+import { FiRefreshCw } from 'react-icons/fi';
 
 const InsiderStrategyBox = ({ title, children, className = "" }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Use a stable storage key per box (based on title to avoid collisions across instances)
+  const storageKey = useMemo(() => `insiderStrategyBox:${title || 'default'}`, [title]);
 
   const requestBody = useMemo(() => ({
     scan_clause: "( {cash} ( [0] 5 minute sum( abs( daily close - daily open ) , 8 ) > [-1] 5 minute sum( abs( daily close - daily open ) , 8 ) and [0] 5 minute close > [0] 5 minute open ) )"
@@ -28,20 +32,53 @@ const InsiderStrategyBox = ({ title, children, className = "" }) => {
       }
       const json = await res.json();
       setData(json.data);
+      // Persist latest successful data for fallback rendering
+      try {
+        if (Array.isArray(json?.data)) {
+          localStorage.setItem(storageKey, JSON.stringify(json.data));
+        }
+      } catch (_) {
+        // ignore storage errors
+      }
     } catch (err) {
       setError(err?.message || 'Unknown error');
+      // Try to load cached data on failure (fallback)
+      try {
+        const cachedRaw = localStorage.getItem(storageKey);
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw);
+          if (Array.isArray(cached)) {
+            setData(prev => prev ?? cached);
+          }
+        }
+      } catch (_) {
+        // ignore parse/storage errors
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    // Load any cached data immediately for instant fallback display
+    try {
+      const cachedRaw = localStorage.getItem(storageKey);
+      if (cachedRaw) {
+        const cached = JSON.parse(cachedRaw);
+        if (Array.isArray(cached)) {
+          setData(cached);
+        }
+      }
+    } catch (_) {
+      // ignore parse/storage errors
+    }
+
     // initial fetch
     fetchScan();
     // 15 minutes interval
     const intervalId = setInterval(fetchScan, 3 * 60 * 1000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [storageKey]);
 
   const processed = useMemo(() => {
     if (!Array.isArray(data)) return null;
@@ -128,17 +165,25 @@ const InsiderStrategyBox = ({ title, children, className = "" }) => {
 
       {isLoading && (
         <div className="flex-1 grid place-items-center text-white/80">
-          Loading...
+          <div className="flex items-center gap-2 text-white/70">
+            <FiRefreshCw className="animate-spin" />
+            <span>Loading...</span>
+          </div>
         </div>
       )}
 
-      {error && (
+      {error && !Array.isArray(data) && (
         <div className="text-red-300 bg-red-900/40 border border-red-500/40 rounded-lg p-3">
           {error}
         </div>
       )}
+      {/* {error && Array.isArray(data) && (
+        <div className="text-amber-300 bg-amber-900/30 border border-amber-500/40 rounded-lg p-3">
+          Showing last saved data (cached). Error: {error}
+        </div>
+      )} */}
 
-      {!isLoading && !error && data && (
+      {!isLoading && data && (
         <div className="w-full flex-1">
           {Array.isArray(data) && processed ? (
             <div

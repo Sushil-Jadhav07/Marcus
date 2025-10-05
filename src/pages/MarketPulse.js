@@ -12,7 +12,7 @@ import LowLevelStocks from '../components/common/LowLevelStocks';
 import TopLoser from '../components/common/TopLoser';
 import TopGainer from '../components/common/TopGainer';
 
-const MarketPulse = () => {
+const   MarketPulse = () => {
   // Initialize states with localStorage data if available
   const [breakoutData, setBreakoutData] = useState(() => {
     const saved = localStorage.getItem('breakoutData');
@@ -353,7 +353,7 @@ const MarketPulse = () => {
   }, []);
 
   return (
-    <div className='flex flex-col bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% '>
+    <div className='flex flex-col  '>
       <Navigation />
       <div className='w-full h-full flex flex-col'>
         <Topbar /> 

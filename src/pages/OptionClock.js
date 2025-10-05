@@ -44,7 +44,7 @@ const OptionClock = () => {
   }, []);
 
   return (
-    <div className='flex overflow-hidden flex-col min-h-screen bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+    <div className='flex overflow-hidden flex-col min-h-screen'>
     <Navigation />
       <div className='w-full h-full flex flex-col'>
           <Topbar /> 

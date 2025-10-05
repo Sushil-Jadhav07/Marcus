@@ -18,6 +18,10 @@ import FMCGSectorBeacon from '../components/common/FMCGSectorBeacon';
 import EnergySector from '../components/Sectors/EnergySector';
 import ITSectors from '../components/Sectors/ITSectors';
 import SignalSection from '../components/MarketPulse/SignalSection';
+import AutoSector from '../components/common/AutoSector';
+import RealitySector from '../components/common/RealitySector';
+import Nifity50 from '../components/common/Nifity50';
+import FMCG from '../components/common/FMCG';
 
 
 const SectorScope = () => {
@@ -44,6 +48,14 @@ const SectorScope = () => {
   const FMCG_CACHE = 'cache_SECTOR_fmcg';
   const [fmcgLoading, setFmcgLoading] = useState(false);
   const [fmcgError, setFmcgError] = useState(null);
+  const [realtyData, setRealtyData] = useState([]);
+  const REALTY_CACHE = 'cache_SECTOR_realty';
+  const [realtyLoading, setRealtyLoading] = useState(false);
+  const [realtyError, setRealtyError] = useState(null);
+  const [nifty50Data, setNifty50Data] = useState([]);
+  const NIFTY50_CACHE = 'cache_SECTOR_nifty50';
+  const [nifty50Loading, setNifty50Loading] = useState(false);
+  const [nifty50Error, setNifty50Error] = useState(null);
   const [financeData, setFinanceData] = useState([]);
   const FINANCE_CACHE = 'cache_SECTOR_finance';
   const [financeLoading, setFinanceLoading] = useState(false);
@@ -187,30 +199,17 @@ const SectorScope = () => {
     setAutoLoading(true);
     setAutoError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/get-ohlc-batch', {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbols: autoSymbols }),
+        body: JSON.stringify({
+          scan_clause: "( {cash} ( sector = 'auto' ) ) ",
+        }),
       });
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const json = await res.json();
-      const fetched = json?.data?.fetched || [];
-      const mapped = fetched.map((it, idx) => {
-        const symbol = (it?.tradingSymbol || it?.symbol || `SYM${idx}`).replace(/-EQ$/i, '');
-        const open = Number(it?.open) || 0;
-        const close = Number(it?.close) || 0;
-        const perChg = open ? ((close - open) / open) * 100 : 0;
-        const pctText = `${perChg >= 0 ? '+' : ''}${perChg.toFixed(2)}%`;
-        const ltpNum = Number(it?.ltp ?? it?.close ?? 0);
-        return {
-          symbol: String(symbol).substring(0, 20),
-          timeLabel: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false }),
-          signalPercent: pctText,
-          ltp: ltpNum,
-          movePercent: pctText,
-          direction: perChg >= 0 ? 'up' : 'down',
-        };
-      });
+      const list = Array.isArray(json?.data) ? json.data : [];
+      const mapped = transformScanToSignals(list);
       setAutoData(mapped);
       try { localStorage.setItem(AUTO_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${AUTO_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
@@ -240,30 +239,17 @@ const SectorScope = () => {
     setFmcgLoading(true);
     setFmcgError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/get-ohlc-batch', {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbols: fmcgSymbols }),
+        body: JSON.stringify({
+          scan_clause: "( {cash} ( ( {cash} ( daily close < weekly max( 52 , weekly high ) and daily close > weekly max( 52 , weekly high ) * .98 ) ) ) )  ",
+        }),
       });
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
       const json = await res.json();
-      const fetched = json?.data?.fetched || [];
-      const mapped = fetched.map((it, idx) => {
-        const symbol = (it?.tradingSymbol || it?.symbol || `SYM${idx}`).replace(/-EQ$/i, '');
-        const open = Number(it?.open) || 0;
-        const close = Number(it?.close) || 0;
-        const perChg = open ? ((close - open) / open) * 100 : 0;
-        const pctText = `${perChg >= 0 ? '+' : ''}${perChg.toFixed(2)}%`;
-        const ltpNum = Number(it?.ltp ?? it?.close ?? 0);
-        return {
-          symbol: String(symbol).substring(0, 20),
-          timeLabel: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false }),
-          signalPercent: pctText,
-          ltp: ltpNum,
-          movePercent: pctText,
-          direction: perChg >= 0 ? 'up' : 'down',
-        };
-      });
+      const list = Array.isArray(json?.data) ? json.data : [];
+      const mapped = transformScanToSignals(list);
       setFmcgData(mapped);
       try { localStorage.setItem(FMCG_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${FMCG_CACHE}_ts`, Date.now().toString()); } catch {}
     } catch (err) {
@@ -272,6 +258,58 @@ const SectorScope = () => {
       setFmcgData([]);
     } finally {
       setFmcgLoading(false);
+    }
+  };
+
+  const fetchRealtyData = async () => {
+    setRealtyLoading(true);
+    setRealtyError(null);
+    try {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scan_clause: "( {33489} ( sector = 'realty' ) ) ",
+        }),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const json = await res.json();
+      const list = Array.isArray(json?.data) ? json.data : [];
+      const mapped = transformScanToSignals(list);
+      setRealtyData(mapped);
+      try { localStorage.setItem(REALTY_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${REALTY_CACHE}_ts`, Date.now().toString()); } catch {}
+    } catch (err) {
+      setRealtyError(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(REALTY_CACHE); if (cached) { setRealtyData(JSON.parse(cached)); return; } } catch {}
+      setRealtyData([]);
+    } finally {
+      setRealtyLoading(false);
+    }
+  };
+
+  const fetchNifty50Data = async () => {
+    setNifty50Loading(true);
+    setNifty50Error(null);
+    try {
+      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scan_clause: "( {33492} ( daily close > 50 ) ) ",
+        }),
+      });
+      if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+      const json = await res.json();
+      const list = Array.isArray(json?.data) ? json.data : [];
+      const mapped = transformScanToSignals(list);
+      setNifty50Data(mapped);
+      try { localStorage.setItem(NIFTY50_CACHE, JSON.stringify(mapped)); localStorage.setItem(`${NIFTY50_CACHE}_ts`, Date.now().toString()); } catch {}
+    } catch (err) {
+      setNifty50Error(err?.message || 'Unknown error');
+      try { const cached = localStorage.getItem(NIFTY50_CACHE); if (cached) { setNifty50Data(JSON.parse(cached)); return; } } catch {}
+      setNifty50Data([]);
+    } finally {
+      setNifty50Loading(false);
     }
   };
 
@@ -347,12 +385,16 @@ const SectorScope = () => {
     try { const c = localStorage.getItem(PHARMA_CACHE); if (c) setPharmaData(JSON.parse(c)); } catch {}
     try { const c = localStorage.getItem(AUTO_CACHE); if (c) setAutoData(JSON.parse(c)); } catch {}
     try { const c = localStorage.getItem(FMCG_CACHE); if (c) setFmcgData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(REALTY_CACHE); if (c) setRealtyData(JSON.parse(c)); } catch {}
+    try { const c = localStorage.getItem(NIFTY50_CACHE); if (c) setNifty50Data(JSON.parse(c)); } catch {}
     try { const c = localStorage.getItem(FINANCE_CACHE); if (c) setFinanceData(JSON.parse(c)); } catch {}
     fetchEnergyData();
     fetchItData();
     fetchPharmaData();
     fetchAutoData();
     fetchFmcgData();
+    fetchRealtyData();
+    fetchNifty50Data();
     fetchFinanceData();
   }, []);
 
@@ -362,7 +404,7 @@ const SectorScope = () => {
         <Topbar /> 
         <MobileTopbar />
         <Navigation />
-          <div className="h-auto lg:hidden block bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60% ">
+          <div className="h-auto lg:hidden block ">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
           <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
           </div>
@@ -388,12 +430,15 @@ const SectorScope = () => {
             error={itError}
             onRefresh={fetchItData}
           />
+         
+          
+         
           <SignalSection
-            title="PHARMA SECTOR"
-            items={pharmaData}
-            isLoading={pharmaLoading}
-            error={pharmaError}
-            onRefresh={fetchPharmaData}
+            title="REALTY SECTOR"
+            items={realtyData}
+            isLoading={realtyLoading}
+            error={realtyError}
+            onRefresh={fetchRealtyData}
           />
           <SignalSection
             title="AUTO SECTOR"
@@ -402,7 +447,7 @@ const SectorScope = () => {
             error={autoError}
             onRefresh={fetchAutoData}
           />
-          <SignalSection
+           <SignalSection
             title="FMCG SECTOR"
             items={fmcgData}
             isLoading={fmcgLoading}
@@ -410,12 +455,13 @@ const SectorScope = () => {
             onRefresh={fetchFmcgData}
           />
           <SignalSection
-            title="FINANCE SECTOR"
-            items={financeData}
-            isLoading={financeLoading}
-            error={financeError}
-            onRefresh={fetchFinanceData}
+            title="NIFTY 50"
+            items={nifty50Data}
+            isLoading={nifty50Loading}
+            error={nifty50Error}
+            onRefresh={fetchNifty50Data}
           />
+          
           
           <div className='px-5 mt-4'>
             {/* <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-4'>
@@ -445,12 +491,13 @@ const SectorScope = () => {
                  <ITSectors />
                </div>
                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                 <PharmaSectorBeacon />
-                 <AutoSectorBeacon />
+                 <RealitySector />
+                 <AutoSector />
                </div>
                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                 <FMCGSectorBeacon />
-                 <BreakoutBeaconLive />
+                 <Nifity50 />
+                 <FMCG/>
+                 {/* <BreakoutBeaconLive /> */}
                </div>
                
              </div>

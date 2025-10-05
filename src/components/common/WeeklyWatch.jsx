@@ -7,6 +7,7 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const storageKey = useMemo(() => `WeeklyWatch:${title || 'default'}`, [title]);
   
     const requestBody = useMemo(() => ({
       scan_clause: "( {33489} ( monthly rsi( 14 ) > 60 and weekly close < weekly sma( close,20 ) and weekly high < 1 week ago high ) )"
@@ -16,32 +17,60 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
       try {
         setIsLoading(true);
         setError(null);
-        const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+        try { if (typeof navigator !== 'undefined' && !navigator.onLine) { setError('Offline. Showing cached data if available.'); const cachedRaw = localStorage.getItem(storageKey); if (cachedRaw) { const cached = JSON.parse(cachedRaw); if (Array.isArray(cached)) setData(cached); } setIsLoading(false); return; } } catch (_) {}
+        const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        const init = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(requestBody)
-        });
+        };
+        let abortId;
+        if (controller) { init.signal = controller.signal; abortId = setTimeout(() => controller.abort(), 10000); }
+        const res = await fetch('https://angelbackend-production.up.railway.app/scan', init);
         if (!res.ok) {
           throw new Error(`Request failed: ${res.status}`);
         }
         const json = await res.json();
         setData(json.data);
+        try {
+          if (Array.isArray(json?.data)) {
+            localStorage.setItem(storageKey, JSON.stringify(json.data));
+          }
+        } catch (_) {}
       } catch (err) {
         setError(err?.message || 'Unknown error');
+        try {
+          const cachedRaw = localStorage.getItem(storageKey);
+          if (cachedRaw) {
+            const cached = JSON.parse(cachedRaw);
+            if (Array.isArray(cached)) {
+              setData(prev => prev ?? cached);
+            }
+          }
+        } catch (_) {}
       } finally {
         setIsLoading(false);
       }
     };
   
     useEffect(() => {
+      try {
+        const cachedRaw = localStorage.getItem(storageKey);
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw);
+          if (Array.isArray(cached)) {
+            setData(cached);
+          }
+        }
+      } catch (_) {}
       // initial fetch
       fetchScan();
       // 15 minutes interval
       const intervalId = setInterval(fetchScan, 3 * 60 * 1000);
       return () => clearInterval(intervalId);
-    }, []);
+    }, [storageKey]);
   
     const processed = useMemo(() => {
       if (!Array.isArray(data)) return null;
@@ -128,13 +157,18 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
           </div>
         )}
   
-        {error && (
+        {/* {error && Array.isArray(data) && (
+          <div className="text-amber-300 bg-amber-900/30 border border-amber-500/40 rounded-lg p-3">
+            Showing last saved data (cached). Error: {error}
+          </div>
+        )} */}
+        {error && !Array.isArray(data) && (
           <div className="text-red-300 bg-red-900/40 border border-red-500/40 rounded-lg p-3">
             {error}
           </div>
         )}
   
-        {!isLoading && !error && data && (
+        {!isLoading && data && (
           <div className="w-full flex-1">
             {Array.isArray(data) && processed ? (
               <div

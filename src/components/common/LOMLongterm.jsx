@@ -17,6 +17,7 @@ const LOMLongterm = (
 ) => {
     const [rawData, setRawData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
   const CACHE_KEY = `cache_LOMLongterm_${title}`;
   
     const extractItems = (json) => {
@@ -29,11 +30,17 @@ const LOMLongterm = (
   
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
+      // If offline, show cached data immediately
+      try { if (typeof navigator !== 'undefined' && !navigator.onLine) { setError('Offline. Showing cached data if available.'); const cached = localStorage.getItem(CACHE_KEY); if (cached) setRawData(JSON.parse(cached)); setIsLoading(false); return; } } catch (_) {}
+      let abortId;
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       try {
         const init = { method, headers };
         if (method.toUpperCase() === 'POST') {
           init.body = JSON.stringify(requestBody ?? {});
         }
+        if (controller) { init.signal = controller.signal; abortId = setTimeout(() => controller.abort(), 10000); }
         const res = await fetch(apiUrl, init);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
@@ -44,14 +51,14 @@ const LOMLongterm = (
         localStorage.setItem(`${CACHE_KEY}_ts`, Date.now().toString());
       } catch (_) {}
       } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error('TopLevelStocks fetch failed', e);
+        setError(e?.message || 'Unknown error');
       try {
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) { setRawData(JSON.parse(cached)); return; }
       } catch (_) {}
       setRawData([]);
       } finally {
+        if (abortId) { clearTimeout(abortId); }
         setIsLoading(false);
       }
     };
@@ -151,6 +158,17 @@ const LOMLongterm = (
       </div>
     </div>
 
+    {/* {error && data.length > 0 && (
+      <div className="text-amber-300 bg-amber-900/30 border border-amber-500/40 rounded-lg p-3">
+        Showing last saved data (cached). Error: {error}
+      </div>
+    )} */}
+    {error && data.length === 0 && (
+      <div className="text-red-300 bg-red-900/40 border border-red-500/40 rounded-lg p-3">
+        {error}
+      </div>
+    )}
+
     <div className="grid grid-cols-5 text-[15px]  text-black/70 px-2">
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-3">Name</div>
       <div className="bg-white/50 px-5 py-2 rounded-full col-span-1">per_chg</div>
@@ -159,7 +177,10 @@ const LOMLongterm = (
 
     <div className="mt-2 divide-y divide-white/10 h-[500px] overflow-y-scroll scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {isLoading ? (
-        <div className="flex items-center justify-center py-8 text-white/70">Loading...</div>
+        <div className="flex items-center justify-center py-8 text-white/70"> <div className="flex items-center gap-2 text-white/70">
+              <FiRefreshCw className="animate-spin" />
+              <span>Loading...</span>
+            </div></div>
       ) : !data.length ? (
         <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
       ) : (

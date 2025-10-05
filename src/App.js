@@ -36,6 +36,17 @@ const AuthBootstrapper = ({ children }) => {
 };
 
 function App() {
+  // Initialize theme once at app startup so all routes inherit the same mode
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (!stored) localStorage.setItem('theme', 'dark');
+      const isDark = (stored || 'dark') === 'dark';
+      document.documentElement.classList.toggle('dark', isDark);
+    } catch (_) {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
   return (
     <Provider store={store}>
       <ThemeProvider>
@@ -54,7 +65,7 @@ function App() {
                 <Route path="/" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#fff] from-[#fff] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#fff] from-[#fff] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#e7edfd] to-60%'>
                          
                           <main className="pt-16 md:ml-64 lg:ml-72 pb-0 md:pb-0 ">
                             <Home />
@@ -66,7 +77,7 @@ function App() {
                 <Route path="/market-pulse" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#e7edfd] to-60%'>
                         
                         <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
                           <MarketPulse />
@@ -78,9 +89,9 @@ function App() {
                 <Route path="/insider-strategy" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                             
-                        <main className=" !h-auto pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className=" !h-auto pt-16 md:ml-64 lg:mb-[50px] lg:ml-72 pb-24 md:pb-0">
                           <InsiderStrategy />
                         </main>
                       </div>
@@ -90,9 +101,9 @@ function App() {
                 <Route path="/sector-scope" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                         
-                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <SectorScope />
                         </main>
                       </div>
@@ -102,9 +113,9 @@ function App() {
                 <Route path="/swing-spectrum" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                         
-                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <SwingSpectrum />
                         </main>
                       </div>
@@ -114,9 +125,9 @@ function App() {
                 <Route path="/option-clock" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
-                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className=" pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <OptionClock />
                         </main>
                       </div>
@@ -126,9 +137,9 @@ function App() {
                 <Route path="/option-apex" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
-                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <OptionApex />
                         </main>
                       </div>
@@ -138,9 +149,9 @@ function App() {
                 <Route path="/settings" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
-                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <Settings />
                         </main>
                       </div>
@@ -150,9 +161,9 @@ function App() {
                  <Route path="/create-user" element={
                    <ProtectedRoute>
                      <RequireRole allowed={['admin']}>
-                     <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                     <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
-                       <main className="pt-16 md:ml-64 lg:ml-70 pb-24 md:pb-0">
+                       <main className="pt-16 md:ml-64 lg:ml-70 pb-24 lg:mb-[50px] md:pb-0">
                          <CreateUser />
                        </main>
                      </div> 
@@ -162,8 +173,8 @@ function App() {
                  <Route path="/user-list" element={
                    <ProtectedRoute>
                      <RequireRole allowed={['admin']}>
-                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
-                         <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                         <main className="pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                            <UserList />
                          </main>
                        </div> 
@@ -178,9 +189,9 @@ function App() {
                 <Route path="/faq" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
-                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                      <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
-                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 md:pb-0">
+                        <main className="pt-16 md:ml-64 lg:ml-72 pb-24 lg:mb-[50px] md:pb-0">
                           <FAQ />
                         </main>
                       </div>

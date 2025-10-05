@@ -5,30 +5,21 @@ import { BsSunFill, BsMoonFill } from 'react-icons/bs';
 const Topbar = () => {
   const { user, userProfile, isAuthenticated } = useSelector((state) => state.auth);
   const role = useSelector((state) => state.role?.role || 'client');
-  const [isDark, setIsDark] = useState(true); // Default to dark mode
+  const getInitialDark = () => {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light') return false;
+      // seed to dark if missing
+      if (!stored) localStorage.setItem('theme', 'dark');
+      return true;
+    } catch (_) {
+      return true;
+    }
+  };
+  const [isDark, setIsDark] = useState(getInitialDark());
   const [scrollY, setScrollY] = useState(0);
 
-  useEffect(() => {
-    try {
-      const storedTheme = localStorage.getItem('theme');
-      
-      if (storedTheme) {
-        // Use stored preference
-        const shouldUseDark = storedTheme === 'dark';
-        setIsDark(shouldUseDark);
-        document.documentElement.classList.toggle('dark', shouldUseDark);
-      } else {
-        // Default to dark mode only if no stored preference exists
-        setIsDark(true);
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      }
-    } catch (_) {
-      // Fallback to dark mode if localStorage fails
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
+  // no mount-time mutation needed; initial state already reflects localStorage
 
   const displayInitial = (() => {
     const name = userProfile?.name || userProfile?.firstName || user?.displayName || user?.email || 'M';
@@ -37,16 +28,8 @@ const Topbar = () => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    try {
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    } catch (_) {
-      // no-op
-    }
+    root.classList.toggle('dark', isDark);
+    try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (_) {}
   }, [isDark]);
 
   useEffect(() => {

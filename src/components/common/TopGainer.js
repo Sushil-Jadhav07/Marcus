@@ -140,7 +140,10 @@ const TopGainer = (
 
     <div className="mt-2 divide-y divide-white/10 max-h-[500px] overflow-y-auto scrollbar-hide">
       {isLoading ? (
-        <div className="flex items-center justify-center py-8 text-white/70">Loading...</div>
+        <div className="flex items-center justify-center py-8 text-white/70"> <div className="flex items-center gap-2 text-white/70">
+              <FiRefreshCw className="animate-spin" />
+              <span>Loading...</span>
+            </div></div>
       ) : !data.length ? (
         <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
       ) : (
