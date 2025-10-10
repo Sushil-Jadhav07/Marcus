@@ -84,7 +84,7 @@ const   MarketPulse = () => {
     setBreakoutLoading(true);
     setBreakoutError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -114,7 +114,7 @@ const   MarketPulse = () => {
     setIntradayLoading(true);
     setIntradayError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -144,7 +144,7 @@ const   MarketPulse = () => {
     setTopLevelLoading(true);
     setTopLevelError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -174,7 +174,7 @@ const   MarketPulse = () => {
     setLowLevelLoading(true);
     setLowLevelError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -204,7 +204,7 @@ const   MarketPulse = () => {
     setTopGainerLoading(true);
     setTopGainerError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -234,7 +234,7 @@ const   MarketPulse = () => {
     setTopLoserLoading(true);
     setTopLoserError(null);
     try {
-      const response = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const response = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -28,7 +28,7 @@ const WeeklyWatch = ({ title, children, className = "" }) => {
         };
         let abortId;
         if (controller) { init.signal = controller.signal; abortId = setTimeout(() => controller.abort(), 10000); }
-        const res = await fetch('https://angelbackend-production.up.railway.app/scan', init);
+        const res = await fetch('http://35.208.40.158:8000/scan', init);
         if (!res.ok) {
           throw new Error(`Request failed: ${res.status}`);
         }

@@ -14,7 +14,7 @@ const OptionArea = () => {
     let isMounted = true
     const loadIndices = async () => {
       try {
-        const res = await fetch('https://angelbackend-production.up.railway.app/indices', { method: 'GET' })
+        const res = await fetch('http://35.208.40.158:8000/indices', { method: 'GET' })
         const data = await res.json()
         const indices = data && data.indices ? Object.keys(data.indices) : []
         const options = indices.map((k) => ({ label: k, value: k }))
@@ -60,7 +60,7 @@ const OptionArea = () => {
     const loadExpiries = async () => {
       try {
         // Request a slightly wider window so October dates are included
-        const res = await fetch(`https://angelbackend-production.up.railway.app/expiry-dates?symbol=${encodeURIComponent(symbol)}&months=3`, { method: 'GET' })
+        const res = await fetch(`http://35.208.40.158:8000/expiry-dates?symbol=${encodeURIComponent(symbol)}&months=3`, { method: 'GET' })
         const data = await res.json()
         const arr = Array.isArray(data.expiry_dates) ? data.expiry_dates : []
         // Keep only October of the current year when available

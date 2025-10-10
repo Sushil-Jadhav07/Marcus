@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMSwingFour = (
     {
         title = 'SWING SCAN 2',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {33489} ( daily high - daily low < 1 day ago high - 1 day ago low and daily high - daily low < 2 days ago high - 2 days ago low and daily high - daily low < 3 days ago high - 3 days ago low and daily high - daily low < 4 days ago high - 4 days ago low and daily high - daily low < 5 days ago high - 5 days ago low and daily high - daily low < 6 days ago high - 6 days ago low ) )"

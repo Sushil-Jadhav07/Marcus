@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMLongterm = (
     {
         title = 'LOM LONG TERM',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( daily close > monthly lower bollinger band( 20,2 ) and daily close > 100 and daily close > 2 months ago high ) )"

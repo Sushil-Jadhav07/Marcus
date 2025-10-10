@@ -5,16 +5,7 @@ import MobileTopbar from '../components/layout/MobileTopbar';
 import Navigation from '../components/layout/Navigation';
 import StrategyBoard from '../components/Insider/StrategyBoard';
 import Marquee from '../components/MarketPulse/Marquee';
-import MomentumHeatmap from '../components/MarketPulse/MomentumHeatmap';
 import TradingViewWidget from '../components/common/TradingViewHeatmap';
-import SectorQuotes from '../components/common/SectorQuotes';
-import SectorSingleListTV from '../components/common/SectorSingleListTV';
-import BreakoutBeaconLive from '../components/common/BreakoutBeaconLive';
-import EnergySectorBeacon from '../components/common/EnergySectorBeacon';
-import ITSectorBeacon from '../components/common/ITSectorBeacon';
-import PharmaSectorBeacon from '../components/common/PharmaSectorBeacon';
-import AutoSectorBeacon from '../components/common/AutoSectorBeacon';
-import FMCGSectorBeacon from '../components/common/FMCGSectorBeacon';
 import EnergySector from '../components/Sectors/EnergySector';
 import ITSectors from '../components/Sectors/ITSectors';
 import SignalSection from '../components/MarketPulse/SignalSection';
@@ -83,7 +74,7 @@ const SectorScope = () => {
     setEnergyLoading(true);
     setEnergyError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,7 +99,7 @@ const SectorScope = () => {
     setItLoading(true);
     setItError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -199,7 +190,7 @@ const SectorScope = () => {
     setAutoLoading(true);
     setAutoError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -239,7 +230,7 @@ const SectorScope = () => {
     setFmcgLoading(true);
     setFmcgError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -265,7 +256,7 @@ const SectorScope = () => {
     setRealtyLoading(true);
     setRealtyError(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -291,7 +282,7 @@ const SectorScope = () => {
     setNifty50Loading(true);
     setNifty50Error(null);
     try {
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

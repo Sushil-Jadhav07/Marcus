@@ -11,7 +11,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
  */
 const TopLevelStocks = ({
   title = 'TOP LEVEL STOCKS',
-  apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+  apiUrl = 'http://35.208.40.158:8000/scan',
   method = 'POST',
   requestBody = { scan_clause: '( {cash} ( ( {33489} ( ( [0] 5 minute sma( [0] 5 minute volume , 4 ) - daily sma( 2 days ago volume / 75 , 5 ) ) / 2 days ago sma( daily volume , 75 ) * 100 > 0 and daily high / daily close <= 1.003 and 1 day ago "close - 1 candle ago close / 1 candle ago close * 100" < 5 and daily close >= 1 day ago high and daily close > 80 and daily close < 10000 and( {33489} ( [0] 5 minute close - [0] 5 minute open / [0] 5 minute open * 100 < 0.05 or [-1] 5 minute close - [-1] 5 minute open / [-1] 5 minute open * 100 < 0.05 or [-2] 5 minute close - [-2] 5 minute open / [-2] 5 minute open * 100 < 0.05 ) ) ) ) ) )' },
   headers = { 'Content-Type': 'application/json' },

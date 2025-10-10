@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMShortterm = (
     {
         title = 'LOM SHORT TERM',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( monthly close > monthly upper bollinger band( 20,2 ) and monthly rsi( 14 ) >= 60 and market cap >= 4000 ) )"

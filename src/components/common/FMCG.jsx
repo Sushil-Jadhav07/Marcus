@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const FMCG = (
     {
         title = 'FMCG',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( ( {cash} ( daily close < weekly max( 52 , weekly high ) and daily close > weekly max( 52 , weekly high ) * .98 ) ) ) )  "

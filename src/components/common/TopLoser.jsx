@@ -7,7 +7,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
 const TopLoser = (
     {
         title = 'TOP LOSERS',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         // Scan clause: strong drop over previous 5-minute low comparison
         requestBody = { scan_clause: '( {33489} ( ( [=-1] 5 minute close - [0] 5 minute low ) / [=-1] 5 minute close > .01 ) )' },

@@ -9,7 +9,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
 const LowLevelStocks = (
     {
         title = 'LOW LEVEL STOCKS',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = { scan_clause: '( {cash} ( daily close > daily open and daily close > daily ema( daily close , 20 ) and daily volume > daily sma( daily volume , 20 ) * 2 and daily close > daily max( 10 , 1 day ago high ) and daily rsi( 14 ) > 50 and daily adx( 14 ) > 20 ) )  ' },
         headers = { 'Content-Type': 'application/json' },

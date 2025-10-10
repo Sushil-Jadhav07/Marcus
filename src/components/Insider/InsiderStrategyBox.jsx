@@ -20,7 +20,7 @@ const InsiderStrategyBox = ({ title, children, className = "" }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const res = await fetch('https://angelbackend-production.up.railway.app/scan', {
+      const res = await fetch('http://35.208.40.158:8000/scan', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

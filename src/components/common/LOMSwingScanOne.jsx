@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMSwingScanOne = (
     {
         title = 'SWING SCAN 1',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( 1 day ago max( 10 , daily high ) < daily close and 1 day ago max( 10 , daily high ) > 1 day ago high and 1 day ago close < daily open ) )"

@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMDayHLReversal = (
     {
         title = 'DAY H/L REVERSAL',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( 1 day ago low < 2 days ago low and [0] 5 minute cci( 34 ) > 100 and [ -1 ] 5 minute cci( 34 ) <= 100 and [0] 5 minute cci( 34 ) > [0] 30 minute cci( 34 ) and daily low < 1 day ago low ) )"

@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMContractionBO = (
     {
         title = 'CONTRACTION BO',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {57960} ( ( daily upper bollinger band( 20 , 2 ) - daily lower bollinger band( 20 , 2 ) ) / daily close < 0.04 ) )"

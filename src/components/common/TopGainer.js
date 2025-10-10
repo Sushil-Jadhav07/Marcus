@@ -7,7 +7,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
 const TopGainer = (
     {
         title = 'TOP GAINERS',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         // Scan clause: stocks up at least 10% intraday
         requestBody = { scan_clause: '( {cash} ( daily close > daily open * 1.1 ) )' },

@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const RealitySector = (
     {
         title = 'REALITY SECTOR',
-        apiUrl = 'https://angelbackend-production.up.railway.app/scan',
+        apiUrl = 'http://35.208.40.158:8000/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {33489} ( sector = 'realty' ) ) "
