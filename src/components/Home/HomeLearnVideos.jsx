@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 
 const HomeLearnVideos = () => {
   const videos = [
-    { title: 'Getting started with Market Pulse' },
-    { title: 'Insider Strategy in 2 minutes' },
+    { title: 'Getting started with Market Beat' },
+    { title: 'Insider Analysis in 2 minutes' },
     { title: 'Timing entries with Option Clock' },
   ]
 

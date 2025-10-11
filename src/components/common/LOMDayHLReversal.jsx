@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMDayHLReversal = (
     {
         title = 'DAY H/L REVERSAL',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( 1 day ago low < 2 days ago low and [0] 5 minute cci( 34 ) > 100 and [ -1 ] 5 minute cci( 34 ) <= 100 and [0] 5 minute cci( 34 ) > [0] 30 minute cci( 34 ) and daily low < 1 day ago low ) )"
@@ -163,7 +163,7 @@ const LOMDayHLReversal = (
               <span>Loading...</span>
             </div></div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh the page</div>
       ) : (
         data.map((it, idx) => {
           const pct = getPerChg(it);

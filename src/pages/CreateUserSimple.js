@@ -154,8 +154,8 @@ const CreateUserSimple = () => {
       <div className='w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
-          <div className=' '>
-      <div className='max-w-6xl mx-auto'>
+          <div className=' lg:mt-0 mt-10'>
+      <div className='max-w-[1000px] mx-auto'>
         {/* Header */}
         <div className=' mb-8 px-4 lg:px-0'>
         

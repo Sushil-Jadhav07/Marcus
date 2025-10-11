@@ -12,10 +12,10 @@ import bgimage from '../../asset/img/functions/bgbox.png'
 
 const Functions = () => {
   const features = [
-    { title: 'Market Plus', to: '/market-pulse', icon: marketpulseIcon, desc: "The market’s heartbeat: real-time trend, momentum, and breadth at a glance.", },
-    { title: 'Insider Strategy', to: '/insider-strategy', icon: insiderstrategyIcon, desc: "Decode insider buy/sell disclosures to follow where the smart money moves." },
-    { title: 'Sector Scope', to: '/sector-scope', icon: sectorscopeIcon ,desc: "Compare sector strength, rotation, and risk-on/off in a clean heatmap view." },
-    { title: 'Swing Spectrum', to: '/swing-spectrum', icon: swingspectrumIcon, desc: "Spot 2–10 day swing setups across volatility bands and momentum lanes." },
+    { title: 'Market Beat', to: '/market-beat', icon: marketpulseIcon, desc: "The market’s heartbeat: real-time trend, momentum, and breadth at a glance.", },
+    { title: 'Insider Analysis', to: '/insider-analysis', icon: insiderstrategyIcon, desc: "Decode insider buy/sell disclosures to follow where the smart money moves." },
+    { title: 'Industry Insight', to: '/industry-insight', icon: sectorscopeIcon ,desc: "Compare industry strength, rotation, and risk-on/off in a clean heatmap view." },
+    { title: 'Momentum Wave', to: '/momentum-wave', icon: swingspectrumIcon, desc: "Spot 2–10 day swing setups across volatility bands and momentum lanes." },
     { title: 'Option Clock', to: '', icon: optionclockIcon, desc: "Time entries with IV, theta decay, and catalyst countdowns synced to the tape." },
     { title: 'Option Apex', to: '', icon: optionapexIcon ,desc: "Surface high-conviction options plays at the peak of risk-reward." },
   ]

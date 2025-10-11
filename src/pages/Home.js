@@ -19,7 +19,7 @@ const Home = () => {
           <div className='w-full h-full flex flex-col'>
               <Topbar /> 
               <MobileTopbar />
-                <div className=" h-auto ">
+                <div className=" h-auto lg:mt-0 mt-10">
                   <div className='h-auto overflow-hidden '>
                   <Marquee />
                   
@@ -31,8 +31,8 @@ const Home = () => {
                   <div className='h-full mt-10 px-5 py-5 mb-[50px] lg:mb-[100px] '>
                   <Homearea />
                   <Functions />
-                  <LearnMore/>
-                  <HomeLearnVideos/>
+                  {/* <LearnMore/>
+                  <HomeLearnVideos/> */}
                   <HomeFAQTeaser/>
                   </div>
                 

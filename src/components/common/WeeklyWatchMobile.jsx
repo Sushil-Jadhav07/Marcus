@@ -7,6 +7,7 @@ const WeeklyWatchMobile = ({ title, children, className = "" }) => {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [visible, setVisible] = useState(false);
   
     const requestBody = useMemo(() => ({
       scan_clause: "( {33489} ( monthly rsi( 14 ) > 60 and weekly close < weekly sma( close,20 ) and weekly high < 1 week ago high ) )"
@@ -23,13 +24,15 @@ const WeeklyWatchMobile = ({ title, children, className = "" }) => {
           },
           body: JSON.stringify(requestBody)
         });
-        if (!res.ok) {
+        if (res.status !== 200) {
           throw new Error(`Request failed: ${res.status}`);
         }
         const json = await res.json();
         setData(json.data);
+        setVisible(true);
       } catch (err) {
         setError(err?.message || 'Unknown error');
+        setVisible(false);
       } finally {
         setIsLoading(false);
       }
@@ -109,6 +112,8 @@ const WeeklyWatchMobile = ({ title, children, className = "" }) => {
       return { tiles, rowsCount: rowsTarget };
     }, [data]);
 
+    
+  if (!visible) return null;
 
   return (
     <div className={` overflow-y-auto scrollbar-hide bg-gradient-to-br from-blue-900/30 via-blue-800/20 to-indigo-900/30 border-blue-400/40 mt-2 lg:relative backdrop-blur-xl rounded-2xl border-t-2 border-r-2 border-b-2 border-l-2 border-t-white/70 border-r-white/70 border-b-blue-400/70 border-l-blue-400/70 w-full flex flex-col p-6 gap-4 bg-white/25 dark:bg-white/25 shadow-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/30 h-[500px]`}>

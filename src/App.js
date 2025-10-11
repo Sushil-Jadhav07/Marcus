@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from '@material-tailwind/react';
+import { setFavicon, setPageSeo } from './utils/seo';
+import blackIcon from './asset/img/black.png';
 
 import Navigation from './components/layout/Navigation';
 import Home from './pages/Home';
@@ -46,6 +48,15 @@ function App() {
     } catch (_) {
       document.documentElement.classList.add('dark');
     }
+    // Basic global SEO defaults
+    try {
+      setFavicon(blackIcon);
+      setPageSeo({
+        title: 'Marcus Finance',
+        description: 'Real-time market analytics: Market Beat, Insider Analysis, Industry Insight, Momentum Wave.',
+        image: blackIcon,
+      });
+    } catch (_) {}
   }, []);
   return (
     <Provider store={store}>
@@ -74,7 +85,7 @@ function App() {
                     </RequireRole>
                   </ProtectedRoute>
                 } />
-                <Route path="/market-pulse" element={
+                <Route path="/market-beat" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#e7edfd] to-60%'>
@@ -86,7 +97,7 @@ function App() {
                     </RequireRole>
                   </ProtectedRoute>
                 } />
-                <Route path="/insider-strategy" element={
+                <Route path="/insider-analysis" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
@@ -98,7 +109,7 @@ function App() {
                     </RequireRole>
                   </ProtectedRoute>
                 } />
-                <Route path="/sector-scope" element={
+                <Route path="/industry-insight" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
@@ -110,7 +121,7 @@ function App() {
                     </RequireRole>
                   </ProtectedRoute>
                 } />
-                <Route path="/swing-spectrum" element={
+                <Route path="/momentum-wave" element={
                   <ProtectedRoute>
                     <RequireRole allowed={['admin', 'client']}>
                       <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
@@ -161,7 +172,7 @@ function App() {
                  <Route path="/create-user" element={
                    <ProtectedRoute>
                      <RequireRole allowed={['admin']}>
-                     <div className='bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
+                     <div className='lg:h-auto h-auto bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#fff] to-60%'>
                        
                        <main className="pt-16 md:ml-64 lg:ml-70 pb-24 lg:mb-[50px] md:pb-0">
                          <CreateUser />

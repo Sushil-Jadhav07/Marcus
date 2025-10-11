@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const LOMSwingScanOne = (
     {
         title = 'SWING SCAN 1',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( 1 day ago max( 10 , daily high ) < daily close and 1 day ago max( 10 , daily high ) > 1 day ago high and 1 day ago close < daily open ) )"
@@ -156,9 +156,14 @@ const LOMSwingScanOne = (
 
     <div className="mt-2 divide-y divide-white/10 h-[500px] overflow-y-scroll scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
       {isLoading ? (
-        <div className="flex items-center justify-center py-8 text-white/70">Loading...</div>
+        <div className="flex items-center justify-center py-8 text-white/70">
+        <div className="flex items-center justify-center py-8 text-white/70"> <div className="flex items-center gap-2 text-white/70">
+              <FiRefreshCw className="animate-spin" />
+              <span>Loading...</span>
+            </div></div>
+        </div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh page </div>
       ) : (
         data.map((it, idx) => {
           const pct = getPerChg(it);

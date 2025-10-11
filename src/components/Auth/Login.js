@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginWithEmail, loginWithGoogle } from '../../store/authSlice';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock } from 'react-icons/fa';
 import { ButtonLoader } from '../common/Loader';
 
 const Login = () => {
@@ -30,7 +30,16 @@ const Login = () => {
       await dispatch(loginWithEmail({ email, password })).unwrap();
       navigate('/');
     } catch (err) {
-      setError(err);
+      try {
+        const isInvalidCred = (err && err.code === 'auth/invalid-credential') || String(err || '').includes('auth/invalid-credential');
+        if (isInvalidCred) {
+          setError('Invalid credential. Try to login again');
+        } else {
+          setError(err?.message || String(err) || 'Login failed. Please try again.');
+        }
+      } catch (_) {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
@@ -40,7 +49,16 @@ const Login = () => {
       await dispatch(loginWithGoogle()).unwrap();
       navigate('/');
     } catch (err) {
-      setError(err);
+      try {
+        const isInvalidCred = (err && err.code === 'auth/invalid-credential') || String(err || '').includes('auth/invalid-credential');
+        if (isInvalidCred) {
+          setError('Invalid credential. Try to login again');
+        } else {
+          setError(err?.message || String(err) || 'Login failed. Please try again.');
+        }
+      } catch (_) {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
@@ -57,15 +75,15 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b dark:from-[#1e40af] from-[#375FFF] from-0% dark:via-[#1d4ed8] via-[#1d4ed8] via-0% to-[#0D0D0D] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-transparent backdrop-blur-3xl border-[3px] border-white/10 rounded-xl shadow-lg p-6 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-b dark:from-[#fff] from-[#fff] from-0% dark:via-[#0235c2] via-[#1d4ed8] via-0% dark:to-[#0D0D0D] to-[#e7edfd] to-60% flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md bg-white/5 dark:bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-semibold text-white">Welcome Back</h2>
-          <p className="mt-1 text-sm text-gray-500">Sign in to access your dashboard</p>
+          <p className="mt-1 text-sm text-white/60">Sign in to access your dashboard</p>
         </div>
 
         {error && (
-          <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <div className="mb-4 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-200">
             {error}
           </div>
         )}
@@ -73,47 +91,54 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-white">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            <div className="relative mt-1 group">
+              <FaEnvelope className="pointer-events-none absolute text-white left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400" />
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                autoComplete="email"
+                required
+                className="w-full rounded-lg border border-slate-200/30 dark:border-white/10 bg-white/60 dark:bg-white/10 px-3 pl-10 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/50 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              />
+            </div>
           </div>
 
-          <div className="relative">
+          <div>
             <label htmlFor="password" className="block text-sm font-medium text-white">Password</label>
-
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            {showPassword ? (
-              <FaEyeSlash
-                className="absolute inset-y-0 right-3 top-11 -translate-y-1/2 h-5 w-5 cursor-pointer text-gray-400"
-                onClick={() => setShowPassword(false)}
-                aria-label="Hide password"
+            <div className="relative mt-1 group">
+              <FaLock className="pointer-events-none absolute text-white left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-blue-400" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+                className="w-full rounded-lg border border-slate-200/30 dark:border-white/10 bg-white/60 dark:bg-white/10 px-3 pl-10 pr-10 py-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-white/50 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               />
-            ) : (
-              <FaEye
-                className="absolute inset-y-0 right-3 top-11 -translate-y-1/2 h-5 w-5 cursor-pointer text-gray-400"
-                onClick={() => setShowPassword(true)}
-                aria-label="Show password"
-              />
-            )}
+              {showPassword ? (
+                <FaEyeSlash
+                  className="absolute text-white right-3 top-1/2 -translate-y-1/2 h-5 w-5 cursor-pointer text-slate-400 hover:text-slate-200"
+                  onClick={() => setShowPassword(false)}
+                  aria-label="Hide password"
+                />
+              ) : (
+                <FaEye
+                  className="absolute text-white right-3 top-1/2 -translate-y-1/2 h-5 w-5 cursor-pointer text-slate-400 hover:text-slate-200"
+                  onClick={() => setShowPassword(true)}
+                  aria-label="Show password"
+                />
+              )}
+            </div>
           </div>
 
           <button
             type="submit"
-            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500 px-4 py-2.5 text-sm font-medium text-white hover:from-indigo-600 hover:via-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={loading}
           >
             {loading ? (

@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const FMCG = (
     {
         title = 'FMCG',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( ( {cash} ( daily close < weekly max( 52 , weekly high ) and daily close > weekly max( 52 , weekly high ) * .98 ) ) ) )  "
@@ -253,7 +253,7 @@ const FMCG = (
               <span>Loading...</span>
             </div></div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh page </div>
       ) : (
         data.map((it, idx) => {
           const pct = getPerChg(it);

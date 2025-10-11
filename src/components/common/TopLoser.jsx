@@ -7,7 +7,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
 const TopLoser = (
     {
         title = 'TOP LOSERS',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         // Scan clause: strong drop over previous 5-minute low comparison
         requestBody = { scan_clause: '( {33489} ( ( [=-1] 5 minute close - [0] 5 minute low ) / [=-1] 5 minute close > .01 ) )' },
@@ -147,7 +147,7 @@ const TopLoser = (
               <span>Loading...</span>
             </div></div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh the page</div>
       ) : (
         data.map((it, idx) => {
           const pct = Number(it.per_chg);

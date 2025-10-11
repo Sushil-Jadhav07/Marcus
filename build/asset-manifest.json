@@ -1,10 +1,12 @@
 {
   "files": {
-    "main.css": "/static/css/main.17f587d6.css",
-    "main.js": "/static/js/main.e4ade819.js",
+    "main.css": "/static/css/main.57706ee9.css",
+    "main.js": "/static/js/main.a19abea5.js",
     "static/media/bg-circle.png": "/static/media/bg-circle.853a9ce8f6d0b801c512.png",
     "static/media/bgbox.png": "/static/media/bgbox.2e10d6c9d817728df6d9.png",
     "static/media/white.png": "/static/media/white.8df0703cfc94b9e0a7a8.png",
+    "static/media/logowhite.png": "/static/media/logowhite.f111c508bea849ddd8d3.png",
+    "static/media/black.png": "/static/media/black.f40971de549cf34bd5ef.png",
     "static/media/optionclock.png": "/static/media/optionclock.2df6bbde8e9ce9834235.png",
     "static/media/sectorscope.png": "/static/media/sectorscope.1bd73f15eaf1688acd48.png",
     "static/media/insiderstrategy.png": "/static/media/insiderstrategy.f21bd973a77108f72499.png",
@@ -12,11 +14,11 @@
     "static/media/candlepc.png": "/static/media/candlepc.8bad164b60521464b778.png",
     "static/media/optionapex.png": "/static/media/optionapex.858706fdd2d57e4df7c7.png",
     "index.html": "/index.html",
-    "main.17f587d6.css.map": "/static/css/main.17f587d6.css.map",
-    "main.e4ade819.js.map": "/static/js/main.e4ade819.js.map"
+    "main.57706ee9.css.map": "/static/css/main.57706ee9.css.map",
+    "main.a19abea5.js.map": "/static/js/main.a19abea5.js.map"
   },
   "entrypoints": [
-    "static/css/main.17f587d6.css",
-    "static/js/main.e4ade819.js"
+    "static/css/main.57706ee9.css",
+    "static/js/main.a19abea5.js"
   ]
 }

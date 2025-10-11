@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const ITSectors = (
     {
         title = 'IT SECTOR',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( sector = 'i.t' ) )"
@@ -252,7 +252,7 @@ const ITSectors = (
               <span>Loading...</span>
             </div></div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh the page</div>
       ) : (
         data.map((it, idx) => {
           const pct = getPerChg(it);

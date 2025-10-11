@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { setPageSeo } from '../utils/seo';
 import Navigation from '../components/layout/Navigation';
 import Topbar from '../components/layout/Topbar';
 import MobileTopbar from '../components/layout/MobileTopbar';
@@ -84,7 +85,7 @@ const   MarketPulse = () => {
     setBreakoutLoading(true);
     setBreakoutError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -114,7 +115,7 @@ const   MarketPulse = () => {
     setIntradayLoading(true);
     setIntradayError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -144,7 +145,7 @@ const   MarketPulse = () => {
     setTopLevelLoading(true);
     setTopLevelError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -174,7 +175,7 @@ const   MarketPulse = () => {
     setLowLevelLoading(true);
     setLowLevelError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -204,7 +205,7 @@ const   MarketPulse = () => {
     setTopGainerLoading(true);
     setTopGainerError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -234,7 +235,7 @@ const   MarketPulse = () => {
     setTopLoserLoading(true);
     setTopLoserError(null);
     try {
-      const response = await fetch('http://35.208.40.158:8000/scan', {
+      const response = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -359,10 +360,11 @@ const   MarketPulse = () => {
         <Topbar /> 
         <MobileTopbar />
         
-        <div className=' overflow-hidden '>
+        <div className=' overflow-hidden lg:mt-0 mt-10'>
+          {setPageSeo({ title: 'Market Beat | Marcus Finance', description: 'Live momentum, breadth and breakouts with real-time scans in Market Beat.' })}
           <Marquee/>
           <div className='flex justify-start item-center px-5 pt-5'>
-            <h2 className="mb-3 text-white font-semibold tracking-wide text-[30px]">Market Pulse</h2>
+            <h2 className="mb-3 text-white font-semibold tracking-wide text-[30px]">Market Beat</h2>
           </div>
           <div className='px-5 md:grid hidden grid-cols-1 lg:grid-cols-2 gap-5 lg:mb-[50px]'>
             <BreakoutBeacon 

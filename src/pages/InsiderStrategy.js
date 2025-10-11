@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { setPageSeo } from '../utils/seo';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Topbar from '../components/layout/Topbar';
 import Navigation from '../components/layout/Navigation';
@@ -57,7 +58,7 @@ const InsiderStrategy = () => {
     setLomLongLoading(true);
     setLomLongError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,7 +91,7 @@ const InsiderStrategy = () => {
     setLomShortLoading(true);
     setLomShortError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -123,7 +124,7 @@ const InsiderStrategy = () => {
     setContractionLoading(true);
     setContractionError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -156,7 +157,7 @@ const InsiderStrategy = () => {
     setDayHLLoading(true);
     setDayHLError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -203,9 +204,10 @@ const InsiderStrategy = () => {
       <div className=' w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
-           <div className='h-auto lg:hidden block'>
+           <div className='h-auto lg:hidden block lg:mt-0 mt-10'>
             <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
-            <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Strategy</h2>
+            {setPageSeo({ title: 'Insider Analysis | Marcus Finance', description: 'Decode insider buy/sell disclosures and momentum spikes.' })}
+            <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Analysis</h2>
             </div>
             <div className='px-5 space-y-5'>
               <MobileStrategyBox title={"5 MIN MOMENTUM SPIKE"} />
@@ -247,7 +249,8 @@ const InsiderStrategy = () => {
            <div className='lg:block  hidden overflow-hidden'>
             <Marquee/>
             <div className='flex justify-start item-center px-5 pt-5'>
-            <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Strategy</h2>
+            {setPageSeo({ title: 'Insider Analysis | Marcus Finance', description: 'Decode insider buy/sell disclosures and momentum spikes.' })}
+            <h2 className="mb-3 text-white font-semibold tracking-wide">Insider Analysis</h2>
             </div>
             
             {/* Grid Layout for Sector Analysis Boxes */}

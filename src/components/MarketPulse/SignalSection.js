@@ -43,7 +43,7 @@ const SignalSection = ({
   }, [items, cachedItems]);
 
   return (
-    <div className="mt-6 px-5 lg:hidden block">
+    <div className="mt-6 px-5 lg:hidden block relative">
       <div className="flex items-center justify-between w-full">
         <div className='flex justify-between items-center gap-2 w-full'>
         <div className='flex justify-between items-center gap-5'>
@@ -77,16 +77,26 @@ const SignalSection = ({
           See all <span>→</span>
         </button> */}
       </div>
+
+      {/* Overlay loader while fetching (shows even if cached items are visible) */}
+      {isLoading && (
+        <div className="absolute inset-0 grid place-items-center bg-black/20 backdrop-blur-[1px] z-10 pointer-events-none">
+          <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-slate-900/80 border border-white/10">
+            <FaSync className="w-5 h-5 animate-spin text-white/80" />
+            <p className="text-white/80 text-sm">Loading...</p>
+          </div>
+        </div>
+      )}
         <div className="mt-4 !dark:text-white !text-black overflow-x-auto scrollbar-hide">
           {error && !(renderItems && renderItems.length) ? (
             <div className="flex items-center justify-center py-8">
               <div className="text-center">
-                <p className="text-red-400 text-sm mb-2">Please refresh button to try again</p>
+                <p className="text-green-600 text-sm mb-2">Please refresh button to try again</p>
                 
                 {onRefresh && (
                   <button
                     onClick={onRefresh}
-                    className="mt-3 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all duration-200"
+                    className="mt-3 px-4 py-2 bg-green-600/20 text-green-600 rounded-lg hover:bg-green-600/30 hover:text-white transition-all duration-200"
                   >
                     Refresh
                   </button> 

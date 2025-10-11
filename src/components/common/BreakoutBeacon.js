@@ -12,6 +12,13 @@ import icon from '../../asset/img/candlepc.png';
 import iconsmall from '../../asset/img/candle.png';
 import { buildTradingViewNseUrl } from '../../utils/tradingview';
 
+// Resolve scan endpoint depending on protocol:
+// - On HTTPS pages, use same-origin proxy path to avoid mixed content and upgrades
+// - On HTTP pages (e.g., local/dev), call the HTTP backend directly
+const SCAN_URL = (typeof window !== 'undefined' && window.location && window.location.protocol === 'https:')
+  ? 'https://70d52fe3b233.ngrok-free.app/scan'
+  : 'https://70d52fe3b233.ngrok-free.app/scan';
+
 // Reusable board component to display a beacon-style list
 // Accepts optional props; falls back to static demo data
 const BreakoutBeacon = ({
@@ -170,7 +177,7 @@ const BreakoutBeacon = ({
   }) => {
     try {
       setInternalLoading(true);
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch(SCAN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
@@ -555,7 +562,7 @@ const BreakoutBeacon = ({
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex items-center justify-center py-8">
-            <div className="text-white/70">No data available</div>
+            <div className="text-white/70">No data available Please refresh the page</div>
           </div>
         ) : (
           sortedFiltered.map((r, idx) => (

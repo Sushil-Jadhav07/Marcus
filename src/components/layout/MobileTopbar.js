@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BsSunFill, BsMoonFill } from 'react-icons/bs';
+import logo from '../../asset/img/black.png'
+import logowhite from '../../asset/img/logowhite.png'
 
 const MobileTopbar = () => {
   const { user, userProfile, isAuthenticated } = useSelector((state) => state.auth);
@@ -49,12 +51,11 @@ const MobileTopbar = () => {
 
   return (
     <header className="md:hidden fixed top-0 inset-x-0 z-[1100]">
-      <div className="h-16 w-full bg-gradient-to-r from-[#1d4ed8] via-[#1d4ed8] to-[#1d4ed8] ">
+      <div className="h-20 w-full bg-gradient-to-r from-[#1d4ed8] via-[#1d4ed8] to-[#1d4ed8] ">
         <div className="h-full px-4 flex items-center justify-between">
           <Link to="/">
-          <div className="flex justify-center pt-4 items-center gap-3">
-            <h1 className="text-white font-semibold text-lg tracking-wide">Marcus Finance</h1>
-          </div>
+          <img src={logo} alt="Marcus Finance" className="w-[70px] h-[70px] dark:hidden block  " />
+            <img src={logowhite} alt="Marcus Finance" className="w-[70px] h-[70px] dark:block hidden " />
           </Link>
           <div className="flex items-center gap-3">
             <button

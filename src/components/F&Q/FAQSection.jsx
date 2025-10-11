@@ -19,62 +19,62 @@ const FAQSection = () => {
     {
       id: 'account-1',
       category: 'Account',
-      question: 'How do I access Marcus Finance platform?',
-      answer: 'Marcus Finance uses a role-based access system. Your access is determined by your assigned role (Admin or Client). Admins have access to all features including user management, while Clients have access to the core financial tools and analysis features.'
+      question: '1. What is Marcus Finance?',
+      answer: 'Marcus Finance is a stock market analytics platform that provides real-time data insights such as daily highs and lows, 5-minute momentum updates, and trend analysis — helping users make informed market decisions.'
     },
     {
       id: 'account-2',
       category: 'Account',
-      question: 'What roles are available in Marcus Finance?',
-      answer: 'Marcus Finance offers two main roles: Admin and Client. Admins have full access to all features including the ability to create and manage users. Clients have access to the core financial analysis tools including Market Pulse, Insider Strategy, Sector Scope, Swing Spectrum, Option Clock, and Option Apex.'
+      question: '2. Can I trade or invest directly through Marcus Finance?',
+      answer: 'No. Marcus Finance is a market analysis and research platform only. We do not offer trading, investing, or brokerage services.'
     },
     {
       id: 'billing-1',
       category: 'Billing',
-      question: 'What payment methods do you accept?',
-      answer: 'Marcus Finance accepts all major credit cards (Visa, MasterCard, American Express), PayPal, and direct bank transfers. All transactions are processed through our secure, encrypted payment system to ensure the safety of your financial information.'
+      question: '3. What type of market data do you provide?',
+      answer: 'We offer analytical data including day high/low values, 5-minute momentum trends, price movements, and technical indicators to help users understand market behavior.'
     },
     {
       id: 'billing-2',
       category: 'Billing',
-      question: 'Can I cancel my subscription anytime?',
-      answer: 'Yes, you have complete flexibility with your subscription. You can cancel at any time from your account settings without any penalties. Your premium features will remain active until the end of your current billing period.'
+      question: '4. Is the data shown on Marcus Finance real-time?',
+      answer: 'Yes, we provide real-time or near real-time market data updates depending on the data source and exchange feed.'
     },
     {
       id: 'technical-1',
       category: 'Technical',
-      question: 'What browsers are supported for optimal performance?',
-      answer: 'For the best Marcus Finance experience, we recommend using the latest versions of Chrome, Firefox, Safari, or Edge. Our platform is optimized for modern browsers and works seamlessly across desktop and mobile devices.'
+      question: '5. Do I need to create an account to use Marcus Finance?',
+      answer: 'Some features like personalized dashboards or saved watchlists may require an account, but basic market insights are accessible to all users.'
     },
     {
       id: 'technical-2',
       category: 'Technical',
-      question: 'Is there a mobile app available?',
-      answer: 'Yes! Marcus Finance mobile apps are available for both iOS and Android devices. Download them from the App Store or Google Play Store to access all your financial tools on the go with the same powerful features as our web platform.'
+      question: '6. Does Marcus Finance charge any fees or commissions?',
+      answer: 'No. We do not charge any brokerage or commission since trading is not available on our platform. Our focus is purely analytical.'
     },
     {
       id: 'security-1',
       category: 'Security',
-      question: 'How do I enable two-factor authentication?',
-      answer: 'Enhance your account security by enabling two-factor authentication in Settings > Privacy & Security. Click "Enable 2FA" and follow the setup instructions. This adds an extra layer of protection to your financial data.'
+      question: '7. Can I view historical stock data?',
+      answer: 'Yes. Marcus Finance provides access to historical price charts and analysis tools to study past performance and identify patterns.'
     },
     {
       id: 'features-1',
       category: 'Features',
-      question: 'What makes Marcus Finance different from other platforms?',
-      answer: 'Marcus Finance combines advanced market analysis tools, insider trading insights, sector analysis, and swing trading strategies in one comprehensive platform. Our unique algorithms and real-time data provide you with actionable insights that give you a competitive edge in the financial markets.'
+      question: '8. What kind of analysis tools are available?',
+      answer: 'We offer tools such as momentum trackers, trend lines, market sentiment indicators, and 5-minute candle summaries for short-term analysis.'
     },
     {
       id: 'support-1',
       category: 'Support',
-      question: 'How can I contact customer support?',
-      answer: 'Our dedicated support team is here to help! You can reach us through the contact form on our website, email us at support@marcusfinance.com, or use the live chat feature available in the app. We typically respond within 24 hours.'
+      question: '9. Is Marcus Finance suitable for beginners?',
+      answer: 'Absolutely. Our clean interface and educational insights make it ideal for both beginners and experienced market analysts.'
     },
     {
       id: 'data-1',
       category: 'Data',
-      question: 'How often is the market data updated?',
-      answer: 'Marcus Finance provides real-time market data that updates continuously throughout trading hours. Our advanced data feeds ensure you have the most current information for making informed investment decisions, with updates happening every few seconds during market hours.'
+      question: '10. How accurate is the market data on Marcus Finance?',
+      answer: 'We source data from reliable and verified market providers to ensure accuracy and consistency, though minor delays may occur due to data feed limitations.'
     }
   ]
 
@@ -154,11 +154,13 @@ const FAQSection = () => {
                 <button
                   onClick={() => toggleExpanded(item.id)}
                   className='w-full flex items-center justify-between p-6 text-left transition-all duration-200'
+                  aria-expanded={isExpanded}
+                  aria-controls={`faq-${item.id}`}
                 >
                   <div className='flex items-start gap-4 flex-1'>
-                    <div className='flex-shrink-0 mt-1'>
+                    {/* <div className='flex-shrink-0 mt-1'>
                       <QuestionMarkCircleIcon className='h-6 w-6 text-white/80' />
-                    </div>
+                    </div> */}
                     <div className='flex-1'>
                       <h3 className='text-lg font-semibold text-white mb-2'>
                         {item.question}
@@ -169,22 +171,19 @@ const FAQSection = () => {
                     </div>
                   </div>
                   <div className='flex-shrink-0 ml-4'>
-                    {isExpanded ? (
-                      <ChevronUpIcon className='h-6 w-6 text-white/80 transition-transform duration-200' />
-                    ) : (
-                      <ChevronDownIcon className='h-6 w-6 text-white/80 transition-transform duration-200' />
-                    )}
+                    <ChevronDownIcon className={`h-6 w-6 text-white/80 transition-transform duration-300 ease-in-out ${isExpanded ? 'rotate-180' : 'rotate-0'}`} />
                   </div>
                 </button>
-                {isExpanded && (
-                  <div className='px-6 pb-6 border-t border-white/10'>
-                    <div className='pt-4 pl-10'>
-                      <p className='text-white/90 leading-relaxed text-base'>
-                        {item.answer}
-                      </p>
-                    </div>
+                <div
+                  id={`faq-${item.id}`}
+                  className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'border-t border-white/10 max-h-96 opacity-100 pb-6' : 'border-transparent max-h-0 opacity-0 pb-0'}`}
+                >
+                  <div className='pt-4 pl-10'>
+                    <p className='text-white/90 leading-relaxed text-base'>
+                      {item.answer}
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
             )
           })

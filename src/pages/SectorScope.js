@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { setPageSeo } from '../utils/seo';
 import { FiRefreshCw } from 'react-icons/fi';
 import Topbar from '../components/layout/Topbar';
 import MobileTopbar from '../components/layout/MobileTopbar';
@@ -74,7 +75,7 @@ const SectorScope = () => {
     setEnergyLoading(true);
     setEnergyError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -99,7 +100,7 @@ const SectorScope = () => {
     setItLoading(true);
     setItError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +191,7 @@ const SectorScope = () => {
     setAutoLoading(true);
     setAutoError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -230,7 +231,7 @@ const SectorScope = () => {
     setFmcgLoading(true);
     setFmcgError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -256,7 +257,7 @@ const SectorScope = () => {
     setRealtyLoading(true);
     setRealtyError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -282,7 +283,7 @@ const SectorScope = () => {
     setNifty50Loading(true);
     setNifty50Error(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -397,7 +398,8 @@ const SectorScope = () => {
         <Navigation />
           <div className="h-auto lg:hidden block ">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
-          <h2 className="mb-3 text-white font-semibold tracking-wide">Sector Scope</h2>
+          {setPageSeo({ title: 'Industry Insight | Marcus Finance', description: 'Industry-level heatmaps and sector scans for rotation and strength.' })}
+          <h2 className="mb-3 text-white font-semibold tracking-wide">Industry Insight</h2>
           </div>
           <div className='px-5 mt-4'>
             <div className='bg-white/10 backdrop-blur rounded-xl border border-white/10 overflow-hidden p-4'>

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { setPageSeo } from '../utils/seo';
 import MobileTopbar from '../components/layout/MobileTopbar';
 import Topbar from '../components/layout/Topbar';
 import Navigation from '../components/layout/Navigation';
@@ -55,7 +56,7 @@ const SwingSpectrum = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://35.208.40.158:8000/scan', {
+      const res = await fetch('https://70d52fe3b233.ngrok-free.app/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scan_clause }),
@@ -129,7 +130,8 @@ const SwingSpectrum = () => {
         <MobileTopbar />
           <div className=" h-auto lg:hidden block">
           <div className='flex lg:justify-center justify-start lg:items-center pl-5 pt-5 items-start'>
-          <h2 className="mb-3 text-white font-semibold tracking-wide">Swing Spectrum</h2>
+          {setPageSeo({ title: 'Momentum Wave | Marcus Finance', description: 'Spot 2–10 day swing setups across volatility and momentum lanes.' })}
+          <h2 className="mb-3 text-white font-semibold tracking-wide">Momentum Wave</h2>
           </div>
           <SignalSection
             title="10 DAY BO"
@@ -169,7 +171,8 @@ const SwingSpectrum = () => {
           <div className='lg:block hidden overflow-hidden'>
             <Marquee/>
             <div className='flex justify-start item-center px-5 pt-5'>
-            <h2 className="mb-3 text-white font-semibold tracking-wide">Swing Spectrum</h2>
+            {setPageSeo({ title: 'Momentum Wave | Marcus Finance', description: 'Spot 2–10 day swing setups across volatility and momentum lanes.' })}
+            <h2 className="mb-3 text-white font-semibold tracking-wide">Momentum Wave</h2>
             </div>
             <div className='px-5 grid grid-cols-1 lg:grid-cols-2 gap-5'>
               <LOMSwingScanOne title="10 DAY BO" />

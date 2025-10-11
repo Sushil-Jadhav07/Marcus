@@ -20,20 +20,20 @@ const HomeFAQTeaser = () => {
     {
       id: 'account-1',
       category: 'Account',
-      question: 'How do I access Marcus Finance platform?',
-      answer: 'Marcus Finance uses a role-based access system. Your access is determined by your assigned role (Admin or Client). Admins have access to all features including user management, while Clients have access to the core financial tools and analysis features.'
+      question: '1. What is Marcus Finance?',
+      answer: 'Marcus Finance is a stock market analytics platform that helps users track market trends, daily highs and lows, and short-term momentum — all in one place. It focuses on data analysis, not trading.'
     },
     {
       id: 'account-2',
       category: 'Account',
-      question: 'What roles are available in Marcus Finance?',
-      answer: 'Marcus Finance offers two main roles: Admin and Client. Admins have full access to all features including the ability to create and manage users. Clients have access to the core financial analysis tools including Market Pulse, Insider Strategy, Sector Scope, Swing Spectrum, Option Clock, and Option Apex.'
+      question: '2. Can I trade or invest using Marcus Finance?',
+      answer: 'No, Marcus Finance does not offer trading or brokerage services. It’s purely an analysis and insights platform to help you understand market movements before making your own decisions.'
     },
     {
       id: 'billing-1',
       category: 'Billing',
-      question: 'What payment methods do you accept?',
-      answer: 'Marcus Finance accepts all major credit cards (Visa, MasterCard, American Express), PayPal, and direct bank transfers. All transactions are processed through our secure, encrypted payment system to ensure the safety of your financial information.'
+      question: '3. What kind of data and tools does Marcus Finance provide?',
+      answer: 'We provide real-time market data, including day high/low values, 5-minute momentum, historical charts, and technical indicators — perfect for traders and analysts who want deep market insights without trading directly.'
     },
     
   ]
@@ -115,9 +115,9 @@ const HomeFAQTeaser = () => {
                   className='w-full flex items-center justify-between p-6 text-left transition-all duration-200'
                 >
                   <div className='flex items-start gap-4 flex-1'>
-                    <div className='flex-shrink-0 mt-1'>
+                    {/* <div className='flex-shrink-0 mt-1'>
                       <QuestionMarkCircleIcon className='h-6 w-6 dark:text-white text-black/80' />
-                    </div>
+                    </div> */}
                     <div className='flex-1'>
                       <h3 className='text-lg font-semibold dark:text-white text-black mb-2'>
                         {item.question}

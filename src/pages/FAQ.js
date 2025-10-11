@@ -29,8 +29,9 @@ const FAQ = () => {
       <div className='w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
-            <div className=" h-auto lg:hidden block">
-            
+            <div className=" h-auto lg:hidden block lg:mt-0 mt-10 overflow-hidden">
+            <Marquee/>
+            <FAQSection />
             </div>
             <div className='lg:block h-auto hidden overflow-hidden'>
               <Marquee/>

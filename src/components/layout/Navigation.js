@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/authSlice';
@@ -30,15 +30,18 @@ import userListInactive from '../../asset/img/Icons/Inactive/insider.png';
 import homeActive from '../../asset/img/Icons/Active/marketactive.png';
 import homeInactive from '../../asset/img/Icons/Inactive/marketpulse.png';
 
+import logo from '../../asset/img/black.png'
+import logowhite from '../../asset/img/logowhite.png'
+
 // Custom Icon Component
 const CustomIcon = ({ iconName, isActive, isHovered, className = "" }) => {
   const getIconSrc = (name, state) => {
     const iconMap = {
       'home': state ? homeActive : homeInactive,
-      'market-pulse': state ? marketActive : marketInactive,
-      'insider-strategy': state ? insiderActive : insiderInactive,
-      'sector-scope': state ? sectorActive : sectorInactive,  
-      'swing-spectrum': state ? swingActive : swingInactive,
+      'market-beat': state ? marketActive : marketInactive,
+      'insider-analysis': state ? insiderActive : insiderInactive,
+      'industry-insight': state ? sectorActive : sectorInactive,  
+      'momentum-wave': state ? swingActive : swingInactive,
       'option-clock': state ? optionActive : optionInactive,
       'option-apex': state ? apexActive : apexInactive,
       'create-user': state ? createUserActive : createUserInactive,
@@ -61,13 +64,29 @@ const CustomIcon = ({ iconName, isActive, isHovered, className = "" }) => {
 
 // Quick Action Icon Component for modal
 const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
+  // Support heroicons for FAQ and Settings
+  if (iconName === 'faq') {
+    return (
+      <QuestionMarkCircleIcon
+        className={`transition-all duration-300 ${isHovered ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'} ${className}`}
+      />
+    );
+  }
+  if (iconName === 'settings') {
+    return (
+      <Cog6ToothIcon
+        className={`transition-all duration-300 ${isHovered ? 'text-blue-200' : 'text-slate-600 dark:text-slate-300'} ${className}`}
+      />
+    );
+  }
+
   const getQuickActionIcon = (name, shouldUseActive) => {
     const activeIconMap = {
       'home': homeActive,
-      'market-pulse': marketActive,
-      'insider-strategy': insiderActive,
-      'sector-scope': sectorActive,
-      'swing-spectrum': swingActive,
+      'market-beat': marketActive,
+      'insider-analysis': insiderActive,
+      'industry-insight': sectorActive,
+      'momentum-wave': swingActive,
       'option-clock': optionActive,
       'option-apex': apexActive,
       'create-user': createUserActive,
@@ -76,10 +95,10 @@ const QuickActionIcon = ({ iconName, isHovered = false, className = "" }) => {
 
     const inactiveIconMap = {
       'home': homeInactive,
-      'market-pulse': marketInactive,
-      'insider-strategy': insiderInactive,
-      'sector-scope': sectorInactive,
-      'swing-spectrum': swingInactive,
+      'market-beat': marketInactive,
+      'insider-analysis': insiderInactive,
+      'industry-insight': sectorInactive,
+      'momentum-wave': swingInactive,
       'option-clock': optionInactive,
       'option-apex': apexInactive,
       'create-user': createUserInactive,
@@ -107,6 +126,8 @@ const Navigation = () => {
   const [quickKey, setQuickKey] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [hoveredQuickAction, setHoveredQuickAction] = useState(null);
+  const [showMobileBar, setShowMobileBar] = useState(true);
+  const lastScrollYRef = useRef(0);
 
   const navigate = useNavigate();
   const isActive = (path) => {
@@ -138,10 +159,10 @@ const Navigation = () => {
   };
 
   const navItemsBase = [
-    { path: '/market-pulse', label: 'Market Pulse', iconName: 'market-pulse' },
-    { path: '/insider-strategy', label: 'Insider Strategy', iconName: 'insider-strategy' },
-    { path: '/sector-scope', label: 'Sector Scope', iconName: 'sector-scope' },
-    { path: '/swing-spectrum', label: 'Swing Spectrum', iconName: 'swing-spectrum' },
+    { path: '/market-beat', label: 'Market Beat', iconName: 'market-beat' },
+    { path: '/insider-analysis', label: 'Insider Analysis', iconName: 'insider-analysis' },
+    { path: '/industry-insight', label: 'Industry Insight', iconName: 'industry-insight' },
+    { path: '/momentum-wave', label: 'Momentum Wave', iconName: 'momentum-wave' },
     { path: '/option-clock', label: 'Option Clock', iconName: 'option-clock', comingSoon: true },
     { path: '/option-apex', label: 'Option Apex', iconName: 'option-apex', comingSoon: true }
   ];
@@ -161,22 +182,40 @@ const Navigation = () => {
     setIsQuickOpen(false);
     setQuickKey(null);
     setHoveredQuickAction(null);
+    // Scroll to top on route change (desktop and mobile)
+    window.scrollTo(0, 0);
+    try {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    } catch (_) {}
   }, [location.pathname]);
+
+  // Mobile bottom bar: show on scroll down, hide on scroll up
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      const isScrollingDown = y > lastScrollYRef.current;
+      setShowMobileBar(!isScrollingDown || y < 10);
+      lastScrollYRef.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const keyToPath = {
     home: '/',
-    pulse: '/market-pulse',
-    swing: '/swing-spectrum',
+    pulse: '/market-beat',
+    swing: '/momentum-wave',
     tools: '/option-clock',
     more: null
   };
 
   const keyToIconName = {
     home: 'home',
-    pulse: 'market-pulse',
-    swing: 'swing-spectrum',
+    pulse: 'market-beat',
+    swing: 'momentum-wave',
     tools: 'option-clock'
-  };
+  }; 
 
   const isKeyActive = (key) => {
     const p = keyToPath[key];
@@ -190,72 +229,63 @@ const Navigation = () => {
 
   // Create quick actions based on role
   const createQuickActions = () => {
-    // Common links available to everyone
+    // Common links available to everyone (used in Home sheet if needed)
     const commonHome = [
       { to: '/', iconName: 'home', label: 'Home' },
-      { to: '/market-pulse', iconName: 'market-pulse', label: 'Pulse' },
-      { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Swing' },
-      { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-      { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
+      { to: '/market-beat', iconName: 'market-beat', label: 'Market Beat' },
+      { to: '/insider-analysis', iconName: 'insider-analysis', label: 'Insider Analysis' },
+      { to: '/momentum-wave', iconName: 'momentum-wave', label: 'Momentum Wave' },
+      { to: '/industry-insight', iconName: 'industry-insight', label: 'Industry Insight' }
     ];
 
+    // Base groupings requested for mobile bottom sheet
     const base = {
       pulse: [
-        { to: '/market-pulse', iconName: 'market-pulse', label: 'Market Pulse' },
-        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
-        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' }
+        { to: '/market-beat', iconName: 'market-beat', label: 'Market Beat' },
+        { to: '/insider-analysis', iconName: 'insider-analysis', label: 'Insider Analysis' }
       ],
       swing: [
-        { to: '/swing-spectrum', iconName: 'swing-spectrum', label: 'Open Swing' },
+        { to: '/momentum-wave', iconName: 'momentum-wave', label: 'Momentum Wave' },
+        { to: '/industry-insight', iconName: 'industry-insight', label: 'Industry Insight' }
       ],
       more: [
-        { to: '/insider-strategy', iconName: 'insider-strategy', label: 'Insider' },
-        { to: '/sector-scope', iconName: 'sector-scope', label: 'Sectors' },
+        { to: '/option-clock', iconName: 'option-clock', label: 'Option Clock', comingSoon: true },
+        { to: '/option-apex', iconName: 'option-apex', label: 'Option Apex', comingSoon: true }
+      ],
+      toolsCommon: [
+        { to: '/faq', iconName: 'faq', label: 'FAQ' },
+        { to: '/settings', iconName: 'settings', label: 'Settings' }
       ]
     };
 
     if (role === 'admin') {
-      // Admin: replace Option Clock/Apex with Create User/User List
+      // Admin: Tools include Create/User List + FAQ/Settings; More shows coming soon options
       return {
         home: [
           ...commonHome,
-          { to: '/create-user', iconName: 'create-user', label: 'Create User' },
-          { to: '/user-list', iconName: 'user-list', label: 'User List' }
         ],
         pulse: base.pulse,
         swing: base.swing,
         tools: [
           { to: '/create-user', iconName: 'create-user', label: 'Create User' },
-          { to: '/user-list', iconName: 'user-list', label: 'User List' }
+          { to: '/user-list', iconName: 'user-list', label: 'User List' },
+          ...base.toolsCommon,
         ],
-        more: [
-          ...base.more,
-          { to: '/create-user', iconName: 'create-user', label: 'Create User' },
-          { to: '/user-list', iconName: 'user-list', label: 'User List' }
-        ]
+        more: base.more,
       };
     }
 
-    // Non-admin: keep Option Apex and Option Clock
+    // Non-admin: Tools show FAQ/Settings only; More shows coming soon options
     return {
       home: [
         ...commonHome,
-        { to: '/option-clock', iconName: 'option-clock', label: 'Clock' },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex' }
       ],
       pulse: base.pulse,
-      swing: [
-        ...base.swing,
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
-      ],
+      swing: base.swing,
       tools: [
-        { to: '/option-clock', iconName: 'option-clock', label: 'Open Clock', comingSoon: true },
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
+        ...base.toolsCommon,
       ],
-      more: [
-        ...base.more,
-        { to: '/option-apex', iconName: 'option-apex', label: 'Apex', comingSoon: true }
-      ]
+      more: base.more,
     };
   };
 
@@ -269,10 +299,12 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop sidebar (always open) */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 lg:w-72 bg-[#ffffff07] backdrop-blur-md border-r-2 border-white/10 dark:border-white/10 text-slate-900 dark:text-white flex-col justify-between py-6 z-[1000] shadow-sm dark:shadow-none">
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 lg:w-72 bg-[#ffffff07] backdrop-blur-md border-r-2 border-white/10 dark:border-white/10 text-slate-900 dark:text-white flex-col justify-between py-6 z-[1000] shadow-sm dark:shadow-none overflow-y-auto scrollbar-hide">
         <div className="flex flex-col gap-6 w-full px-5">
           <Link to="/" className="flex items-center gap-3 px-2">
-            <span className="text-2xl text-white dark:text-[#fff] font-semibold">Marcus</span>
+            {/* <span className="text-2xl text-white dark:text-[#fff] font-semibold">Marcus</span> */}
+            <img src={logo} alt="Marcus Finance" className="w-[150px] h-[150px] dark:hidden block  " />
+            <img src={logowhite} alt="Marcus Finance" className="w-[150px] h-[150px] dark:block hidden " />
           </Link>
           <nav className="flex-1 flex flex-col gap-1 w-full">
             {navItems.map((item) => (
@@ -325,7 +357,7 @@ const Navigation = () => {
             ))}
           </nav>
         </div>
-        <div className="flex gap-2 w-full px-5">
+        <div className="flex gap-2 w-full px-5 mt-20">
           {/* FAQ Box */}
           <Link
             to="/faq"
@@ -368,7 +400,7 @@ const Navigation = () => {
       </aside>
 
       {/* Mobile bottom nav (below md) */}
-      <nav className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-xl bg-white dark:bg-[#070707] text-slate-900 dark:text-white rounded-3xl border-b-[5px] border-slate-200 dark:border-white shadow-[0_10px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.45)] px-3 pt-3 z-[1000]">
+      <nav className={`md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 w-[92%] max-w-xl bg-white dark:bg-[#070707] text-slate-900 dark:text-white rounded-3xl border-b-[5px] border-[#000000/20]  dark:border-white shadow-[0_12px_40px_#000000/18] dark:shadow-[0_12px_40px_#000000/5] ring-1 ring-black/5 dark:ring-white/10 px-3 pt-3 z-[1000] transition-transform duration-300 ${showMobileBar ? 'translate-y-0' : 'translate-y-[140%]'}`}>
         <ul className="grid grid-cols-5 items-center">
           <li className="flex items-center justify-center">
             <button
@@ -486,7 +518,7 @@ const Navigation = () => {
           isQuickOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        <div className="mx-auto mb-[8%] w-[92%] pb-10 max-w-xl rounded-3xl bg-white dark:bg-[#070707] border-b-[3px] border-slate-200 dark:border-white shadow-[0_-10px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.45)]">
+        <div className="mx-auto mb-[8%] w-[92%] pb-10 max-w-xl rounded-3xl bg-white/90 dark:bg-[#070707] border-b-[3px] border-slate-200 dark:border-white shadow-[0_-10px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.45)]">
           <div className="rounded-t-3xl bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border-t border-slate-200 dark:border-white/10">
             <div className="flex items-center justify-center py-3">
               <div className="h-1.5 w-12 rounded-full bg-slate-300 dark:bg-white/20" />
@@ -518,7 +550,7 @@ const Navigation = () => {
                       to={item.to}
                       onMouseEnter={() => setHoveredQuickAction(`${quickKey}-${index}`)}
                       onMouseLeave={() => setHoveredQuickAction(null)}
-                      className="group flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 py-4 transition-all duration-300 min-h-[80px]"
+                      className="group flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white bg-black/10 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 py-4 px-2 transition-all duration-300 min-h-[80px]"
                     >
                       <div className="flex items-center justify-center h-8">
                         <QuickActionIcon 

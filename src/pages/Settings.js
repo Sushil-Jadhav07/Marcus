@@ -39,8 +39,9 @@ const Settings = () => {
       <div className='w-full h-full flex flex-col'>
           <Topbar /> 
           <MobileTopbar />
-            <div className=" h-[120vh] lg:hidden block ">
-            
+            <div className=" h-[120vh] lg:hidden block overflow-hidden mt-10 ">
+            <Marquee/>
+            <AccountDetails />  
             </div>
             <div className='lg:block h-[120vh] hidden overflow-hidden'>
               <Marquee/>

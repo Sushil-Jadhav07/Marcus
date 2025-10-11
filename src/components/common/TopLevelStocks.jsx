@@ -11,7 +11,7 @@ import { buildTradingViewNseUrl } from '../../utils/tradingview';
  */
 const TopLevelStocks = ({
   title = 'TOP LEVEL STOCKS',
-  apiUrl = 'http://35.208.40.158:8000/scan',
+  apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
   method = 'POST',
   requestBody = { scan_clause: '( {cash} ( ( {33489} ( ( [0] 5 minute sma( [0] 5 minute volume , 4 ) - daily sma( 2 days ago volume / 75 , 5 ) ) / 2 days ago sma( daily volume , 75 ) * 100 > 0 and daily high / daily close <= 1.003 and 1 day ago "close - 1 candle ago close / 1 candle ago close * 100" < 5 and daily close >= 1 day ago high and daily close > 80 and daily close < 10000 and( {33489} ( [0] 5 minute close - [0] 5 minute open / [0] 5 minute open * 100 < 0.05 or [-1] 5 minute close - [-1] 5 minute open / [-1] 5 minute open * 100 < 0.05 or [-2] 5 minute close - [-2] 5 minute open / [-2] 5 minute open * 100 < 0.05 ) ) ) ) ) )' },
   headers = { 'Content-Type': 'application/json' },
@@ -147,7 +147,7 @@ const TopLevelStocks = ({
               <span>Loading...</span>
             </div></div>
         ) : !data.length ? (
-          <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+          <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh the page</div>
         ) : (
         data.map((it, idx) => {
           const pct = Number(it.per_chg);

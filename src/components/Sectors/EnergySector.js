@@ -6,7 +6,7 @@ import iconsmall from '../../asset/img/candle.png';
 const EnergySector = (
     {
         title = 'ENERGY SECTOR',
-        apiUrl = 'http://35.208.40.158:8000/scan',
+        apiUrl = 'https://70d52fe3b233.ngrok-free.app/scan',
         method = 'POST',
         requestBody = {
           scan_clause: "( {cash} ( abs( [0] 5 minute sma( [0] 5 minute close , 10 ) - [0] 5 minute sma( [0] 5 minute close , 6 ) ) <= [0] 5 minute sma( [0] 5 minute close , 10 ) * 0.005 and [0] 5 minute close > [0] 5 minute open and [0] 5 minute sma( [0] 5 minute close , 6 ) >= [0] 5 minute sma( [0] 5 minute close , 10 ) and [0] 5 minute close >= [0] 5 minute sma( [0] 5 minute close , 6 ) and [0] 5 minute rsi( 14 ) >= 70 and abs( [0] 5 minute close - [0] 5 minute open ) > 2 * [-1] 5 minute sma( abs( [0] 5 minute close - [0] 5 minute open ) , 75 ) ) ) "
@@ -283,7 +283,7 @@ const EnergySector = (
               <span>Loading...</span>
             </div></div>
       ) : !data.length ? (
-        <div className="flex items-center justify-center py-8 text-white/70">No data available</div>
+        <div className="flex items-center justify-center py-8 text-white/70">No data available Please refresh the page</div>
       ) : (
         data.map((it, idx) => {
           const pct = getPerChg(it);
